@@ -80,3 +80,14 @@ it('ignores small elevation variations below noise threshold', function () {
 
     expect($this->calculator->elevationGain($points))->toBe(0);
 });
+
+it('calculates moving duration excluding pauses', function () {
+    $points = [
+        ['lat' => 0, 'lon' => 0, 'ele' => 0, 'time' => Carbon::parse('2024-06-15T08:00:00Z')],
+        ['lat' => 0, 'lon' => 0, 'ele' => 0, 'time' => Carbon::parse('2024-06-15T08:00:20Z')], // 20s — mouvement
+        ['lat' => 0, 'lon' => 0, 'ele' => 0, 'time' => Carbon::parse('2024-06-15T08:05:20Z')], // 300s — pause
+        ['lat' => 0, 'lon' => 0, 'ele' => 0, 'time' => Carbon::parse('2024-06-15T08:05:40Z')], // 20s — mouvement
+    ];
+
+    expect($this->calculator->movingDuration($points))->toBe(40);
+});

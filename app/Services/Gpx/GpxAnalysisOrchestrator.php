@@ -22,6 +22,6 @@ class GpxAnalysisOrchestrator
         $points   = $this->parser->parse($gpxFilePath);
         $segments = $this->segmentation->segment($points);
 
-        return $this->aggregator->aggregate($segments);
+        return $this->aggregator->aggregate($segments, $points);
     }
 }

@@ -6,8 +6,8 @@ use Carbon\Carbon;
 
 class ElevationCalculatorService
 {
-    private const NOISE_THRESHOLD = 0.5;
-    private const SMOOTHING_WINDOW = 5;
+    private const NOISE_THRESHOLD = 0.5; // mètres
+    private const SMOOTHING_WINDOW = 5; // lissage
 
     /**
      * Calcule la distance totale en km entre une liste de points (formule de Haversine).
@@ -117,6 +117,30 @@ class ElevationCalculatorService
         }
 
         return (int) $first['time']->diffInSeconds($last['time']);
+    }
+
+    /**
+     * Calcule la durée en mouvement en excluant les pauses > 30 secondes.
+     *
+     * @param array<int, array{lat: float, lon: float, ele: float|null, time: Carbon|null}> $points
+     */
+    public function movingDuration(array $points): int
+    {
+        $moving = 0;
+
+        for ($i = 1; $i < count($points); $i++) {
+            if ($points[$i]['time'] === null || $points[$i - 1]['time'] === null) {
+                continue;
+            }
+
+            $dt = $points[$i - 1]['time']->diffInSeconds($points[$i]['time']);
+
+            if ($dt <= config('geo.pause_threshold_seconds', 30)) {
+                $moving += $dt;
+            }
+        }
+
+        return $moving;
     }
 
     /**

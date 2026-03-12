@@ -88,4 +88,20 @@ class ActivityController extends Controller
 
         return $this->noContent();
     }
+
+    public function recalculate(Activity $activity, GpxAnalysisOrchestrator $orchestrator): JsonResponse
+    {
+        $path = Storage::disk('local')->path($activity->gpx_path);
+        $analysis = $orchestrator->analyze($path);
+
+        $activity->segments()->delete();
+
+        foreach ($analysis['segments'] as $segment) {
+            $activity->segments()->create($segment);
+        }
+
+        $activity->update($analysis['activity_stats']);
+
+        return $this->success($activity->fresh()->load('segments'));
+    }    
 }

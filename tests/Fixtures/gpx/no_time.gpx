@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="SummitStats Tests">
+  <trk>
+    <name>No Time Track</name>
+    <trkseg>
+      <trkpt lat="45.8326" lon="6.8652">
+        <ele>1034.0</ele>
+      </trkpt>
+      <trkpt lat="45.8330" lon="6.8660">
+        <ele>1045.0</ele>
+      </trkpt>
+    </trkseg>
+  </trk>
+</gpx>

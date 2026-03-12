@@ -120,6 +120,7 @@ npm install
 # Configuration
 cp .env.example .env
 php artisan key:generate
+> ⚠️ Créer manuellement un fichier `.env.testing` basé sur `.env.example` avec `DB_DATABASE=:memory:` — ce fichier n'est pas committé pour des raisons de sécurité.
 
 # Base de données
 touch database/database.sqlite

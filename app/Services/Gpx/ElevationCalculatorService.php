@@ -6,7 +6,8 @@ use Carbon\Carbon;
 
 class ElevationCalculatorService
 {
-    private const NOISE_THRESHOLD = 2.0; // mètres
+    private const NOISE_THRESHOLD = 0.5;
+    private const SMOOTHING_WINDOW = 5;
 
     /**
      * Calcule la distance totale en km entre une liste de points (formule de Haversine).
@@ -36,18 +37,13 @@ class ElevationCalculatorService
      */
     public function elevationGain(array $points): int
     {
-        $gain = 0.0;
+        $smoothed = $this->smoothElevations($points);
+        $gain     = 0.0;
 
-        for ($i = 1; $i < count($points); $i++) {
-            if ($points[$i]['ele'] === null || $points[$i - 1]['ele'] === null) {
-                continue;
-            }
-
-            $delta = $points[$i]['ele'] - $points[$i - 1]['ele'];
-
-            if ($delta > self::NOISE_THRESHOLD) {
-                $gain += $delta;
-            }
+        for ($i = 1; $i < count($smoothed); $i++) {
+            if ($smoothed[$i] === null || $smoothed[$i - 1] === null) continue;
+            $delta = $smoothed[$i] - $smoothed[$i - 1];
+            if ($delta > self::NOISE_THRESHOLD) $gain += $delta;
         }
 
         return (int) round($gain);
@@ -60,21 +56,50 @@ class ElevationCalculatorService
      */
     public function elevationLoss(array $points): int
     {
-        $loss = 0.0;
+        $smoothed = $this->smoothElevations($points);
+        $loss     = 0.0;
 
-        for ($i = 1; $i < count($points); $i++) {
-            if ($points[$i]['ele'] === null || $points[$i - 1]['ele'] === null) {
-                continue;
-            }
-
-            $delta = $points[$i - 1]['ele'] - $points[$i]['ele'];
-
-            if ($delta > self::NOISE_THRESHOLD) {
-                $loss += $delta;
-            }
+        for ($i = 1; $i < count($smoothed); $i++) {
+            if ($smoothed[$i] === null || $smoothed[$i - 1] === null) continue;
+            $delta = $smoothed[$i - 1] - $smoothed[$i];
+            if ($delta > self::NOISE_THRESHOLD) $loss += $delta;
         }
 
         return (int) round($loss);
+    }
+
+    /**
+     * Lisse les altitudes par moyenne glissante.
+     *
+     * @param  array<int, array{ele: float|null}> $points
+     * @return array<int, float|null>
+     */
+    private function smoothElevations(array $points): array
+    {
+        $elevations = array_column($points, 'ele');
+        $count      = count($elevations);
+
+        // Pas de lissage si moins de points que la fenêtre
+        if ($count < self::SMOOTHING_WINDOW) {
+            return $elevations;
+        }
+
+        $smoothed   = [];
+        $half       = (int) (self::SMOOTHING_WINDOW / 2);
+
+        for ($i = 0; $i < $count; $i++) {
+            $start  = max(0, $i - $half);
+            $end    = min($count, $i + $half + 1);
+            $values = array_filter(
+                array_slice($elevations, $start, $end - $start),
+                fn($v) => $v !== null
+            );
+            $smoothed[$i] = !empty($values)
+                ? array_sum($values) / count($values)
+                : null;
+        }
+
+        return $smoothed;
     }
 
     /**
@@ -99,7 +124,7 @@ class ElevationCalculatorService
      */
     private function haversine(float $lat1, float $lon1, float $lat2, float $lon2): float
     {
-        $R    = 6371;
+        $R    = config('geo.earth_radius_km');
         $dLat = deg2rad($lat2 - $lat1);
         $dLon = deg2rad($lon2 - $lon1);
 

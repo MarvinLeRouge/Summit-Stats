@@ -72,8 +72,10 @@ it('returns zero elevation gain on flat track', function () {
 it('ignores small elevation variations below noise threshold', function () {
     $points = [
         ['lat' => 0, 'lon' => 0, 'ele' => 1000.0, 'time' => null],
-        ['lat' => 0, 'lon' => 0, 'ele' => 1001.0, 'time' => null], // bruit GPS < 2m
-        ['lat' => 0, 'lon' => 0, 'ele' => 1000.5, 'time' => null], // bruit GPS < 2m
+        ['lat' => 0, 'lon' => 0, 'ele' => 1000.3, 'time' => null],
+        ['lat' => 0, 'lon' => 0, 'ele' => 1000.1, 'time' => null],
+        ['lat' => 0, 'lon' => 0, 'ele' => 1000.2, 'time' => null],
+        ['lat' => 0, 'lon' => 0, 'ele' => 1000.0, 'time' => null],
     ];
 
     expect($this->calculator->elevationGain($points))->toBe(0);

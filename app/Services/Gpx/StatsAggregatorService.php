@@ -152,7 +152,7 @@ class StatsAggregatorService
      */
     private function haversine(float $lat1, float $lon1, float $lat2, float $lon2): float
     {
-        $R    = 6371;
+        $R    = config('geo.earth_radius_km');
         $dLat = deg2rad($lat2 - $lat1);
         $dLon = deg2rad($lon2 - $lon1);
 

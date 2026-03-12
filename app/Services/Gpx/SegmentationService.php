@@ -141,7 +141,7 @@ class SegmentationService
      */
     private function haversineMeters(float $lat1, float $lon1, float $lat2, float $lon2): float
     {
-        $R    = 6371000;
+        $R    = config('geo.earth_radius_m');
         $dLat = deg2rad($lat2 - $lat1);
         $dLon = deg2rad($lon2 - $lon1);
 

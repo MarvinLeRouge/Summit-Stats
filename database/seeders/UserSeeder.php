@@ -12,7 +12,7 @@ class UserSeeder extends Seeder
         $user = User::firstOrCreate(
             ['email' => env('APP_USER_EMAIL', 'admin@summitstats.local')],
             [
-                'name'     => env('APP_USER_NAME'),
+                'name'     => env('APP_USER_NAME', 'Summit Stats User'),
                 'password' => bcrypt(env('APP_USER_PASSWORD', 'changeme')),
             ]
         );

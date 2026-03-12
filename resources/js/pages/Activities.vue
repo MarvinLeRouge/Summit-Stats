@@ -84,6 +84,7 @@
             </table>
         </div>
     </div>
+    <GpxUploadForm v-if="showForm" @close="showForm = false" @imported="onImported" />
 </template>
 
 <script setup>
@@ -98,6 +99,13 @@ onMounted(() => store.fetch());
 
 const resetFilters = () => {
     store.filters = { type: null, environment: null, date_from: null, date_to: null };
+    store.fetch();
+};
+
+import GpxUploadForm from '@/components/GpxUploadForm.vue';
+
+const onImported = () => {
+    showForm.value = false;
     store.fetch();
 };
 </script>

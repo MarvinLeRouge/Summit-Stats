@@ -7,5 +7,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('activities', \App\Http\Controllers\Api\ActivityController::class);
 
     // Stats
-    // Route::get('stats', [\App\Http\Controllers\Api\StatsController::class, 'index']);
+    Route::get('stats', [\App\Http\Controllers\Api\StatsController::class, 'index']);
 });

@@ -1,9 +1,9 @@
-# 🏔️ SummitStats
+# 🏔️ Summit Stats
 
 > **⚠️ Projet en cours de développement — Work in progress**
 
 Outil de visualisation de progression pour les activités outdoor (randonnée, trail running).  
-Importez vos traces GPX, laissez SummitStats les analyser, et visualisez votre progression sur les métriques qui comptent vraiment.
+Importez vos traces GPX, laissez Summit Stats les analyser, et visualisez votre progression sur les métriques qui comptent vraiment.
 
 ![CI](https://github.com/marvinlerouge/summit-stats/actions/workflows/ci.yml/badge.svg)
 ![PHP](https://img.shields.io/badge/PHP-8.3-777BB4?logo=php&logoColor=white)
@@ -22,7 +22,7 @@ Les applications de sport classiques (Strava, Garmin Connect) offrent des statis
 - *Comment évolue mon endurance sur les longues sorties en montagne ces six derniers mois ?*
 - *Suis-je plus rapide en trail qu'en randonnée sur les dénivelés modérés ?*
 
-SummitStats segmente chaque trace GPX par type de terrain et classe de pente, puis vous laisse composer vos propres métriques de progression via une interface de filtrage dynamique.
+Summit Stats segmente chaque trace GPX par type de terrain et classe de pente, puis vous laisse composer vos propres métriques de progression via une interface de filtrage dynamique.
 
 ---
 
@@ -44,7 +44,7 @@ SummitStats segmente chaque trace GPX par type de terrain et classe de pente, pu
 
 ## 🗂️ Classes de pente
 
-SummitStats segmente automatiquement chaque trace selon cinq classes de pente :
+Summit Stats segmente automatiquement chaque trace selon cinq classes de pente :
 
 | Classe | Label    | Plage      |
 |--------|----------|------------|

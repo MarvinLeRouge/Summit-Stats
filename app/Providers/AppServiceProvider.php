@@ -12,6 +12,11 @@ class AppServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
+        $this->app->bind(\App\Services\ActivityService::class, function ($app) {
+            return new \App\Services\ActivityService(
+                $app->make(\App\Services\Gpx\GpxAnalysisOrchestrator::class),
+            );
+        });
         $this->app->bind(GpxAnalysisOrchestrator::class, function ($app) {
             return new GpxAnalysisOrchestrator(
                 $app->make(GpxParserService::class),

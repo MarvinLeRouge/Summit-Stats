@@ -15,7 +15,7 @@
 ![Coverage](https://img.shields.io/badge/Coverage-99%25-brightgreen)
 ![Tests](https://img.shields.io/badge/Tests-89%20passing-brightgreen)
 ![Status](https://img.shields.io/badge/Status-Delivered-brightgreen)
-![License](https://img.shields.io/github/license/MarvinLeRouge/Summit-Stats)
+![License](https://img.shields.io/github/license/MarvinLeRouge/Summit-Stats?cacheSeconds=3600)
 
 ---
 
@@ -221,7 +221,7 @@ Ce projet est sous licence MIT - voir le fichier [LICENSE](LICENSE) pour plus de
 ![Coverage](https://img.shields.io/badge/Coverage-99%25-brightgreen)
 ![Tests](https://img.shields.io/badge/Tests-89%20passing-brightgreen)
 ![Status](https://img.shields.io/badge/Status-Delivered-brightgreen)
-![License](https://img.shields.io/github/license/MarvinLeRouge/Summit-Stats)
+![License](https://img.shields.io/github/license/MarvinLeRouge/Summit-Stats?cacheSeconds=3600)
 
 ---
 

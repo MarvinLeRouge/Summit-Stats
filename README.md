@@ -8,7 +8,7 @@ Importez vos traces GPX, laissez Summit Stats les analyser, et visualisez votre 
 ![Laravel](https://img.shields.io/badge/Laravel-12-FF2D20?logo=laravel&logoColor=white)
 ![Vue.js](https://img.shields.io/badge/Vue.js-3-4FC08D?logo=vuedotjs&logoColor=white)
 ![Coverage](https://img.shields.io/badge/Coverage-99%25-brightgreen)
-![Tests](https://img.shields.io/badge/Tests-63%20passing-brightgreen?logo=pest)
+![Tests](https://img.shields.io/badge/Tests-89%20passing-brightgreen?logo=pest)
 ![Status](https://img.shields.io/badge/Status-Livré-brightgreen)
 
 ---
@@ -30,7 +30,7 @@ Summit Stats segmente chaque trace GPX par type de terrain et classe de pente, p
 | Métrique | Valeur |
 |---|---|
 | Couverture de tests | **99%** |
-| Tests automatisés | **63 tests, 220+ assertions** |
+| Tests automatisés | **89 tests, 271+ assertions** |
 | Endpoints API | **6 routes REST** |
 | Métriques calculées par activité | **22 stats stockées en base** |
 | Pipeline GPX | **4 services en TDD strict** |

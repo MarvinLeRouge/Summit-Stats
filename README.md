@@ -5,9 +5,9 @@
 Outil de visualisation de progression pour les activités outdoor (randonnée, trail running).  
 Importez vos traces GPX, laissez Summit Stats les analyser, et visualisez votre progression sur les métriques qui comptent vraiment.
 
-![CI](https://github.com/marvinlerouge/summit-stats/actions/workflows/ci.yml/badge.svg)
+![CI](https://github.com/MarvinLeRouge/Summit-Stats/actions/workflows/laravel.yml/badge.svg)
 ![PHP](https://img.shields.io/badge/PHP-8.3-777BB4?logo=php&logoColor=white)
-![Laravel](https://img.shields.io/badge/Laravel-11-FF2D20?logo=laravel&logoColor=white)
+![Laravel](https://img.shields.io/badge/Laravel-12-FF2D20?logo=laravel&logoColor=white)
 ![Vue.js](https://img.shields.io/badge/Vue.js-3-4FC08D?logo=vuedotjs&logoColor=white)
 ![Tests](https://img.shields.io/badge/Tests-Pest-F59E0B)
 ![Status](https://img.shields.io/badge/Status-En%20développement-orange)
@@ -28,17 +28,15 @@ Summit Stats segmente chaque trace GPX par type de terrain et classe de pente, p
 
 ## ✨ Fonctionnalités
 
-### Disponibles
-> *(à compléter au fil des livraisons)*
+### ✅ Disponibles
 
-### Prévues
-
-- **Import GPX** — upload de fichiers GPX après chaque sortie
+- **Import GPX** — upload avec drag & drop, analyse automatique à l'import
 - **Analyse automatique** — segmentation de la trace en sections homogènes (montée / descente / plat) par classe de pente
-- **Statistiques par segment** — vitesse, vitesse ascensionnelle, dénivelé, durée par type de terrain
+- **Statistiques complètes** — vitesse totale et en mouvement, vitesse ascensionnelle (moyenne, → sommet, long tronçon), vitesse descensionnelle, répartition par classe de pente
+- **Recalcul à la demande** — bouton "Recalculer" sur chaque activité + commande `php artisan stats:recalculate`
 - **Dashboard de progression** — graphes recalculés à la volée selon vos critères
-- **Filtres avancés** — par type d'activité, milieu (urbain / campagne / montagne), période, et intervalle de pente (ouvert ou fermé)
-- **Historique des sorties** — liste complète avec stats résumées et profil altimétrique
+- **Filtres avancés** — par type d'activité, milieu, période, activité spécifique, et plage de pente
+- **Historique des sorties** — liste complète avec filtres et stats résumées
 
 ---
 
@@ -100,7 +98,7 @@ resources/js/
 
 ### Prérequis
 
-- PHP >= 8.2 avec extensions `pdo_sqlite`, `sqlite3`, `xml`, `mbstring`, `fileinfo`
+- PHP >= 8.3 avec extensions `pdo_sqlite`, `sqlite3`, `xml`, `mbstring`, `fileinfo`, `pcov`
 - Composer >= 2.x
 - Node.js >= 18
 
@@ -135,7 +133,7 @@ php artisan serve       # Backend sur http://localhost:8000
 npm run dev             # Frontend Vite sur http://localhost:5173
 ```
 
-Ouvrez `http://localhost:5173`, saisissez le token généré par le seeder, c'est parti.
+Ouvrez `http://localhost:8000`, saisissez le token généré par le seeder, c'est parti.
 
 ---
 
@@ -204,12 +202,12 @@ GET /api/stats
 
 - [x] Cadrage du projet et architecture
 - [x] **P1** — Setup (Laravel 12, Pest, Sanctum, Vue.js 3)
-- [ ] **P2** — Modèle de données (migrations, modèles Eloquent)
-- [ ] **P3** — Algo GPX (parsing, segmentation, calcul des stats) — *TDD*
-- [ ] **P4** — API REST (endpoints + feature tests)
-- [ ] **P5** — Frontend Vue.js (dashboard, graphes, filtres dynamiques)
-- [ ] **P6** — Qualité (couverture, PHPDoc, linting)
-- [ ] **P7** — DevOps (CI GitHub Actions, documentation)
+- [x] **P2** — Modèle de données (migrations, modèles Eloquent)
+- [x] **P3** — Algo GPX (parsing, segmentation, calcul des stats) — *TDD*
+- [x] **P4** — API REST (endpoints + feature tests)
+- [x] **P5** — Frontend Vue.js (dashboard, graphes, filtres dynamiques)
+- [x] **P6** — Qualité (couverture, PHPDoc, linting)
+- [x] **P7** — DevOps (CI GitHub Actions, documentation)
 
 ---
 

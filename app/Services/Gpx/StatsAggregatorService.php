@@ -9,8 +9,8 @@ class StatsAggregatorService
     /**
      * Agrège les stats de chaque segment et calcule les stats globales de l'activité.
      *
-     * @param  array<int, array{type: string, slope_class: string, order: int, points: array}> $segments
-     * @param  array<int, array{lat: float, lon: float, ele: float|null, time: Carbon|null}> $allPoints
+     * @param  array<int, array{type: string, slope_class: string, order: int, points: array}> $segments   Segments issus du SegmentationService
+     * @param  array<int, array{lat: float, lon: float, ele: float|null, time: \Carbon\Carbon|null}> $allPoints Points bruts pour le calcul de la durée en mouvement
      * @return array{activity_stats: array, segments: array}
      */
     public function aggregate(array $segments, array $allPoints = []): array

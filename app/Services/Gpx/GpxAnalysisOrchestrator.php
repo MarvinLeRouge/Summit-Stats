@@ -11,11 +11,12 @@ class GpxAnalysisOrchestrator
     ) {}
 
     /**
-     * Exécute le pipeline complet d'analyse d'un fichier GPX.
+     * Analyse complète d'une trace GPX.
+     * Pipeline : GpxParserService → SegmentationService → StatsAggregatorService.
      *
      * @param  string $gpxFilePath Chemin absolu vers le fichier GPX
      * @return array{activity_stats: array, segments: array}
-     * @throws \App\Exceptions\GpxParseException
+     * @throws \App\Exceptions\GpxParseException Si le fichier est invalide ou introuvable
      */
     public function analyze(string $gpxFilePath): array
     {

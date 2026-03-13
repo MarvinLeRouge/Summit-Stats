@@ -11,8 +11,8 @@ class GpxParserService
      * Parse un fichier GPX et retourne la liste des trackpoints normalisés.
      *
      * @param  string $filePath Chemin absolu vers le fichier GPX
-     * @return array<int, array{lat: float, lon: float, ele: float|null, time: Carbon|null}>
-     * @throws GpxParseException
+     * @return array<int, array{lat: float, lon: float, ele: float|null, time: \Carbon\Carbon|null}>
+     * @throws \App\Exceptions\GpxParseException Si le fichier est introuvable, invalide ou vide
      */
     public function parse(string $filePath): array
     {

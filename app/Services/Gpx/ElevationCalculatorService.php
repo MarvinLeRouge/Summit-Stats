@@ -10,9 +10,10 @@ class ElevationCalculatorService
     private const SMOOTHING_WINDOW = 5; // lissage
 
     /**
-     * Calcule la distance totale en km entre une liste de points (formule de Haversine).
+     * Calcule la distance totale entre une liste de points GPS via la formule de Haversine.
      *
-     * @param array<int, array{lat: float, lon: float, ele: float|null, time: Carbon|null}> $points
+     * @param  array<int, array{lat: float, lon: float, ele: float|null, time: \Carbon\Carbon|null}> $points
+     * @return float Distance en kilomètres
      */
     public function totalDistance(array $points): float
     {
@@ -31,9 +32,11 @@ class ElevationCalculatorService
     }
 
     /**
-     * Calcule le dénivelé positif total (D+) en mètres.
+     * Calcule le dénivelé positif cumulé avec lissage par moyenne glissante.
+     * Les variations inférieures au seuil de bruit sont ignorées.
      *
-     * @param array<int, array{lat: float, lon: float, ele: float|null, time: Carbon|null}> $points
+     * @param  array<int, array{lat: float, lon: float, ele: float|null, time: \Carbon\Carbon|null}> $points
+     * @return int Dénivelé positif en mètres
      */
     public function elevationGain(array $points): int
     {
@@ -50,9 +53,11 @@ class ElevationCalculatorService
     }
 
     /**
-     * Calcule le dénivelé négatif total (D-) en mètres (valeur positive).
+     * Calcule le dénivelé négatif cumulé avec lissage par moyenne glissante.
+     * Les variations inférieures au seuil de bruit sont ignorées.
      *
-     * @param array<int, array{lat: float, lon: float, ele: float|null, time: Carbon|null}> $points
+     * @param  array<int, array{lat: float, lon: float, ele: float|null, time: \Carbon\Carbon|null}> $points
+     * @return int Dénivelé négatif en mètres (valeur positive)
      */
     public function elevationLoss(array $points): int
     {
@@ -103,9 +108,11 @@ class ElevationCalculatorService
     }
 
     /**
-     * Calcule la durée totale en secondes à partir des timestamps.
+     * Calcule la durée totale entre le premier et le dernier point horodaté.
+     * Les pauses sont incluses dans le calcul.
      *
-     * @param array<int, array{lat: float, lon: float, ele: float|null, time: Carbon|null}> $points
+     * @param  array<int, array{lat: float, lon: float, ele: float|null, time: \Carbon\Carbon|null}> $points
+     * @return int Durée totale en secondes, 0 si pas de timestamps
      */
     public function totalDuration(array $points): int
     {
@@ -120,9 +127,11 @@ class ElevationCalculatorService
     }
 
     /**
-     * Calcule la durée en mouvement en excluant les pauses > 30 secondes.
+     * Calcule la durée en mouvement en excluant les pauses dépassant le seuil configuré.
      *
-     * @param array<int, array{lat: float, lon: float, ele: float|null, time: Carbon|null}> $points
+     * @param  array<int, array{lat: float, lon: float, ele: float|null, time: \Carbon\Carbon|null}> $points
+     * @return int Durée en mouvement en secondes
+     * @see config('geo.pause_threshold_seconds')
      */
     public function movingDuration(array $points): int
     {

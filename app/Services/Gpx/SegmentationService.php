@@ -7,12 +7,10 @@ use Carbon\Carbon;
 class SegmentationService
 {
     /**
-     * Segmente une liste de trackpoints en segments homogènes.
+     * Segmente une liste de points GPS en intervalles homogènes selon le type et la classe de pente.
+     * Les intervalles consécutifs de même type et classe sont fusionnés.
      *
-     * Chaque segment regroupe des points consécutifs ayant la même classe
-     * de pente et le même type (montée/descente/plat).
-     *
-     * @param  array<int, array{lat: float, lon: float, ele: float|null, time: Carbon|null}> $points
+     * @param  array<int, array{lat: float, lon: float, ele: float|null, time: \Carbon\Carbon|null}> $points
      * @return array<int, array{type: string, slope_class: string, order: int, point_index_start: int, point_index_end: int, points: array}>
      */
     public function segment(array $points): array

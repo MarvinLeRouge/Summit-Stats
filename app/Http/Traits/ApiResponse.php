@@ -18,7 +18,7 @@ trait ApiResponse
 
     protected function noContent(): JsonResponse
     {
-        return response()->json(null, 204);
+        return response()->json(null, 204, [], JSON_FORCE_OBJECT);
     }
 
     protected function error(string $message, int $status = 400, array $errors = []): JsonResponse

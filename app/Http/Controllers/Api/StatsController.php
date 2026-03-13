@@ -102,10 +102,10 @@ class StatsController extends Controller
             ->when($request->slope_min || $request->slope_max || $request->slope_class, function ($q) use ($request) {
                 // Filtrer les activités qui ont au moins un segment dans l'intervalle de pente
                 $q->whereHas('segments', function ($sq) use ($request) {
-                    $q->when($request->slope_class, fn($q, $v) => $q->where('slope_class', $v))
-                    ->when($request->slope_min !== null, fn($q) => $q->where('avg_slope_pct', '>=', $request->slope_min))
-                    ->when($request->slope_max !== null, fn($q) => $q->where('avg_slope_pct', '<=', $request->slope_max));
-                  });
+                    $sq->when($request->slope_class, fn($q, $v) => $q->where('slope_class', $v))
+                    ->when($request->slope_min,   fn($q, $v) => $q->where('avg_slope_pct', '>=', $v))
+                    ->when($request->slope_max,   fn($q, $v) => $q->where('avg_slope_pct', '<=', $v));
+                });
             })
             ->orderBy('date')
             ->get()

@@ -119,3 +119,21 @@ it('classifies extreme slope correctly', function () {
 
     expect($segments[0]['slope_class'])->toBe('gt35');
 });
+
+it('returns empty array when trace has only one point', function () {
+    $points = [
+        ['lat' => 45.0, 'lon' => 6.0, 'ele' => 1000.0, 'time' => null],
+    ];
+
+    expect($this->service->segment($points))->toBeEmpty();
+});
+
+it('classifies slope above 35% as gt35', function () {
+    $points = [
+        ['lat' => 45.0,    'lon' => 6.0, 'ele' => 1000.0, 'time' => null],
+        ['lat' => 45.0001, 'lon' => 6.0, 'ele' => 1050.0, 'time' => null],
+    ];
+
+    $segments = $this->service->segment($points);
+    expect($segments[0]['slope_class'])->toBe('gt35');
+});

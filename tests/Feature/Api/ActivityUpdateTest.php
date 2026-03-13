@@ -55,3 +55,25 @@ it('returns 401 without token', function () {
     $this->putJson("/api/activities/{$activity->id}", [])
         ->assertUnauthorized();
 });
+
+it('recalculates stats for an activity', function () {
+    $gpxContent = file_get_contents(base_path('tests/Fixtures/gpx/simple_track.gpx'));
+    Storage::disk('local')->put('gpx/trace.gpx', $gpxContent);
+
+    $activity = Activity::factory()->create(['gpx_path' => 'gpx/trace.gpx']);
+
+    $this->withToken($this->token)
+        ->postJson("/api/activities/{$activity->id}/recalculate")
+        ->assertOk()
+        ->assertJsonStructure([
+            'success',
+            'data' => ['id', 'title', 'segments'],
+        ]);
+});
+
+it('returns 401 on recalculate without token', function () {
+    $activity = Activity::factory()->create();
+
+    $this->postJson("/api/activities/{$activity->id}/recalculate")
+        ->assertUnauthorized();
+});

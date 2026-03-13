@@ -91,3 +91,27 @@ it('calculates moving duration excluding pauses', function () {
 
     expect($this->calculator->movingDuration($points))->toBe(40);
 });
+
+it('handles null elevation in smoothing window', function () {
+    $points = [
+        ['lat' => 0, 'lon' => 0, 'ele' => null, 'time' => null],
+        ['lat' => 0, 'lon' => 0, 'ele' => null, 'time' => null],
+        ['lat' => 0, 'lon' => 0, 'ele' => null, 'time' => null],
+        ['lat' => 0, 'lon' => 0, 'ele' => null, 'time' => null],
+        ['lat' => 0, 'lon' => 0, 'ele' => null, 'time' => null],
+        ['lat' => 0, 'lon' => 0, 'ele' => null, 'time' => null],
+    ];
+
+    expect($this->calculator->elevationGain($points))->toBe(0);
+    expect($this->calculator->elevationLoss($points))->toBe(0);
+});
+
+it('skips points without timestamp in movingDuration', function () {
+    $points = [
+        ['lat' => 0, 'lon' => 0, 'ele' => 0, 'time' => Carbon::parse('2024-06-15T08:00:00Z')],
+        ['lat' => 0, 'lon' => 0, 'ele' => 0, 'time' => null],
+        ['lat' => 0, 'lon' => 0, 'ele' => 0, 'time' => Carbon::parse('2024-06-15T08:00:20Z')],
+    ];
+
+    expect($this->calculator->movingDuration($points))->toBe(0);
+});

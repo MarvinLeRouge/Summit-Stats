@@ -10,4 +10,5 @@ return [
     */
     'earth_radius_km' => 6371,
     'earth_radius_m'  => 6371000,
+    'pause_threshold_seconds' => 30,
 ];

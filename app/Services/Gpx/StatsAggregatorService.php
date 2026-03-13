@@ -99,7 +99,7 @@ class StatsAggregatorService
         $summitAscentSpeedMh = $this->summitAscentSpeed($segments);
 
         // Vitesse ascensionnelle plus long tronçon non descendant
-        $longestAscentSpeedMh = $this->longestNonDescentSpeed($segments);
+        $longestAscent = $this->longestNonDescentSpeed($segments);
 
         // Vitesses à plat et en descente
         $avgFlatSpeedKmh    = $this->avgSpeed($flatSegments);
@@ -126,7 +126,8 @@ class StatsAggregatorService
             'avg_speed_moving_kmh'     => $avgSpeedMovingKmh,
             'avg_ascent_speed_mh'      => $avgAscentSpeedMh,
             'summit_ascent_speed_mh'   => $summitAscentSpeedMh,
-            'longest_ascent_speed_mh'  => $longestAscentSpeedMh,
+            'longest_ascent_speed_mh'      => $longestAscent['speed'],
+            'longest_ascent_distance_km'   => $longestAscent['distance_km'],
             'avg_flat_speed_kmh'       => $avgFlatSpeedKmh,
             'avg_descent_speed_kmh'    => $avgDescentSpeedKmh,
             'avg_descent_rate_mh'      => $avgDescentRateMh,
@@ -174,46 +175,52 @@ class StatsAggregatorService
     }
 
     /**
-     * Vitesse ascensionnelle sur le plus long tronçon non descendant
+     * Vitesse ascensionnelle et distance sur le plus long tronçon non descendant
      * (séquence de segments sans elevation_delta négatif).
      */
-    private function longestNonDescentSpeed(array $segments): ?float
+    private function longestNonDescentSpeed(array $segments): array
     {
-        $bestDuration = 0;
-        $bestDPlus    = 0;
-        $currentSegs  = [];
+        $bestDuration   = 0;
+        $bestDPlus      = 0;
+        $bestDistanceKm = 0;
+        $currentSegs    = [];
 
         foreach ($segments as $segment) {
             if ($segment['elevation_delta'] >= 0) {
                 $currentSegs[] = $segment;
             } else {
-                // Descente détectée — évaluer le tronçon courant
-                $this->evaluateTroncon($currentSegs, $bestDuration, $bestDPlus);
+                $this->evaluateTroncon($currentSegs, $bestDuration, $bestDPlus, $bestDistanceKm);
                 $currentSegs = [];
             }
         }
 
-        // Evaluer le dernier tronçon
-        $this->evaluateTroncon($currentSegs, $bestDuration, $bestDPlus);
+        $this->evaluateTroncon($currentSegs, $bestDuration, $bestDPlus, $bestDistanceKm);
 
-        return $bestDuration > 0 && $bestDPlus > 0
-            ? round($bestDPlus / ($bestDuration / 3600), 2)
-            : null;
+        return [
+            'speed'       => $bestDuration > 0 && $bestDPlus > 0
+                ? round($bestDPlus / ($bestDuration / 3600), 2)
+                : null,
+            'distance_km' => $bestDistanceKm > 0
+                ? round($bestDistanceKm, 3)
+                : null,
+        ];
     }
 
     /**
      * Évalue un tronçon et met à jour le meilleur si plus long.
      */
-    private function evaluateTroncon(array $segs, int &$bestDuration, float &$bestDPlus): void
+    private function evaluateTroncon(array $segs, int &$bestDuration, float &$bestDPlus, float &$bestDistanceKm): void
     {
         if (empty($segs)) return;
 
-        $duration = array_sum(array_column($segs, 'duration_seconds'));
-        $dPlus    = array_sum(array_filter(array_column($segs, 'elevation_delta'), fn($d) => $d > 0));
+        $duration   = array_sum(array_column($segs, 'duration_seconds'));
+        $dPlus      = array_sum(array_filter(array_column($segs, 'elevation_delta'), fn($d) => $d > 0));
+        $distanceKm = array_sum(array_column($segs, 'distance_km'));
 
         if ($duration > $bestDuration) {
-            $bestDuration = $duration;
-            $bestDPlus    = $dPlus;
+            $bestDuration   = $duration;
+            $bestDPlus      = $dPlus;
+            $bestDistanceKm = $distanceKm;
         }
     }
 

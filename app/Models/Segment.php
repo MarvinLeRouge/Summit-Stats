@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Segment extends Model
 {
     use HasFactory;
-    
+
     protected $fillable = [
         'activity_id',
         'type',
@@ -26,15 +26,15 @@ class Segment extends Model
     ];
 
     protected $casts = [
-        'distance_km'         => 'float',
-        'elevation_delta'     => 'integer',
-        'duration_seconds'    => 'integer',
-        'avg_speed_kmh'       => 'float',
-        'avg_slope_pct'       => 'float',
+        'distance_km' => 'float',
+        'elevation_delta' => 'integer',
+        'duration_seconds' => 'integer',
+        'avg_speed_kmh' => 'float',
+        'avg_slope_pct' => 'float',
         'avg_ascent_speed_mh' => 'float',
-        'point_index_start'   => 'integer',
-        'point_index_end'     => 'integer',
-        'order'               => 'integer',
+        'point_index_start' => 'integer',
+        'point_index_end' => 'integer',
+        'order' => 'integer',
     ];
 
     public function activity(): BelongsTo

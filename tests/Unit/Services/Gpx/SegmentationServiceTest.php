@@ -1,9 +1,10 @@
 <?php
 
 use App\Services\Gpx\SegmentationService;
+use Carbon\Carbon;
 
 beforeEach(function () {
-    $this->service = new SegmentationService();
+    $this->service = new SegmentationService;
 });
 
 /**
@@ -13,16 +14,16 @@ beforeEach(function () {
 function generatePointsWithSlope(float $slope, float $distanceM, int $count = 2, string $startTime = '2024-06-15T08:00:00Z', float $startEle = 1000.0): array
 {
     $points = [];
-    $stepM  = $distanceM / ($count - 1);
-    $dEle   = $stepM * ($slope / 100);
-    $dLat   = $stepM / 111000;
+    $stepM = $distanceM / ($count - 1);
+    $dEle = $stepM * ($slope / 100);
+    $dLat = $stepM / 111000;
 
     for ($i = 0; $i < $count; $i++) {
         $points[] = [
-            'lat'  => 45.0 + ($i * $dLat),
-            'lon'  => 6.0,
-            'ele'  => $startEle + ($i * $dEle),
-            'time' => \Carbon\Carbon::parse($startTime)->addSeconds($i * 60),
+            'lat' => 45.0 + ($i * $dLat),
+            'lon' => 6.0,
+            'ele' => $startEle + ($i * $dEle),
+            'time' => Carbon::parse($startTime)->addSeconds($i * 60),
         ];
     }
 
@@ -30,7 +31,7 @@ function generatePointsWithSlope(float $slope, float $distanceM, int $count = 2,
 }
 
 it('classifies a flat track as slope class lt5', function () {
-    $points   = generatePointsWithSlope(slope: 2, distanceM: 200, count: 3);
+    $points = generatePointsWithSlope(slope: 2, distanceM: 200, count: 3);
     $segments = $this->service->segment($points);
 
     expect($segments)->toHaveCount(1);
@@ -39,7 +40,7 @@ it('classifies a flat track as slope class lt5', function () {
 });
 
 it('classifies a moderate climb as slope class 5_15', function () {
-    $points   = generatePointsWithSlope(slope: 10, distanceM: 200, count: 3);
+    $points = generatePointsWithSlope(slope: 10, distanceM: 200, count: 3);
     $segments = $this->service->segment($points);
 
     expect($segments)->toHaveCount(1);
@@ -48,7 +49,7 @@ it('classifies a moderate climb as slope class 5_15', function () {
 });
 
 it('classifies a steep climb as slope class 25_35', function () {
-    $points   = generatePointsWithSlope(slope: 30, distanceM: 100, count: 3);
+    $points = generatePointsWithSlope(slope: 30, distanceM: 100, count: 3);
     $segments = $this->service->segment($points);
 
     expect($segments)->toHaveCount(1);
@@ -57,7 +58,7 @@ it('classifies a steep climb as slope class 25_35', function () {
 });
 
 it('classifies a descent correctly', function () {
-    $points   = generatePointsWithSlope(slope: -15, distanceM: 200, count: 3);
+    $points = generatePointsWithSlope(slope: -15, distanceM: 200, count: 3);
     $segments = $this->service->segment($points);
 
     expect($segments)->toHaveCount(1);
@@ -66,19 +67,19 @@ it('classifies a descent correctly', function () {
 });
 
 it('merges consecutive points with same slope class into one segment', function () {
-    $points   = generatePointsWithSlope(slope: 20, distanceM: 500, count: 5);
+    $points = generatePointsWithSlope(slope: 20, distanceM: 500, count: 5);
     $segments = $this->service->segment($points);
 
     expect($segments)->toHaveCount(1);
 });
 
 it('creates separate segments when slope class changes', function () {
-    $first  = generatePointsWithSlope(slope: 8,  distanceM: 200, count: 2, startEle: 1000.0);
-    
+    $first = generatePointsWithSlope(slope: 8, distanceM: 200, count: 2, startEle: 1000.0);
+
     // Partir de la position ET l'altitude du dernier point du premier groupe
     $lastPoint = end($first);
     $second = generatePointsWithSlope(slope: 28, distanceM: 100, count: 2, startEle: $lastPoint['ele']);
-    
+
     // Corriger la latitude de départ du second groupe
     $latOffset = $lastPoint['lat'] - 45.0;
     foreach ($second as &$point) {
@@ -95,7 +96,7 @@ it('creates separate segments when slope class changes', function () {
 
 it('assigns correct order to segments', function () {
     $points = array_merge(
-        generatePointsWithSlope(slope: 8,  distanceM: 200, count: 3),
+        generatePointsWithSlope(slope: 8, distanceM: 200, count: 3),
         generatePointsWithSlope(slope: 28, distanceM: 100, count: 3),
     );
 
@@ -106,7 +107,7 @@ it('assigns correct order to segments', function () {
 });
 
 it('sets correct point indexes', function () {
-    $points   = generatePointsWithSlope(slope: 10, distanceM: 200, count: 4);
+    $points = generatePointsWithSlope(slope: 10, distanceM: 200, count: 4);
     $segments = $this->service->segment($points);
 
     expect($segments[0]['point_index_start'])->toBe(0);
@@ -114,7 +115,7 @@ it('sets correct point indexes', function () {
 });
 
 it('classifies extreme slope correctly', function () {
-    $points   = generatePointsWithSlope(slope: 48, distanceM: 100, count: 3);
+    $points = generatePointsWithSlope(slope: 48, distanceM: 100, count: 3);
     $segments = $this->service->segment($points);
 
     expect($segments[0]['slope_class'])->toBe('gt35');

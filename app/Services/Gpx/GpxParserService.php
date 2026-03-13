@@ -10,13 +10,14 @@ class GpxParserService
     /**
      * Parse un fichier GPX et retourne la liste des trackpoints normalisés.
      *
-     * @param  string $filePath Chemin absolu vers le fichier GPX
-     * @return array<int, array{lat: float, lon: float, ele: float|null, time: \Carbon\Carbon|null}>
-     * @throws \App\Exceptions\GpxParseException Si le fichier est introuvable, invalide ou vide
+     * @param  string  $filePath  Chemin absolu vers le fichier GPX
+     * @return array<int, array{lat: float, lon: float, ele: float|null, time: Carbon|null}>
+     *
+     * @throws GpxParseException Si le fichier est introuvable, invalide ou vide
      */
     public function parse(string $filePath): array
     {
-        if (!file_exists($filePath)) {
+        if (! file_exists($filePath)) {
             throw new GpxParseException("Fichier GPX introuvable : {$filePath}");
         }
 
@@ -24,7 +25,7 @@ class GpxParserService
         $xml = simplexml_load_file($filePath);
 
         if ($xml === false) {
-            throw new GpxParseException("Fichier GPX invalide ou mal formé.");
+            throw new GpxParseException('Fichier GPX invalide ou mal formé.');
         }
 
         $points = [];
@@ -33,9 +34,9 @@ class GpxParserService
             foreach ($track->trkseg as $segment) {
                 foreach ($segment->trkpt as $point) {
                     $points[] = [
-                        'lat'  => (float) $point['lat'],
-                        'lon'  => (float) $point['lon'],
-                        'ele'  => isset($point->ele) ? (float) $point->ele : null,
+                        'lat' => (float) $point['lat'],
+                        'lon' => (float) $point['lon'],
+                        'ele' => isset($point->ele) ? (float) $point->ele : null,
                         'time' => isset($point->time)
                             ? Carbon::parse((string) $point->time)
                             : null,
@@ -45,7 +46,7 @@ class GpxParserService
         }
 
         if (empty($points)) {
-            throw new GpxParseException("Aucun trackpoint trouvé dans le fichier GPX.");
+            throw new GpxParseException('Aucun trackpoint trouvé dans le fichier GPX.');
         }
 
         return $points;

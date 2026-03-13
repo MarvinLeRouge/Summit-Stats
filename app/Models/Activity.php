@@ -27,34 +27,34 @@ class Activity extends Model
     ];
 
     protected $casts = [
-        'date'                          => 'date',
-        'distance_km'                   => 'float',
-        'elevation_gain'                => 'integer',
-        'elevation_loss'                => 'integer',
-        'duration_seconds'              => 'integer',
-        'moving_duration_seconds'       => 'integer',
-        'avg_speed_kmh'                 => 'float',
-        'avg_speed_moving_kmh'          => 'float',
-        'avg_ascent_speed_mh'           => 'float',
-        'summit_ascent_speed_mh'        => 'float',
-        'longest_ascent_speed_mh'       => 'float',
-        'longest_ascent_distance_km'    => 'float',
-        'avg_flat_speed_kmh'            => 'float',
-        'avg_descent_speed_kmh'         => 'float',
-        'avg_descent_rate_mh'           => 'float',
-        'pct_ascent'                    => 'float',
-        'pct_flat'                      => 'float',
-        'pct_descent'                   => 'float',
-        'pct_ascent_lt5'                => 'float',
-        'pct_ascent_5_15'               => 'float',
-        'pct_ascent_15_25'              => 'float',
-        'pct_ascent_25_35'              => 'float',
-        'pct_ascent_gt35'               => 'float',
-        'pct_descent_lt5'               => 'float',
-        'pct_descent_5_15'              => 'float',
-        'pct_descent_15_25'             => 'float',
-        'pct_descent_25_35'             => 'float',
-        'pct_descent_gt35'              => 'float',
+        'date' => 'date',
+        'distance_km' => 'float',
+        'elevation_gain' => 'integer',
+        'elevation_loss' => 'integer',
+        'duration_seconds' => 'integer',
+        'moving_duration_seconds' => 'integer',
+        'avg_speed_kmh' => 'float',
+        'avg_speed_moving_kmh' => 'float',
+        'avg_ascent_speed_mh' => 'float',
+        'summit_ascent_speed_mh' => 'float',
+        'longest_ascent_speed_mh' => 'float',
+        'longest_ascent_distance_km' => 'float',
+        'avg_flat_speed_kmh' => 'float',
+        'avg_descent_speed_kmh' => 'float',
+        'avg_descent_rate_mh' => 'float',
+        'pct_ascent' => 'float',
+        'pct_flat' => 'float',
+        'pct_descent' => 'float',
+        'pct_ascent_lt5' => 'float',
+        'pct_ascent_5_15' => 'float',
+        'pct_ascent_15_25' => 'float',
+        'pct_ascent_25_35' => 'float',
+        'pct_ascent_gt35' => 'float',
+        'pct_descent_lt5' => 'float',
+        'pct_descent_5_15' => 'float',
+        'pct_descent_15_25' => 'float',
+        'pct_descent_25_35' => 'float',
+        'pct_descent_gt35' => 'float',
     ];
 
     public function segments(): HasMany
@@ -66,6 +66,7 @@ class Activity extends Model
     {
         $h = intdiv($this->duration_seconds, 3600);
         $m = intdiv($this->duration_seconds % 3600, 60);
-        return "{$h}h" . str_pad($m, 2, '0', STR_PAD_LEFT);
+
+        return "{$h}h".str_pad($m, 2, '0', STR_PAD_LEFT);
     }
 }

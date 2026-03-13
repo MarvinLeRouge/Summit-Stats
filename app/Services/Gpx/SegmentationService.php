@@ -10,7 +10,7 @@ class SegmentationService
      * Segmente une liste de points GPS en intervalles homogènes selon le type et la classe de pente.
      * Les intervalles consécutifs de même type et classe sont fusionnés.
      *
-     * @param  array<int, array{lat: float, lon: float, ele: float|null, time: \Carbon\Carbon|null}> $points
+     * @param  array<int, array{lat: float, lon: float, ele: float|null, time: Carbon|null}>  $points
      * @return array<int, array{type: string, slope_class: string, order: int, point_index_start: int, point_index_end: int, points: array}>
      */
     public function segment(array $points): array
@@ -41,12 +41,12 @@ class SegmentationService
             );
 
             $eleDelta = ($curr['ele'] ?? 0) - ($prev['ele'] ?? 0);
-            $slope    = $distanceM > 0 ? ($eleDelta / $distanceM) * 100 : 0;
+            $slope = $distanceM > 0 ? ($eleDelta / $distanceM) * 100 : 0;
 
             $intervals[] = [
-                'from'        => $i - 1,
-                'to'          => $i,
-                'type'        => $this->resolveType($slope),
+                'from' => $i - 1,
+                'to' => $i,
+                'type' => $this->resolveType($slope),
                 'slope_class' => $this->resolveSlopeClass(abs($slope)),
             ];
         }
@@ -59,16 +59,16 @@ class SegmentationService
      */
     private function mergeIntervals(array $intervals, array $points): array
     {
-        $segments   = [];
-        $order      = 1;
-        $current    = $intervals[0];
+        $segments = [];
+        $order = 1;
+        $current = $intervals[0];
         $startIndex = $current['from'];
 
         for ($i = 1; $i < count($intervals); $i++) {
             $interval = $intervals[$i];
 
             if (
-                $interval['type']        === $current['type'] &&
+                $interval['type'] === $current['type'] &&
                 $interval['slope_class'] === $current['slope_class']
             ) {
                 // Même classe — on étend le segment courant
@@ -77,27 +77,27 @@ class SegmentationService
 
             // Changement de classe — on ferme le segment courant
             $segments[] = [
-                'type'              => $current['type'],
-                'slope_class'       => $current['slope_class'],
-                'order'             => $order++,
+                'type' => $current['type'],
+                'slope_class' => $current['slope_class'],
+                'order' => $order++,
                 'point_index_start' => $startIndex,
-                'point_index_end'   => $intervals[$i - 1]['to'],
-                'points'            => array_slice($points, $startIndex, $intervals[$i - 1]['to'] - $startIndex + 1),
+                'point_index_end' => $intervals[$i - 1]['to'],
+                'points' => array_slice($points, $startIndex, $intervals[$i - 1]['to'] - $startIndex + 1),
             ];
 
-            $current    = $interval;
+            $current = $interval;
             $startIndex = $interval['from'];
         }
 
         // Fermer le dernier segment
         $lastInterval = end($intervals);
         $segments[] = [
-            'type'              => $current['type'],
-            'slope_class'       => $current['slope_class'],
-            'order'             => $order,
+            'type' => $current['type'],
+            'slope_class' => $current['slope_class'],
+            'order' => $order,
             'point_index_start' => $startIndex,
-            'point_index_end'   => $lastInterval['to'],
-            'points'            => array_slice($points, $startIndex, $lastInterval['to'] - $startIndex + 1),
+            'point_index_end' => $lastInterval['to'],
+            'points' => array_slice($points, $startIndex, $lastInterval['to'] - $startIndex + 1),
         ];
 
         return $segments;
@@ -110,8 +110,13 @@ class SegmentationService
     {
         $flatThreshold = config('slope_thresholds.classes')[0]['max']; // 5%
 
-        if ($slope >= $flatThreshold) return 'montee';
-        if ($slope <= -$flatThreshold) return 'descente';
+        if ($slope >= $flatThreshold) {
+            return 'montee';
+        }
+        if ($slope <= -$flatThreshold) {
+            return 'descente';
+        }
+
         return 'plat';
     }
 
@@ -139,7 +144,7 @@ class SegmentationService
      */
     private function haversineMeters(float $lat1, float $lon1, float $lat2, float $lon2): float
     {
-        $R    = config('geo.earth_radius_m');
+        $R = config('geo.earth_radius_m');
         $dLat = deg2rad($lat2 - $lat1);
         $dLon = deg2rad($lon2 - $lon1);
 

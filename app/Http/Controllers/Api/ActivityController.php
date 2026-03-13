@@ -21,10 +21,10 @@ class ActivityController extends Controller
     public function index(): JsonResponse
     {
         $activities = Activity::query()
-            ->when(request('type'),        fn($q, $v) => $q->where('type', $v))
-            ->when(request('environment'), fn($q, $v) => $q->where('environment', $v))
-            ->when(request('date_from'),   fn($q, $v) => $q->whereDate('date', '>=', $v))
-            ->when(request('date_to'),     fn($q, $v) => $q->whereDate('date', '<=', $v))
+            ->when(request('type'), fn ($q, $v) => $q->where('type', $v))
+            ->when(request('environment'), fn ($q, $v) => $q->where('environment', $v))
+            ->when(request('date_from'), fn ($q, $v) => $q->whereDate('date', '>=', $v))
+            ->when(request('date_to'), fn ($q, $v) => $q->whereDate('date', '<=', $v))
             ->orderByDesc('date')
             ->paginate(20);
 

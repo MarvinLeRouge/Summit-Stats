@@ -9,8 +9,8 @@ class StatsAggregatorService
     /**
      * Agrège les stats de chaque segment et calcule les stats globales de l'activité.
      *
-     * @param  array<int, array{type: string, slope_class: string, order: int, points: array}> $segments   Segments issus du SegmentationService
-     * @param  array<int, array{lat: float, lon: float, ele: float|null, time: \Carbon\Carbon|null}> $allPoints Points bruts pour le calcul de la durée en mouvement
+     * @param  array<int, array{type: string, slope_class: string, order: int, points: array}>  $segments  Segments issus du SegmentationService
+     * @param  array<int, array{lat: float, lon: float, ele: float|null, time: Carbon|null}>  $allPoints  Points bruts pour le calcul de la durée en mouvement
      * @return array{activity_stats: array, segments: array}
      */
     public function aggregate(array $segments, array $allPoints = []): array
@@ -23,7 +23,7 @@ class StatsAggregatorService
 
         return [
             'activity_stats' => $this->computeActivityStats($aggregatedSegments, $allPoints),
-            'segments'       => $aggregatedSegments,
+            'segments' => $aggregatedSegments,
         ];
     }
 
@@ -32,11 +32,11 @@ class StatsAggregatorService
      */
     private function aggregateSegment(array $segment, int $order): array
     {
-        $points          = $segment['points'];
-        $distanceKm      = $this->totalDistance($points);
-        $elevationDelta  = $this->elevationDelta($points);
+        $points = $segment['points'];
+        $distanceKm = $this->totalDistance($points);
+        $elevationDelta = $this->elevationDelta($points);
         $durationSeconds = $this->totalDuration($points);
-        $avgSpeedKmh     = $durationSeconds > 0
+        $avgSpeedKmh = $durationSeconds > 0
             ? round($distanceKm / ($durationSeconds / 3600), 2)
             : 0.0;
 
@@ -50,16 +50,16 @@ class StatsAggregatorService
         }
 
         return [
-            'type'                => $segment['type'],
-            'slope_class'         => $segment['slope_class'],
-            'order'               => $order,
-            'point_index_start'   => $segment['point_index_start'],
-            'point_index_end'     => $segment['point_index_end'],
-            'distance_km'         => round($distanceKm, 4),
-            'elevation_delta'     => $elevationDelta,
-            'duration_seconds'    => $durationSeconds,
-            'avg_speed_kmh'       => $avgSpeedKmh,
-            'avg_slope_pct'       => $avgSlopePct,
+            'type' => $segment['type'],
+            'slope_class' => $segment['slope_class'],
+            'order' => $order,
+            'point_index_start' => $segment['point_index_start'],
+            'point_index_end' => $segment['point_index_end'],
+            'distance_km' => round($distanceKm, 4),
+            'elevation_delta' => $elevationDelta,
+            'duration_seconds' => $durationSeconds,
+            'avg_speed_kmh' => $avgSpeedKmh,
+            'avg_slope_pct' => $avgSlopePct,
             'avg_ascent_speed_mh' => $avgAscentSpeedMh,
         ];
     }
@@ -73,8 +73,8 @@ class StatsAggregatorService
         $totalDuration = array_sum(array_column($segments, 'duration_seconds'));
 
         // Dénivelés
-        $elevationGain = array_sum(array_filter(array_column($segments, 'elevation_delta'), fn($d) => $d > 0));
-        $elevationLoss = abs(array_sum(array_filter(array_column($segments, 'elevation_delta'), fn($d) => $d < 0)));
+        $elevationGain = array_sum(array_filter(array_column($segments, 'elevation_delta'), fn ($d) => $d > 0));
+        $elevationLoss = abs(array_sum(array_filter(array_column($segments, 'elevation_delta'), fn ($d) => $d < 0)));
 
         // Vitesse moyenne totale
         $avgSpeedKmh = $totalDuration > 0
@@ -82,15 +82,15 @@ class StatsAggregatorService
             : 0.0;
 
         // Vitesse moyenne en mouvement
-        $movingDuration   = $this->computeMovingDuration($allPoints);
+        $movingDuration = $this->computeMovingDuration($allPoints);
         $avgSpeedMovingKmh = $movingDuration > 0
             ? round($totalDistance / ($movingDuration / 3600), 2)
             : null;
 
         // Segments par type
-        $ascentSegments  = array_values(array_filter($segments, fn($s) => $s['type'] === 'montee'));
-        $descentSegments = array_values(array_filter($segments, fn($s) => $s['type'] === 'descente'));
-        $flatSegments    = array_values(array_filter($segments, fn($s) => $s['type'] === 'plat'));
+        $ascentSegments = array_values(array_filter($segments, fn ($s) => $s['type'] === 'montee'));
+        $descentSegments = array_values(array_filter($segments, fn ($s) => $s['type'] === 'descente'));
+        $flatSegments = array_values(array_filter($segments, fn ($s) => $s['type'] === 'plat'));
 
         // Vitesse ascensionnelle moyenne (segments montants)
         $avgAscentSpeedMh = $this->ascentSpeed($ascentSegments);
@@ -102,38 +102,38 @@ class StatsAggregatorService
         $longestAscent = $this->longestNonDescentSpeed($segments);
 
         // Vitesses à plat et en descente
-        $avgFlatSpeedKmh    = $this->avgSpeed($flatSegments);
+        $avgFlatSpeedKmh = $this->avgSpeed($flatSegments);
         $avgDescentSpeedKmh = $this->avgSpeed($descentSegments);
-        $avgDescentRateMh   = $this->descentRate($descentSegments);
+        $avgDescentRateMh = $this->descentRate($descentSegments);
 
         // Répartition globale
-        $pctAscent  = $totalDistance > 0 ? round(array_sum(array_column($ascentSegments,  'distance_km')) / $totalDistance * 100, 1) : 0;
+        $pctAscent = $totalDistance > 0 ? round(array_sum(array_column($ascentSegments, 'distance_km')) / $totalDistance * 100, 1) : 0;
         $pctDescent = $totalDistance > 0 ? round(array_sum(array_column($descentSegments, 'distance_km')) / $totalDistance * 100, 1) : 0;
-        $pctFlat    = $totalDistance > 0 ? round(array_sum(array_column($flatSegments,    'distance_km')) / $totalDistance * 100, 1) : 0;
+        $pctFlat = $totalDistance > 0 ? round(array_sum(array_column($flatSegments, 'distance_km')) / $totalDistance * 100, 1) : 0;
 
         // Répartition par classe de pente
         $slopeClasses = ['lt5', '5_15', '15_25', '25_35', 'gt35'];
-        $pctBySlopeAscent  = $this->pctBySlopeClass($ascentSegments,  $totalDistance, $slopeClasses, 'pct_ascent');
+        $pctBySlopeAscent = $this->pctBySlopeClass($ascentSegments, $totalDistance, $slopeClasses, 'pct_ascent');
         $pctBySlopeDescent = $this->pctBySlopeClass($descentSegments, $totalDistance, $slopeClasses, 'pct_descent');
 
         return array_merge([
-            'distance_km'              => round($totalDistance, 4),
-            'elevation_gain'           => (int) $elevationGain,
-            'elevation_loss'           => (int) $elevationLoss,
-            'duration_seconds'         => $totalDuration,
-            'moving_duration_seconds'  => $movingDuration,
-            'avg_speed_kmh'            => $avgSpeedKmh,
-            'avg_speed_moving_kmh'     => $avgSpeedMovingKmh,
-            'avg_ascent_speed_mh'      => $avgAscentSpeedMh,
-            'summit_ascent_speed_mh'   => $summitAscentSpeedMh,
-            'longest_ascent_speed_mh'      => $longestAscent['speed'],
-            'longest_ascent_distance_km'   => $longestAscent['distance_km'],
-            'avg_flat_speed_kmh'       => $avgFlatSpeedKmh,
-            'avg_descent_speed_kmh'    => $avgDescentSpeedKmh,
-            'avg_descent_rate_mh'      => $avgDescentRateMh,
-            'pct_ascent'               => $pctAscent,
-            'pct_flat'                 => $pctFlat,
-            'pct_descent'              => $pctDescent,
+            'distance_km' => round($totalDistance, 4),
+            'elevation_gain' => (int) $elevationGain,
+            'elevation_loss' => (int) $elevationLoss,
+            'duration_seconds' => $totalDuration,
+            'moving_duration_seconds' => $movingDuration,
+            'avg_speed_kmh' => $avgSpeedKmh,
+            'avg_speed_moving_kmh' => $avgSpeedMovingKmh,
+            'avg_ascent_speed_mh' => $avgAscentSpeedMh,
+            'summit_ascent_speed_mh' => $summitAscentSpeedMh,
+            'longest_ascent_speed_mh' => $longestAscent['speed'],
+            'longest_ascent_distance_km' => $longestAscent['distance_km'],
+            'avg_flat_speed_kmh' => $avgFlatSpeedKmh,
+            'avg_descent_speed_kmh' => $avgDescentSpeedKmh,
+            'avg_descent_rate_mh' => $avgDescentRateMh,
+            'pct_ascent' => $pctAscent,
+            'pct_flat' => $pctFlat,
+            'pct_descent' => $pctDescent,
         ], $pctBySlopeAscent, $pctBySlopeDescent);
     }
 
@@ -142,7 +142,7 @@ class StatsAggregatorService
      */
     private function ascentSpeed(array $ascentSegments): ?float
     {
-        $totalD        = array_sum(array_filter(array_column($ascentSegments, 'elevation_delta'), fn($d) => $d > 0));
+        $totalD = array_sum(array_filter(array_column($ascentSegments, 'elevation_delta'), fn ($d) => $d > 0));
         $totalDuration = array_sum(array_column($ascentSegments, 'duration_seconds'));
 
         return $totalDuration > 0 ? round($totalD / ($totalDuration / 3600), 2) : null;
@@ -154,7 +154,7 @@ class StatsAggregatorService
     private function summitAscentSpeed(array $segments): ?float
     {
         // Trouver le segment contenant le point culminant
-        $maxEle        = null;
+        $maxEle = null;
         $summitOrderIdx = null;
 
         foreach ($segments as $idx => $segment) {
@@ -164,11 +164,13 @@ class StatsAggregatorService
             }
         }
 
-        if ($summitOrderIdx === null) return null;
+        if ($summitOrderIdx === null) {
+            return null;
+        }
 
         // Agréger du début jusqu'au segment sommet inclus
         $relevantSegments = array_slice($segments, 0, $summitOrderIdx + 1);
-        $dPlus    = array_sum(array_filter(array_column($relevantSegments, 'elevation_delta'), fn($d) => $d > 0));
+        $dPlus = array_sum(array_filter(array_column($relevantSegments, 'elevation_delta'), fn ($d) => $d > 0));
         $duration = array_sum(array_column($relevantSegments, 'duration_seconds'));
 
         return $duration > 0 && $dPlus > 0 ? round($dPlus / ($duration / 3600), 2) : null;
@@ -180,10 +182,10 @@ class StatsAggregatorService
      */
     private function longestNonDescentSpeed(array $segments): array
     {
-        $bestDuration   = 0;
-        $bestDPlus      = 0;
+        $bestDuration = 0;
+        $bestDPlus = 0;
         $bestDistanceKm = 0;
-        $currentSegs    = [];
+        $currentSegs = [];
 
         foreach ($segments as $segment) {
             if ($segment['elevation_delta'] >= 0) {
@@ -197,7 +199,7 @@ class StatsAggregatorService
         $this->evaluateTroncon($currentSegs, $bestDuration, $bestDPlus, $bestDistanceKm);
 
         return [
-            'speed'       => $bestDuration > 0 && $bestDPlus > 0
+            'speed' => $bestDuration > 0 && $bestDPlus > 0
                 ? round($bestDPlus / ($bestDuration / 3600), 2)
                 : null,
             'distance_km' => $bestDistanceKm > 0
@@ -211,15 +213,17 @@ class StatsAggregatorService
      */
     private function evaluateTroncon(array $segs, int &$bestDuration, float &$bestDPlus, float &$bestDistanceKm): void
     {
-        if (empty($segs)) return;
+        if (empty($segs)) {
+            return;
+        }
 
-        $duration   = array_sum(array_column($segs, 'duration_seconds'));
-        $dPlus      = array_sum(array_filter(array_column($segs, 'elevation_delta'), fn($d) => $d > 0));
+        $duration = array_sum(array_column($segs, 'duration_seconds'));
+        $dPlus = array_sum(array_filter(array_column($segs, 'elevation_delta'), fn ($d) => $d > 0));
         $distanceKm = array_sum(array_column($segs, 'distance_km'));
 
         if ($duration > $bestDuration) {
-            $bestDuration   = $duration;
-            $bestDPlus      = $dPlus;
+            $bestDuration = $duration;
+            $bestDPlus = $dPlus;
             $bestDistanceKm = $distanceKm;
         }
     }
@@ -242,7 +246,7 @@ class StatsAggregatorService
      */
     private function descentRate(array $descentSegments): ?float
     {
-        $totalDMinus  = abs(array_sum(array_filter(array_column($descentSegments, 'elevation_delta'), fn($d) => $d < 0)));
+        $totalDMinus = abs(array_sum(array_filter(array_column($descentSegments, 'elevation_delta'), fn ($d) => $d < 0)));
         $totalDuration = array_sum(array_column($descentSegments, 'duration_seconds'));
 
         return $totalDuration > 0 && $totalDMinus > 0
@@ -258,10 +262,10 @@ class StatsAggregatorService
         $result = [];
 
         foreach ($classes as $class) {
-            $key      = "{$prefix}_{$class}";
+            $key = "{$prefix}_{$class}";
             $distance = array_sum(
                 array_column(
-                    array_filter($segments, fn($s) => $s['slope_class'] === $class),
+                    array_filter($segments, fn ($s) => $s['slope_class'] === $class),
                     'distance_km'
                 )
             );
@@ -276,13 +280,17 @@ class StatsAggregatorService
      */
     private function computeMovingDuration(array $allPoints): int
     {
-        if (empty($allPoints)) return 0;
+        if (empty($allPoints)) {
+            return 0;
+        }
 
-        $moving          = 0;
-        $pauseThreshold  = config('geo.pause_threshold_seconds', 30);
+        $moving = 0;
+        $pauseThreshold = config('geo.pause_threshold_seconds', 30);
 
         for ($i = 1; $i < count($allPoints); $i++) {
-            if ($allPoints[$i]['time'] === null || $allPoints[$i - 1]['time'] === null) continue;
+            if ($allPoints[$i]['time'] === null || $allPoints[$i - 1]['time'] === null) {
+                continue;
+            }
 
             $dt = $allPoints[$i - 1]['time']->diffInSeconds($allPoints[$i]['time']);
             if ($dt <= $pauseThreshold) {
@@ -303,7 +311,7 @@ class StatsAggregatorService
         for ($i = 1; $i < count($points); $i++) {
             $distance += $this->haversine(
                 $points[$i - 1]['lat'], $points[$i - 1]['lon'],
-                $points[$i]['lat'],     $points[$i]['lon'],
+                $points[$i]['lat'], $points[$i]['lon'],
             );
         }
 
@@ -316,7 +324,7 @@ class StatsAggregatorService
     private function elevationDelta(array $points): int
     {
         $first = $points[0]['ele'] ?? 0;
-        $last  = $points[count($points) - 1]['ele'] ?? 0;
+        $last = $points[count($points) - 1]['ele'] ?? 0;
 
         return (int) round($last - $first);
     }
@@ -326,10 +334,12 @@ class StatsAggregatorService
      */
     private function totalDuration(array $points): int
     {
-        $first = collect($points)->first(fn($p) => $p['time'] !== null);
-        $last  = collect($points)->last(fn($p) => $p['time'] !== null);
+        $first = collect($points)->first(fn ($p) => $p['time'] !== null);
+        $last = collect($points)->last(fn ($p) => $p['time'] !== null);
 
-        if (!$first || !$last || $first === $last) return 0;
+        if (! $first || ! $last || $first === $last) {
+            return 0;
+        }
 
         return (int) $first['time']->diffInSeconds($last['time']);
     }
@@ -339,7 +349,7 @@ class StatsAggregatorService
      */
     private function haversine(float $lat1, float $lon1, float $lat2, float $lon2): float
     {
-        $R    = config('geo.earth_radius_km');
+        $R = config('geo.earth_radius_km');
         $dLat = deg2rad($lat2 - $lat1);
         $dLon = deg2rad($lon2 - $lon1);
 

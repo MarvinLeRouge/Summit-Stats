@@ -2,6 +2,7 @@
 
 use App\Models\Activity;
 use App\Models\Segment;
+use Illuminate\Support\Carbon;
 
 it('has segments relation', function () {
     $activity = Activity::factory()->create();
@@ -26,12 +27,12 @@ it('formats duration with zero minutes', function () {
 it('casts date as carbon instance', function () {
     $activity = Activity::factory()->make(['date' => '2024-06-15']);
 
-    expect($activity->date)->toBeInstanceOf(\Illuminate\Support\Carbon::class);
+    expect($activity->date)->toBeInstanceOf(Carbon::class);
 });
 
 it('casts numeric fields as correct types', function () {
     $activity = Activity::factory()->make([
-        'distance_km'    => '11.5',
+        'distance_km' => '11.5',
         'elevation_gain' => '470',
         'duration_seconds' => '11831',
     ]);

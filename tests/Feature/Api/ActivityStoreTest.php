@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Storage;
 
 beforeEach(function () {
     Storage::fake('local');
-    $this->user  = User::factory()->create();
+    $this->user = User::factory()->create();
     $this->token = $this->user->createToken('test')->plainTextToken;
 });
 
@@ -18,12 +18,12 @@ it('creates an activity from a GPX file', function () {
 
     $response = $this->withToken($this->token)
         ->postJson('/api/activities', [
-            'title'       => 'Sortie test',
-            'type'        => 'randonnee',
+            'title' => 'Sortie test',
+            'type' => 'randonnee',
             'environment' => 'montagne',
-            'date'        => '2024-06-15',
-            'comment'     => 'Premier test',
-            'gpx_file'    => $gpxFile,
+            'date' => '2024-06-15',
+            'comment' => 'Premier test',
+            'gpx_file' => $gpxFile,
         ]);
 
     $response->assertCreated()
@@ -42,10 +42,10 @@ it('creates an activity from a GPX file', function () {
 it('returns 422 if GPX file is missing', function () {
     $this->withToken($this->token)
         ->postJson('/api/activities', [
-            'title'       => 'Sans fichier',
-            'type'        => 'randonnee',
+            'title' => 'Sans fichier',
+            'type' => 'randonnee',
             'environment' => 'montagne',
-            'date'        => '2024-06-15',
+            'date' => '2024-06-15',
         ])
         ->assertUnprocessable();
 });
@@ -58,11 +58,11 @@ it('returns 422 if type is invalid', function () {
 
     $this->withToken($this->token)
         ->postJson('/api/activities', [
-            'title'       => 'Type invalide',
-            'type'        => 'cyclisme',
+            'title' => 'Type invalide',
+            'type' => 'cyclisme',
             'environment' => 'montagne',
-            'date'        => '2024-06-15',
-            'gpx_file'    => $gpxFile,
+            'date' => '2024-06-15',
+            'gpx_file' => $gpxFile,
         ])
         ->assertUnprocessable();
 });

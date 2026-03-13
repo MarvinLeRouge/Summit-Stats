@@ -12,7 +12,7 @@ class UserSeeder extends Seeder
         $user = User::firstOrCreate(
             ['email' => env('APP_USER_EMAIL', 'admin@summitstats.local')],
             [
-                'name'     => env('APP_USER_NAME', 'Summit Stats User'),
+                'name' => env('APP_USER_NAME', 'Summit Stats User'),
                 'password' => bcrypt(env('APP_USER_PASSWORD', 'changeme')),
             ]
         );
@@ -24,6 +24,6 @@ class UserSeeder extends Seeder
         $token = $user->createToken('main-token')->plainTextToken;
 
         $this->command->info("Token généré : {$token}");
-        $this->command->warn("Copie ce token dans ton .env frontend et dans Insomnia/Postman.");
+        $this->command->warn('Copie ce token dans ton .env frontend et dans Insomnia/Postman.');
     }
 }

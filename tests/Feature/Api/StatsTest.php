@@ -5,17 +5,17 @@ use App\Models\Segment;
 use App\Models\User;
 
 beforeEach(function () {
-    $this->user  = User::factory()->create();
+    $this->user = User::factory()->create();
     $this->token = $this->user->createToken('test')->plainTextToken;
 });
 
 it('returns progression data for a metric', function () {
     $activity = Activity::factory()->create(['date' => '2024-06-15', 'type' => 'trail']);
     Segment::factory()->create([
-        'activity_id'         => $activity->id,
-        'type'                => 'montee',
+        'activity_id' => $activity->id,
+        'type' => 'montee',
         'avg_ascent_speed_mh' => 450.0,
-        'avg_slope_pct'       => 20.0,
+        'avg_slope_pct' => 20.0,
     ]);
 
     $response = $this->withToken($this->token)
@@ -32,7 +32,7 @@ it('returns progression data for a metric', function () {
 });
 
 it('filters by activity type', function () {
-    $trail    = Activity::factory()->create(['type' => 'trail', 'date' => '2024-06-15']);
+    $trail = Activity::factory()->create(['type' => 'trail', 'date' => '2024-06-15']);
     $randonnee = Activity::factory()->create(['type' => 'randonnee', 'date' => '2024-06-16']);
 
     Segment::factory()->create(['activity_id' => $trail->id,     'type' => 'montee', 'avg_ascent_speed_mh' => 400.0, 'avg_slope_pct' => 20.0]);
@@ -114,10 +114,10 @@ it('returns elevation_gain filtered by slope', function () {
 it('returns avg_speed_moving_kmh metric', function () {
     $activity = Activity::factory()->create(['date' => '2024-06-15', 'type' => 'trail']);
     Segment::factory()->create([
-        'activity_id'     => $activity->id,
-        'type'            => 'montee',
-        'avg_speed_kmh'   => 4.5,
-        'avg_slope_pct'   => 10.0,
+        'activity_id' => $activity->id,
+        'type' => 'montee',
+        'avg_speed_kmh' => 4.5,
+        'avg_slope_pct' => 10.0,
     ]);
 
     $response = $this->withToken($this->token)

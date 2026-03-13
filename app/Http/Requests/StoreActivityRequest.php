@@ -14,12 +14,12 @@ class StoreActivityRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title'       => ['required', 'string', 'max:255'],
-            'type'        => ['required', 'in:randonnee,trail'],
+            'title' => ['required', 'string', 'max:255'],
+            'type' => ['required', 'in:randonnee,trail'],
             'environment' => ['required', 'in:urbain,campagne,montagne'],
-            'date'        => ['required', 'date'],
-            'comment'     => ['nullable', 'string'],
-            'gpx_file'    => ['required', 'file', 'mimes:gpx,xml', 'max:20480'],
+            'date' => ['required', 'date'],
+            'comment' => ['nullable', 'string'],
+            'gpx_file' => ['required', 'file', 'mimes:gpx,xml', 'max:20480'],
         ];
     }
 }

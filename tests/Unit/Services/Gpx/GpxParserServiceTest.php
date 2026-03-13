@@ -1,11 +1,11 @@
 <?php
 
-use App\Services\Gpx\GpxParserService;
 use App\Exceptions\GpxParseException;
+use App\Services\Gpx\GpxParserService;
 use Carbon\Carbon;
 
 beforeEach(function () {
-    $this->parser = new GpxParserService();
+    $this->parser = new GpxParserService;
     $this->fixturePath = base_path('tests/Fixtures/gpx');
 });
 
@@ -53,6 +53,6 @@ it('throws exception when GPX has no trackpoints', function () {
     $gpx = '<?xml version="1.0"?><gpx version="1.1" xmlns="http://www.topografix.com/GPX/1/1"><trk><trkseg></trkseg></trk></gpx>';
     file_put_contents(base_path('tests/Fixtures/gpx/empty_track.gpx'), $gpx);
 
-    expect(fn() => $this->parser->parse(base_path('tests/Fixtures/gpx/empty_track.gpx')))
-        ->toThrow(\App\Exceptions\GpxParseException::class);
+    expect(fn () => $this->parser->parse(base_path('tests/Fixtures/gpx/empty_track.gpx')))
+        ->toThrow(GpxParseException::class);
 });

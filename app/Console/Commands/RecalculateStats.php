@@ -9,7 +9,8 @@ use Illuminate\Support\Facades\Storage;
 
 class RecalculateStats extends Command
 {
-    protected $signature   = 'stats:recalculate {--id= : Recalculer une seule activité}';
+    protected $signature = 'stats:recalculate {--id= : Recalculer une seule activité}';
+
     protected $description = 'Recalcule les stats de toutes les activités depuis leur fichier GPX';
 
     public function handle(GpxAnalysisOrchestrator $orchestrator): int
@@ -24,6 +25,7 @@ class RecalculateStats extends Command
 
         if ($activities->isEmpty()) {
             $this->warn('Aucune activité trouvée.');
+
             return self::SUCCESS;
         }
 
@@ -55,15 +57,17 @@ class RecalculateStats extends Command
         $bar->finish();
         $this->newLine();
 
-        if (!empty($errors)) {
+        if (! empty($errors)) {
             $this->error('Erreurs rencontrées :');
             foreach ($errors as $error) {
                 $this->warn("  • {$error}");
             }
+
             return self::FAILURE;
         }
 
         $this->info('Recalcul terminé avec succès.');
+
         return self::SUCCESS;
     }
 }

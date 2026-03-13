@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Storage;
 
 beforeEach(function () {
     Storage::fake('local');
-    $this->user  = User::factory()->create();
+    $this->user = User::factory()->create();
     $this->token = $this->user->createToken('test')->plainTextToken;
 });
 

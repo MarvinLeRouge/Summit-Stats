@@ -8,10 +8,25 @@ class TestApiResponse
 {
     use ApiResponse;
 
-    public function callSuccess(mixed $data, int $status = 200) { return $this->success($data, $status); }
-    public function callCreated(mixed $data)                     { return $this->created($data); }
-    public function callNoContent()                              { return $this->noContent(); }
-    public function callError(string $msg, int $status, array $errors = []) { return $this->error($msg, $status, $errors); }
+    public function callSuccess(mixed $data, int $status = 200)
+    {
+        return $this->success($data, $status);
+    }
+
+    public function callCreated(mixed $data)
+    {
+        return $this->created($data);
+    }
+
+    public function callNoContent()
+    {
+        return $this->noContent();
+    }
+
+    public function callError(string $msg, int $status, array $errors = [])
+    {
+        return $this->error($msg, $status, $errors);
+    }
 }
 
 it('success() returns 200 with data', function () {
@@ -36,6 +51,6 @@ it('error() returns correct status with message and errors', function () {
     $test->assertBadRequest()->assertJson([
         'success' => false,
         'message' => 'Something went wrong',
-        'errors'  => ['field' => ['invalid']],
+        'errors' => ['field' => ['invalid']],
     ]);
 });

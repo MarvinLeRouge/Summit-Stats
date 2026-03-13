@@ -4,7 +4,7 @@ use App\Models\Activity;
 use App\Models\User;
 
 beforeEach(function () {
-    $this->user  = User::factory()->create();
+    $this->user = User::factory()->create();
     $this->token = $this->user->createToken('test')->plainTextToken;
 });
 

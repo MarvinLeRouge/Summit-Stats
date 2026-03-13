@@ -4,7 +4,7 @@ use App\Services\Gpx\ElevationCalculatorService;
 use Carbon\Carbon;
 
 beforeEach(function () {
-    $this->calculator = new ElevationCalculatorService();
+    $this->calculator = new ElevationCalculatorService;
 });
 
 it('calculates distance between two points using Haversine formula', function () {

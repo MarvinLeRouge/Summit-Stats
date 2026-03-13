@@ -18,9 +18,9 @@
             <p v-if="error" class="text-red-500 text-sm mb-4">{{ error }}</p>
 
             <button
-                @click="login"
                 :disabled="loading || !token"
                 class="w-full bg-blue-600 text-white py-2 px-4 rounded-md text-sm font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                @click="login"
             >
                 {{ loading ? 'Connexion...' : 'Se connecter' }}
             </button>

@@ -3,8 +3,8 @@
         <div class="flex items-center justify-between mb-6">
             <h1 class="text-2xl font-bold text-gray-800">Mes sorties</h1>
             <button
-                @click="showForm = true"
                 class="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700"
+                @click="showForm = true"
             >
                 + Importer une sortie
             </button>
@@ -12,13 +12,13 @@
 
         <!-- Filtres -->
         <div class="bg-white rounded-lg shadow-sm border p-4 mb-6 flex flex-wrap gap-4">
-            <select v-model="store.filters.type" @change="store.fetch()" class="border rounded px-3 py-1.5 text-sm">
+            <select v-model="store.filters.type" class="border rounded px-3 py-1.5 text-sm" @change="store.fetch()">
                 <option :value="null">Tous les types</option>
                 <option value="randonnee">Randonnée</option>
                 <option value="trail">Trail</option>
             </select>
 
-            <select v-model="store.filters.environment" @change="store.fetch()" class="border rounded px-3 py-1.5 text-sm">
+            <select v-model="store.filters.environment" class="border rounded px-3 py-1.5 text-sm" @change="store.fetch()">
                 <option :value="null">Tous les milieux</option>
                 <option value="urbain">Urbain</option>
                 <option value="campagne">Campagne</option>
@@ -27,18 +27,18 @@
 
             <input
                 v-model="store.filters.date_from"
-                @change="store.fetch()"
                 type="date"
                 class="border rounded px-3 py-1.5 text-sm"
+                @change="store.fetch()"
             />
             <input
                 v-model="store.filters.date_to"
-                @change="store.fetch()"
                 type="date"
                 class="border rounded px-3 py-1.5 text-sm"
+                @change="store.fetch()"
             />
 
-            <button @click="resetFilters" class="text-sm text-gray-500 hover:text-gray-700 underline">
+            <button class="text-sm text-gray-500 hover:text-gray-700 underline" @click="resetFilters">
                 Réinitialiser
             </button>
         </div>
@@ -68,8 +68,8 @@
                     <tr
                         v-for="activity in store.activities"
                         :key="activity.id"
-                        @click="$router.push(`/activities/${activity.id}`)"
                         class="hover:bg-gray-50 cursor-pointer"
+                        @click="$router.push(`/activities/${activity.id}`)"
                     >
                         <td class="px-4 py-3 font-medium text-blue-600">{{ activity.title }}</td>
                         <td class="px-4 py-3 text-gray-600 capitalize">{{ activity.type }}</td>

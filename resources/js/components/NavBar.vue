@@ -14,7 +14,7 @@
                     Sorties
                 </RouterLink>
             </div>
-            <button @click="logout" class="text-sm text-gray-400 hover:text-red-500">
+            <button class="text-sm text-gray-400 hover:text-red-500" @click="logout">
                 Déconnexion
             </button>
         </div>

@@ -85,7 +85,7 @@
                         <option v-for="cls in slopeClasses" :key="cls.value" :value="cls.value">{{ cls.label }}</option>
                     </select>
                 </div>
-                <button @click="resetFilters" class="text-sm text-gray-500 hover:text-gray-700 underline">
+                <button class="text-sm text-gray-500 hover:text-gray-700 underline" @click="resetFilters">
                     Réinitialiser
                 </button>
             </div>

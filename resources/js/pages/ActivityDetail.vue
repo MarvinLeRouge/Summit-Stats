@@ -1,6 +1,6 @@
 <template>
     <div class="max-w-5xl mx-auto px-4 py-8">
-        <button @click="$router.push('/activities')" class="text-sm text-blue-600 hover:underline mb-6 flex items-center gap-1">
+        <button class="text-sm text-blue-600 hover:underline mb-6 flex items-center gap-1" @click="$router.push('/activities')">
             ← Retour aux sorties
         </button>
 
@@ -17,11 +17,11 @@
                     <p v-if="activity.comment" class="text-gray-600 text-sm mt-2 italic">{{ activity.comment }}</p>
                 </div>
                 <div class="flex gap-3">
-                    <button @click="recalculate" :disabled="recalculating"
-                        class="text-sm text-blue-600 hover:text-blue-800 disabled:opacity-50">
+                    <button :disabled="recalculating" class="text-sm text-blue-600 hover:text-blue-800 disabled:opacity-50"
+                        @click="recalculate">
                         {{ recalculating ? 'Recalcul...' : '↺ Recalculer' }}
                     </button>
-                    <button @click="confirmDelete" class="text-sm text-red-500 hover:text-red-700">
+                    <button class="text-sm text-red-500 hover:text-red-700" @click="confirmDelete">
                         Supprimer
                     </button>
                 </div>
@@ -73,9 +73,9 @@
                 <!-- Toggle mode pour le détail par classe de pente -->
                 <div class="flex gap-4 mb-4 text-sm border-t pt-4">
                     <button v-for="mode in pctModes" :key="mode.value"
-                        @click="pctMode = mode.value"
                         :class="pctMode === mode.value ? 'text-blue-600 font-semibold border-b-2 border-blue-600' : 'text-gray-400 hover:text-gray-600'"
-                        class="pb-1">
+                        class="pb-1"
+                        @click="pctMode = mode.value">
                         {{ mode.label }}
                     </button>
                 </div>
@@ -153,7 +153,7 @@
 import { ref, computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import axios from 'axios';
-import { formatDate, formatDistance, formatDuration, formatElevation, formatSpeed } from '@/helpers/format';
+import { formatDate, formatDistance, formatDuration, formatSpeed } from '@/helpers/format';
 import StatCard from '@/components/StatCard.vue';
 import PctBar from '@/components/PctBar.vue';
 

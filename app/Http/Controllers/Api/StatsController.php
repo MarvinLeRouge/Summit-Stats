@@ -14,12 +14,27 @@ class StatsController extends Controller
     use ApiResponse;
 
     private const METRIC_UNITS = [
-        'avg_ascent_speed_mh' => 'm/h',
-        'avg_speed_kmh' => 'km/h',
-        'elevation_gain' => 'm',
-        'distance_km' => 'km',
+        'avg_speed_kmh'         => 'km/h',
+        'avg_speed_moving_kmh'  => 'km/h',
+        'avg_flat_speed_kmh'    => 'km/h',
+        'avg_descent_speed_kmh' => 'km/h',
+        'avg_descent_rate_mh'   => 'm/h',
+        'avg_ascent_speed_mh'   => 'm/h',
+        'elevation_gain'        => 'm',
+        'distance_km'           => 'km',
     ];
 
+    private const ACTIVITY_LEVEL_METRICS = [
+        'avg_speed_kmh',
+        'avg_speed_moving_kmh',
+        'avg_flat_speed_kmh',
+        'avg_descent_speed_kmh',
+        'avg_descent_rate_mh',
+    ];
+
+    private const SEGMENT_LEVEL_METRICS = [
+        'avg_ascent_speed_mh',
+    ];
     public function index(StatsRequest $request): JsonResponse
     {
         $metric = $request->input('metric');
@@ -45,9 +60,8 @@ class StatsController extends Controller
 
         // Construire les données selon la métrique
         $data = match (true) {
-            in_array($metric, ['avg_ascent_speed_mh', 'avg_speed_kmh']) => $this->getSegmentMetric($request, $activityIds, $metric),
-            in_array($metric, ['elevation_gain', 'distance_km']) => $this->getActivityMetric($request, $activityIds, $metric),
-            default => [],
+            in_array($metric, self::SEGMENT_LEVEL_METRICS) => $this->getSegmentMetric($request, $activityIds, $metric),
+            default => $this->getActivityMetric($request, $activityIds, $metric),
         };
 
         return response()->json([

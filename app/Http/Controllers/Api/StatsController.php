@@ -14,14 +14,14 @@ class StatsController extends Controller
     use ApiResponse;
 
     private const METRIC_UNITS = [
-        'avg_speed_kmh'         => 'km/h',
-        'avg_speed_moving_kmh'  => 'km/h',
-        'avg_flat_speed_kmh'    => 'km/h',
+        'avg_speed_kmh' => 'km/h',
+        'avg_speed_moving_kmh' => 'km/h',
+        'avg_flat_speed_kmh' => 'km/h',
         'avg_descent_speed_kmh' => 'km/h',
-        'avg_descent_rate_mh'   => 'm/h',
-        'avg_ascent_speed_mh'   => 'm/h',
-        'elevation_gain'        => 'm',
-        'distance_km'           => 'km',
+        'avg_descent_rate_mh' => 'm/h',
+        'avg_ascent_speed_mh' => 'm/h',
+        'elevation_gain' => 'm',
+        'distance_km' => 'km',
     ];
 
     private const ACTIVITY_LEVEL_METRICS = [
@@ -35,6 +35,7 @@ class StatsController extends Controller
     private const SEGMENT_LEVEL_METRICS = [
         'avg_ascent_speed_mh',
     ];
+
     public function index(StatsRequest $request): JsonResponse
     {
         $metric = $request->input('metric');

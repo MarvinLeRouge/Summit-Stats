@@ -119,6 +119,20 @@
                 </div>
             </div>
 
+            <!-- Carte OSM -->
+            <div class="bg-white rounded-lg shadow-sm border mb-6">
+                <button
+                    class="w-full flex items-center justify-between px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                    @click="showMap = !showMap"
+                >
+                    <span>Carte du tracé</span>
+                    <span>{{ showMap ? '▲' : '▼' }}</span>
+                </button>
+                <div v-if="showMap" class="px-4 pb-4">
+                    <TrackMap :activity-id="activity.id" />
+                </div>
+            </div>
+
             <!-- Tableau des segments -->
             <div class="bg-white rounded-lg shadow-sm border overflow-hidden mb-8">
                 <div class="px-4 py-3 border-b bg-gray-50">
@@ -171,6 +185,7 @@ import { formatDate, formatDistance, formatDuration, formatSpeed } from '@/helpe
 import StatCard from '@/components/StatCard.vue';
 import PctBar from '@/components/PctBar.vue';
 import ElevationProfile from '@/components/ElevationProfile.vue';
+import TrackMap from '@/components/TrackMap.vue';
 
 const route         = useRoute();
 const router        = useRouter();
@@ -178,6 +193,7 @@ const activity      = ref(null);
 const loading       = ref(true);
 const recalculating = ref(false);
 const showProfile = ref(false);
+const showMap = ref(false);
 const pctMode       = ref('total');
 
 const pctModes = [

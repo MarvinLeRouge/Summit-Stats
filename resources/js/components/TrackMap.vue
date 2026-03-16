@@ -1,0 +1,100 @@
+<template>
+    <div style="position: relative; height: 400px;">
+        <l-map
+            ref="map"
+            :center="center"
+            :zoom="13"
+            :use-global-leaflet="false"
+            style="height: 100%; width: 100%; border-radius: 8px;"
+        >
+            <l-tile-layer
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                attribution="&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors"
+            />
+            <l-polyline
+                v-if="latLngs.length > 0"
+                :lat-lngs="latLngs"
+                color="#3B82F6"
+                :weight="3"
+            />
+            <l-marker v-if="startPoint" :lat-lng="startPoint">
+                <l-tooltip>Départ</l-tooltip>
+            </l-marker>
+            <l-marker v-if="endPoint" :lat-lng="endPoint">
+                <l-tooltip>Arrivée</l-tooltip>
+            </l-marker>
+        </l-map>
+    </div>
+</template>
+
+<script setup>
+import { ref, computed, onMounted, nextTick } from 'vue';
+import axios from 'axios';
+import { LMap, LTileLayer, LPolyline, LMarker, LTooltip } from '@vue-leaflet/vue-leaflet';
+import 'leaflet/dist/leaflet.css';
+
+const props = defineProps({
+    activityId: { type: Number, required: true },
+});
+
+const map     = ref(null);
+const points  = ref([]);
+const loading = ref(true);
+
+const latLngs = computed(() =>
+    points.value.map(p => [p.lat, p.lon])
+);
+
+const startPoint = computed(() =>
+    points.value.length > 0 ? [points.value[0].lat, points.value[0].lon] : null
+);
+
+const endPoint = computed(() =>
+    points.value.length > 1
+        ? [points.value[points.value.length - 1].lat, points.value[points.value.length - 1].lon]
+        : null
+);
+
+const center = computed(() => {
+    if (points.value.length === 0) return [45.0, 6.0];
+    const lats = points.value.map(p => p.lat);
+    const lons = points.value.map(p => p.lon);
+    return [
+        (Math.min(...lats) + Math.max(...lats)) / 2,
+        (Math.min(...lons) + Math.max(...lons)) / 2,
+    ];
+});
+
+const bounds = computed(() => {
+    if (points.value.length === 0) return null;
+    const lats = points.value.map(p => p.lat);
+    const lons = points.value.map(p => p.lon);
+    return [
+        [Math.min(...lats), Math.min(...lons)],
+        [Math.max(...lats), Math.max(...lons)],
+    ];
+});
+
+const fetchPoints = async () => {
+    loading.value = true;
+    try {
+        const { data } = await axios.get(`/activities/${props.activityId}/track`);
+        points.value = data.data;
+    } finally {
+        loading.value = false;
+    }
+};
+
+onMounted(async () => {
+    await fetchPoints();
+    await nextTick();
+    if (points.value.length > 0 && map.value?.leafletObject) {
+        const lats = points.value.map(p => p.lat);
+        const lons = points.value.map(p => p.lon);
+        map.value.leafletObject.fitBounds([
+            [Math.min(...lats), Math.min(...lons)],
+            [Math.max(...lats), Math.max(...lons)],
+        ]);
+    }
+});
+</script>

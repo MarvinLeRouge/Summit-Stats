@@ -38,7 +38,7 @@ class StatsAggregatorService
         $durationSeconds = $this->totalDuration($points);
         $avgSpeedKmh = $durationSeconds > 0
             ? round($distanceKm / ($durationSeconds / 3600), 2)
-            : 0.0;
+            : null;
 
         $avgSlopePct = $distanceKm > 0
             ? round($elevationDelta / ($distanceKm * 1000) * 100, 2)
@@ -79,7 +79,7 @@ class StatsAggregatorService
         // Vitesse moyenne totale
         $avgSpeedKmh = $totalDuration > 0
             ? round($totalDistance / ($totalDuration / 3600), 2)
-            : 0.0;
+            : null;
 
         // Vitesse moyenne en mouvement
         $movingDuration = $this->computeMovingDuration($allPoints);

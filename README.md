@@ -8,13 +8,13 @@
 
 > *Une application full-stack Laravel 12 + Vue.js 3 construite en TDD strict, architecture en couches services et 99% de couverture de tests — du parsing algorithmique de traces GPX jusqu'au dashboard de progression.*
 
+![Status](https://img.shields.io/badge/Status-V2%20En%20Développement-blue)
 [![CI](https://github.com/MarvinLeRouge/Summit-Stats/actions/workflows/laravel.yml/badge.svg)](https://github.com/MarvinLeRouge/Summit-Stats/actions)
 ![PHP](https://img.shields.io/badge/PHP-8.3-777BB4?logo=php&logoColor=white)
 ![Laravel](https://img.shields.io/badge/Laravel-12-FF2D20?logo=laravel&logoColor=white)
 ![Vue.js](https://img.shields.io/badge/Vue.js-3-4FC08D?logo=vuedotjs&logoColor=white)
 ![Coverage](https://img.shields.io/badge/Coverage-99%25-brightgreen)
 ![Tests](https://img.shields.io/badge/Tests-89%20passing-brightgreen)
-![Status](https://img.shields.io/badge/Status-V2%20en%20développement-blue)
 ![License](https://img.shields.io/github/license/MarvinLeRouge/Summit-Stats?cacheSeconds=3600)
 
 ---
@@ -232,13 +232,13 @@ Ce projet est sous licence MIT - voir le fichier [LICENSE](LICENSE) pour plus de
 
 > *A full-stack Laravel 12 + Vue.js 3 application built with strict TDD, layered service architecture and 99% test coverage — from geospatial GPX parsing algorithms to a dynamic progression dashboard.*
 
+![Status](https://img.shields.io/badge/Status-V2%20In%20Development-blue)
 [![CI](https://github.com/MarvinLeRouge/Summit-Stats/actions/workflows/laravel.yml/badge.svg)](https://github.com/MarvinLeRouge/Summit-Stats/actions)
 ![PHP](https://img.shields.io/badge/PHP-8.3-777BB4?logo=php&logoColor=white)
 ![Laravel](https://img.shields.io/badge/Laravel-12-FF2D20?logo=laravel&logoColor=white)
 ![Vue.js](https://img.shields.io/badge/Vue.js-3-4FC08D?logo=vuedotjs&logoColor=white)
 ![Coverage](https://img.shields.io/badge/Coverage-99%25-brightgreen)
 ![Tests](https://img.shields.io/badge/Tests-89%20passing-brightgreen)
-![Status](https://img.shields.io/badge/Status-Delivered-brightgreen)
 ![License](https://img.shields.io/github/license/MarvinLeRouge/Summit-Stats?cacheSeconds=3600)
 
 ---

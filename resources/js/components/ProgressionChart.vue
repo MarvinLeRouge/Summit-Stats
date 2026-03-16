@@ -8,9 +8,10 @@
 import { ref, onMounted, onUnmounted, watch } from 'vue';
 import { Chart, registerables } from 'chart.js';
 import 'chartjs-adapter-date-fns';
+import zoomPlugin from 'chartjs-plugin-zoom';
 import { fr } from 'date-fns/locale';
 
-Chart.register(...registerables);
+Chart.register(...registerables, zoomPlugin);
 
 const props = defineProps({
     data: { type: Object, required: true },

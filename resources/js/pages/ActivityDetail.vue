@@ -105,6 +105,20 @@
                 </div>
             </div>
 
+            <!-- Profil altimétrique -->
+            <div class="bg-white rounded-lg shadow-sm border mb-6">
+                <button
+                    class="w-full flex items-center justify-between px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                    @click="showProfile = !showProfile"
+                >
+                    <span>Profil altimétrique</span>
+                    <span>{{ showProfile ? '▲' : '▼' }}</span>
+                </button>
+                <div v-if="showProfile" class="px-4 pb-4">
+                    <ElevationProfile :activity-id="activity.id" />
+                </div>
+            </div>
+
             <!-- Tableau des segments -->
             <div class="bg-white rounded-lg shadow-sm border overflow-hidden mb-8">
                 <div class="px-4 py-3 border-b bg-gray-50">
@@ -156,12 +170,14 @@ import axios from 'axios';
 import { formatDate, formatDistance, formatDuration, formatSpeed } from '@/helpers/format';
 import StatCard from '@/components/StatCard.vue';
 import PctBar from '@/components/PctBar.vue';
+import ElevationProfile from '@/components/ElevationProfile.vue';
 
 const route         = useRoute();
 const router        = useRouter();
 const activity      = ref(null);
 const loading       = ref(true);
 const recalculating = ref(false);
+const showProfile = ref(false);
 const pctMode       = ref('total');
 
 const pctModes = [

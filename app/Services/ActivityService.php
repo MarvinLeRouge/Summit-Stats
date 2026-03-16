@@ -14,13 +14,13 @@ class ActivityService
     ) {}
 
     /**
-     * Stocke un fichier GPX, analyse la trace et persiste l'activité avec ses segments.
+     * Stocke un fichier GPX, analyse la trace et persiste l'activité avec ses segments et points.
      *
      * @param  array{title: string, type: string, environment: string, date: string, comment: string|null}  $metadata
      */
     public function store(array $metadata, UploadedFile $gpxFile): Activity
     {
-        $path = $gpxFile->store('gpx', 'local');
+        $path     = $gpxFile->store('gpx', 'local');
         $analysis = $this->orchestrator->analyze(Storage::disk('local')->path($path));
 
         $activity = Activity::create([
@@ -33,6 +33,8 @@ class ActivityService
             $activity->segments()->create($segment);
         }
 
+        $this->persistTrackPoints($activity, $analysis['points']);
+
         return $activity->load('segments');
     }
 
@@ -44,13 +46,16 @@ class ActivityService
     {
         if ($gpxFile !== null) {
             Storage::disk('local')->delete($activity->gpx_path);
-            $path = $gpxFile->store('gpx', 'local');
+            $path     = $gpxFile->store('gpx', 'local');
             $analysis = $this->orchestrator->analyze(Storage::disk('local')->path($path));
 
             $activity->segments()->delete();
             foreach ($analysis['segments'] as $segment) {
                 $activity->segments()->create($segment);
             }
+
+            $activity->trackPoints()->delete();
+            $this->persistTrackPoints($activity, $analysis['points']);
 
             $activity->update([
                 ...$metadata,
@@ -69,7 +74,7 @@ class ActivityService
      */
     public function recalculate(Activity $activity): Activity
     {
-        $path = Storage::disk('local')->path($activity->gpx_path);
+        $path     = Storage::disk('local')->path($activity->gpx_path);
         $analysis = $this->orchestrator->analyze($path);
 
         $activity->segments()->delete();
@@ -77,17 +82,50 @@ class ActivityService
             $activity->segments()->create($segment);
         }
 
+        $activity->trackPoints()->delete();
+        $this->persistTrackPoints($activity, $analysis['points']);
+
         $activity->update($analysis['activity_stats']);
 
         return $activity->fresh()->load('segments');
     }
 
     /**
-     * Supprime une activité, ses segments et son fichier GPX.
+     * Supprime une activité, ses segments, ses points et son fichier GPX.
      */
     public function destroy(Activity $activity): void
     {
         Storage::disk('local')->delete($activity->gpx_path);
-        $activity->delete();
+        $activity->delete(); // cascade supprime segments et track_points
+    }
+
+    /**
+     * Persiste les points GPX d'une activité en masse.
+     *
+     * @param  array<int, array{lat: float, lon: float, ele: float|null, time: string|null, distance_from_start_km: float}>  $points
+     */
+    private function persistTrackPoints(Activity $activity, array $points): void
+    {
+        $now    = now();
+        $rows   = [];
+
+        foreach ($points as $order => $point) {
+            $rows[] = [
+                'activity_id'            => $activity->id,
+                'order'                  => $order,
+                'lat'                    => $point['lat'],
+                'lon'                    => $point['lon'],
+                'ele'                    => $point['ele'] ?? null,
+                'time'                   => isset($point['time']) ? $point['time']->toDateTimeString() : null,
+                'distance_from_start_km' => $point['distance_from_start_km'],
+                'created_at'             => $now,
+                'updated_at'             => $now,
+            ];
+        }
+
+        // Insert en masse par chunks de 500 pour éviter les limites SQLite
+        foreach (array_chunk($rows, 500) as $chunk) {
+            \DB::table('track_points')->insert($chunk);
+        }
     }
 }

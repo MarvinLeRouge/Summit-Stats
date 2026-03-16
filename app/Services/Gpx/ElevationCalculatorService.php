@@ -83,6 +83,30 @@ class ElevationCalculatorService
     }
 
     /**
+     * Calcule la distance cumulée depuis le départ pour chaque point.
+     *
+     * @param  array<int, array{lat: float, lon: float, ele: float|null, time: Carbon|null}>  $points
+     * @return array<int, float>  Distance cumulée en km pour chaque index
+     */
+    public function distancesFromStart(array $points): array
+    {
+        $distances  = [0.0];
+        $cumulative = 0.0;
+
+        for ($i = 1; $i < count($points); $i++) {
+            $cumulative += $this->haversine(
+                $points[$i - 1]['lat'],
+                $points[$i - 1]['lon'],
+                $points[$i]['lat'],
+                $points[$i]['lon'],
+            );
+            $distances[] = round($cumulative, 6);
+        }
+
+        return $distances;
+    }
+    
+    /**
      * Lisse les altitudes par moyenne glissante.
      *
      * @param  array<int, array{ele: float|null}>  $points
@@ -165,7 +189,7 @@ class ElevationCalculatorService
     /**
      * Formule de Haversine — distance en km entre deux points GPS.
      */
-    private function haversine(float $lat1, float $lon1, float $lat2, float $lon2): float
+    public function haversine(float $lat1, float $lon1, float $lat2, float $lon2): float
     {
         $R = config('geo.earth_radius_km');
         $dLat = deg2rad($lat2 - $lat1);

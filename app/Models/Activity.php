@@ -69,4 +69,9 @@ class Activity extends Model
 
         return "{$h}h".str_pad($m, 2, '0', STR_PAD_LEFT);
     }
+
+    public function trackPoints(): HasMany
+    {
+        return $this->hasMany(TrackPoint::class)->orderBy('order');
+    }    
 }

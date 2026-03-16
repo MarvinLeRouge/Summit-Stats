@@ -70,4 +70,13 @@ class ActivityController extends Controller
 
         return $this->success($updated);
     }
+
+    public function track(Activity $activity): JsonResponse
+    {
+        $points = $activity->trackPoints()
+            ->select('order', 'lat', 'lon', 'ele', 'distance_from_start_km')
+            ->get();
+
+        return $this->success($points);
+    }
 }

@@ -32,25 +32,32 @@
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                 <StatCard label="Distance" :value="formatDistance(activity.distance_km)" />
                 <StatCard label="Dénivelé" :value="`+${activity.elevation_gain} m / -${activity.elevation_loss} m`" />
-                <StatCard label="Durée" :value="`TTL : ${formatDuration(activity.duration_seconds)}`" :sub="`MVT : ${formatDuration(activity.moving_duration_seconds)}`" />
-                <StatCard label="Vitesse moy." :value="`TTL : ${formatSpeed(activity.avg_speed_kmh)}`" :sub="`MVT : ${formatSpeed(activity.avg_speed_moving_kmh)}`" />
+                <StatCard v-if="hastiming" label="Durée" :value="`TTL : ${formatDuration(activity.duration_seconds)}`" :sub="`MVT : ${formatDuration(activity.moving_duration_seconds)}`" />
+                <StatCard v-if="hastiming" label="Vitesse moy." :value="`TTL : ${formatSpeed(activity.avg_speed_kmh)}`" :sub="`MVT : ${formatSpeed(activity.avg_speed_moving_kmh)}`" />
+            </div>
+            <div v-if="!hastiming" class="text-xs text-amber-600 bg-amber-50 border border-amber-200 rounded px-3 py-2 mb-6">
+                Trace sans timing — durées et vitesses non disponibles.
             </div>
 
             <!-- Vitesses ascensionnelles -->
-            <div class="mb-2 text-xs font-semibold text-gray-400 uppercase tracking-wide">Vitesses ascensionnelles</div>
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
-                <StatCard label="Vit. asc. moy."         :value="formatAscentSpeed(activity.avg_ascent_speed_mh)" />
-                <StatCard label="Vit. asc. → sommet"     :value="formatAscentSpeed(activity.summit_ascent_speed_mh)" />
-                <StatCard label="Vit. asc. long tronçon" :value="formatAscentSpeed(activity.longest_ascent_speed_mh)" :sub="activity.longest_ascent_distance_km ? `${formatDistance(activity.longest_ascent_distance_km)}` : `aze`" />
-            </div>
+            <template v-if="hastiming">
+                <div class="mb-2 text-xs font-semibold text-gray-400 uppercase tracking-wide">Vitesses ascensionnelles</div>
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+                    <StatCard label="Vit. asc. moy."         :value="formatAscentSpeed(activity.avg_ascent_speed_mh)" />
+                    <StatCard label="Vit. asc. → sommet"     :value="formatAscentSpeed(activity.summit_ascent_speed_mh)" />
+                    <StatCard label="Vit. asc. long tronçon" :value="formatAscentSpeed(activity.longest_ascent_speed_mh)" :sub="activity.longest_ascent_distance_km ? `${formatDistance(activity.longest_ascent_distance_km)}` : `aze`" />
+                </div>
+            </template>
 
             <!-- Vitesses à plat et en descente -->
-            <div class="mb-2 text-xs font-semibold text-gray-400 uppercase tracking-wide">Plat & descente</div>
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
-                <StatCard label="Vit. moy. à plat"   :value="formatSpeed(activity.avg_flat_speed_kmh)" />
-                <StatCard label="Vit. moy. descente" :value="formatSpeed(activity.avg_descent_speed_kmh)" />
-                <StatCard label="Vit. desc. (D-/h)"  :value="formatAscentSpeed(activity.avg_descent_rate_mh)" />
-            </div>
+            <template v-if="hastiming">
+                <div class="mb-2 text-xs font-semibold text-gray-400 uppercase tracking-wide">Plat & descente</div>
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+                    <StatCard label="Vit. moy. à plat"   :value="formatSpeed(activity.avg_flat_speed_kmh)" />
+                    <StatCard label="Vit. moy. descente" :value="formatSpeed(activity.avg_descent_speed_kmh)" />
+                    <StatCard label="Vit. desc. (D-/h)"  :value="formatAscentSpeed(activity.avg_descent_rate_mh)" />
+                </div>
+            </template>
 
             <!-- Répartition du trajet -->
             <div class="mb-2 text-xs font-semibold text-gray-400 uppercase tracking-wide">Répartition du trajet</div>
@@ -195,6 +202,7 @@ const recalculating = ref(false);
 const showProfile = ref(false);
 const showMap = ref(false);
 const pctMode       = ref('total');
+const hastiming = computed(() => !!activity.value?.duration_seconds);
 
 const pctModes = [
     { value: 'total', label: '% du trajet total' },

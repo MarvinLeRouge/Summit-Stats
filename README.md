@@ -14,8 +14,16 @@
 ![Vue.js](https://img.shields.io/badge/Vue.js-3-4FC08D?logo=vuedotjs&logoColor=white)
 ![Coverage](https://img.shields.io/badge/Coverage-99%25-brightgreen)
 ![Tests](https://img.shields.io/badge/Tests-89%20passing-brightgreen)
-![Status](https://img.shields.io/badge/Status-Delivered-brightgreen)
+![Status](https://img.shields.io/badge/Status-V2%20en%20développement-blue)
 ![License](https://img.shields.io/github/license/MarvinLeRouge/Summit-Stats?cacheSeconds=3600)
+
+---
+
+## Versions
+
+**V1 (actuelle — [v1.0.0](https://github.com/MarvinLeRouge/Summit-Stats/releases/tag/v1.0.0))** — Pipeline complet : parsing GPX, segmentation par pente, 22 métriques par activité, API REST, dashboard Vue.js 3, 99% de couverture de tests, CI GitHub Actions.
+
+**V2 (en cours)** — Visualisation géographique : profil altimétrique zoomable, carte OSM interactive avec tracé GPX.
 
 ---
 
@@ -190,6 +198,8 @@ Projet personnel à double vocation :
 
 ## 🗺️ Roadmap
 
+### ✅ V1 — Livrée
+
 - [x] Cadrage et architecture projet
 - [x] **P1** — Setup (Laravel 12, Pest, Sanctum, Vue.js 3)
 - [x] **P2** — Modèle de données (migrations, Eloquent)
@@ -198,6 +208,14 @@ Projet personnel à double vocation :
 - [x] **P5** — Frontend Vue.js (dashboard, charts, dynamic filters)
 - [x] **P6** — Qualité (99% coverage, PHPDoc, Pint, ESLint)
 - [x] **P7** — DevOps (GitHub Actions CI, documentation)
+
+### 🚧 V2 — En cours
+
+- [ ] **P1** — Stockage des points GPS + endpoint `/api/activities/{id}/track`
+- [ ] **P2** — Profil altimétrique (Chart.js + zoom)
+- [ ] **P3** — Carte OSM avec tracé GPX (Leaflet)
+- [ ] **P4** — Qualité (tests, couverture, linting)
+- [ ] **P5** — DevOps (mise à jour CI, documentation V2)
 
 ---
 
@@ -222,6 +240,14 @@ Ce projet est sous licence MIT - voir le fichier [LICENSE](LICENSE) pour plus de
 ![Tests](https://img.shields.io/badge/Tests-89%20passing-brightgreen)
 ![Status](https://img.shields.io/badge/Status-Delivered-brightgreen)
 ![License](https://img.shields.io/github/license/MarvinLeRouge/Summit-Stats?cacheSeconds=3600)
+
+---
+
+## Versions
+
+**V1 (current — [v1.0.0](https://github.com/MarvinLeRouge/Summit-Stats/releases/tag/v1.0.0))** — Full pipeline: GPX parsing, slope segmentation, 22 metrics per activity, REST API, Vue.js 3 dashboard, 99% test coverage, GitHub Actions CI.
+
+**V2 (in progress)** — Geographic visualization: elevation profile with zoom, interactive OSM map with GPX trace overlay.
 
 ---
 
@@ -396,7 +422,9 @@ Personal project with a dual purpose:
 
 ## 🗺️ Roadmap
 
-- [x] Project scoping and architecture / Cadrage et architecture
+### ✅ V1 — Livrée
+
+- [x] Project scoping and architecture
 - [x] **P1** — Setup (Laravel 12, Pest, Sanctum, Vue.js 3)
 - [x] **P2** — Data model / Modèle de données (migrations, Eloquent)
 - [x] **P3** — GPX algorithm (parsing, segmentation, stats) — *strict TDD*
@@ -404,6 +432,14 @@ Personal project with a dual purpose:
 - [x] **P5** — Vue.js frontend (dashboard, charts, dynamic filters)
 - [x] **P6** — Quality (99% coverage, PHPDoc, Pint, ESLint)
 - [x] **P7** — DevOps (GitHub Actions CI, documentation)
+
+### 🚧 V2 — In progress
+
+- [ ] **P1** — Track points storage + `/api/activities/{id}/track` endpoint
+- [ ] **P2** — Elevation profile (Chart.js + zoom)
+- [ ] **P3** — OSM map with GPX trace (Leaflet)
+- [ ] **P4** — Quality (tests, coverage, linting)
+- [ ] **P5** — DevOps (CI update, V2 documentation)
 
 ---
 

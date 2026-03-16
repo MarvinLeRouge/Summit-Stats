@@ -7,10 +7,6 @@
             :use-global-leaflet="false"
             style="height: 100%; width: 100%; border-radius: 8px;"
         >
-            <l-tile-layer
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                attribution="&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors"
-            />
             <l-polyline
                 v-if="latLngs.length > 0"
                 :lat-lngs="latLngs"
@@ -30,8 +26,10 @@
 <script setup>
 import { ref, computed, onMounted, nextTick } from 'vue';
 import axios from 'axios';
-import { LMap, LTileLayer, LPolyline, LMarker, LTooltip } from '@vue-leaflet/vue-leaflet';
+import { LMap, LPolyline, LMarker, LTooltip } from '@vue-leaflet/vue-leaflet';
 import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
+import { tileLayerOffline } from 'leaflet.offline';
 
 const props = defineProps({
     activityId: { type: Number, required: true },
@@ -88,10 +86,25 @@ const fetchPoints = async () => {
 onMounted(async () => {
     await fetchPoints();
     await nextTick();
-    if (points.value.length > 0 && map.value?.leafletObject) {
+
+    const leafletMap = map.value?.leafletObject;
+    if (!leafletMap) return;
+
+    // Tile layer avec cache offline
+    const tileLayer = tileLayerOffline(
+        'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+        {
+            attribution: "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors",
+            maxZoom: 19,
+        }
+    );
+    tileLayer.addTo(leafletMap);
+
+    // FitBounds sur le tracé
+    if (points.value.length > 0) {
         const lats = points.value.map(p => p.lat);
         const lons = points.value.map(p => p.lon);
-        map.value.leafletObject.fitBounds([
+        leafletMap.fitBounds([
             [Math.min(...lats), Math.min(...lons)],
             [Math.max(...lats), Math.max(...lons)],
         ]);

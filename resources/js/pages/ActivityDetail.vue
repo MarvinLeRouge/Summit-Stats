@@ -122,7 +122,10 @@
                     <span>{{ showProfile ? '▲' : '▼' }}</span>
                 </button>
                 <div v-if="showProfile" class="px-4 pb-4">
-                    <ElevationProfile :activity-id="activity.id" />
+                    <ElevationProfile
+                        :activity-id="activity.id"
+                        @hover-point="showMap ? hoveredPoint = $event : null"
+                    />
                 </div>
             </div>
 
@@ -136,7 +139,10 @@
                     <span>{{ showMap ? '▲' : '▼' }}</span>
                 </button>
                 <div v-if="showMap" class="px-4 pb-4">
-                    <TrackMap :activity-id="activity.id" />
+                    <TrackMap
+                        :activity-id="activity.id"
+                        :hovered-point="hoveredPoint"
+                    />
                 </div>
             </div>
 
@@ -203,6 +209,7 @@ const showProfile = ref(false);
 const showMap = ref(false);
 const pctMode       = ref('total');
 const hastiming = computed(() => !!activity.value?.duration_seconds);
+const hoveredPoint = ref(null);
 
 const pctModes = [
     { value: 'total', label: '% du trajet total' },

@@ -37,6 +37,8 @@ const props = defineProps({
     activityId: { type: Number, required: true },
 });
 
+const emit = defineEmits(['hover-point']);
+
 const canvas   = ref(null);
 const loading  = ref(true);
 const points   = ref([]);
@@ -72,7 +74,7 @@ const buildChart = () => {
                 backgroundColor: 'rgba(59, 130, 246, 0.1)',
                 borderWidth:      1.5,
                 pointRadius:      0,
-                pointHoverRadius: 4,
+                pointHoverRadius: 8,
                 fill:             true,
                 tension:          0.2,
             }],
@@ -130,15 +132,31 @@ const buildChart = () => {
 const resetZoom = () => chart?.resetZoom();
 const onDblClick = () => chart?.resetZoom();
 
+const onMouseMove = (e) => {
+    if (!chart) return;
+    const elements = chart.getElementsAtEventForMode(e, 'index', { intersect: false }, false);
+    if (elements.length > 0) {
+        const idx   = elements[0].index;
+        const point = points.value[idx];
+        if (point) emit('hover-point', { lat: point.lat, lon: point.lon });
+    }
+};
+
+const onMouseLeave = () => emit('hover-point', null);
+
 onMounted(async () => {
     await fetchPoints();
     await nextTick();
     buildChart();
     canvas.value?.addEventListener('dblclick', onDblClick);
+    canvas.value?.addEventListener('mousemove', onMouseMove);
+    canvas.value?.addEventListener('mouseleave', onMouseLeave);
 });
 
 onUnmounted(() => {
     canvas.value?.removeEventListener('dblclick', onDblClick);
+    canvas.value?.removeEventListener('mousemove', onMouseMove);
+    canvas.value?.removeEventListener('mouseleave', onMouseLeave);
     chart?.destroy();
 });
 </script>

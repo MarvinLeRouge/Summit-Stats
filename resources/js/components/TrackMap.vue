@@ -19,6 +19,15 @@
             <l-marker v-if="endPoint" :lat-lng="endPoint">
                 <l-tooltip>Arrivée</l-tooltip>
             </l-marker>
+            <l-circle-marker
+                v-if="props.hoveredPoint"
+                :lat-lng="[props.hoveredPoint.lat, props.hoveredPoint.lon]"
+                :radius="8"
+                color="#2563EB"
+                fill-color="#3B82F6"
+                :fill-opacity="0.9"
+                :weight="2"
+            />        
         </l-map>
     </div>
 </template>
@@ -26,12 +35,13 @@
 <script setup>
 import { ref, computed, onMounted, nextTick } from 'vue';
 import axios from 'axios';
-import { LMap, LPolyline, LMarker, LTooltip } from '@vue-leaflet/vue-leaflet';
+import { LMap, LPolyline, LMarker, LTooltip, LCircleMarker } from '@vue-leaflet/vue-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { tileLayerOffline } from 'leaflet.offline';
 
 const props = defineProps({
-    activityId: { type: Number, required: true },
+    activityId:   { type: Number, required: true },
+    hoveredPoint: { type: Object, default: null },
 });
 
 const map     = ref(null);
@@ -99,4 +109,5 @@ onMounted(async () => {
         ]);
     }
 });
+
 </script>

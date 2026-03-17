@@ -73,5 +73,5 @@ class Activity extends Model
     public function trackPoints(): HasMany
     {
         return $this->hasMany(TrackPoint::class)->orderBy('order');
-    }    
+    }
 }

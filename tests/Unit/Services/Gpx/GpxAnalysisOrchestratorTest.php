@@ -5,7 +5,7 @@ use App\Services\Gpx\GpxAnalysisOrchestrator;
 
 it('produces coherent stats from a simple GPX fixture', function () {
     $orchestrator = app(GpxAnalysisOrchestrator::class);
-    $result       = $orchestrator->analyze(base_path('tests/Fixtures/gpx/simple_track.gpx'));
+    $result = $orchestrator->analyze(base_path('tests/Fixtures/gpx/simple_track.gpx'));
 
     expect($result)->toHaveKeys(['activity_stats', 'segments', 'points']);
     expect($result['activity_stats']['distance_km'])->toBeGreaterThan(0);
@@ -23,7 +23,7 @@ it('throws an exception for an invalid GPX file', function () {
 
 it('analyse correctement un GPX sans timing', function () {
     $orchestrator = app(GpxAnalysisOrchestrator::class);
-    $result       = $orchestrator->analyze(base_path('tests/Fixtures/gpx/no_time.gpx'));
+    $result = $orchestrator->analyze(base_path('tests/Fixtures/gpx/no_time.gpx'));
 
     expect($result)->toHaveKeys(['activity_stats', 'segments', 'points']);
     expect($result['activity_stats']['duration_seconds'])->toBe(0);
@@ -37,4 +37,12 @@ it('analyse correctement un GPX sans timing', function () {
     foreach ($result['points'] as $point) {
         expect($point['time'])->toBeNull();
     }
+});
+
+it('parse uniquement les points sans analyse complète', function () {
+    $orchestrator = app(GpxAnalysisOrchestrator::class);
+    $points = $orchestrator->parseOnly(base_path('tests/Fixtures/gpx/simple_track.gpx'));
+
+    expect($points)->not->toBeEmpty();
+    expect($points[0])->toHaveKeys(['lat', 'lon', 'ele', 'time']);
 });

@@ -138,3 +138,14 @@ it('classifies slope above 35% as gt35', function () {
     $segments = $this->service->segment($points);
     expect($segments[0]['slope_class'])->toBe('gt35');
 });
+
+it('classifie correctement une pente extrême supérieure à 35%', function () {
+    $points = [
+        ['lat' => 45.0, 'lon' => 6.0, 'ele' => 0.0,   'time' => null, 'distance_from_start_km' => 0.0],
+        ['lat' => 45.0, 'lon' => 6.001, 'ele' => 500.0, 'time' => null, 'distance_from_start_km' => 0.1],
+    ];
+
+    $segments = $this->service->segment($points);
+
+    expect($segments[0]['slope_class'])->toBe('gt35');
+});

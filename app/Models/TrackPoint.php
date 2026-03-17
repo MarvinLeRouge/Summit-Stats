@@ -21,12 +21,12 @@ class TrackPoint extends Model
     ];
 
     protected $casts = [
-        'lat'                    => 'float',
-        'lon'                    => 'float',
-        'ele'                    => 'float',
-        'time'                   => 'datetime',
+        'lat' => 'float',
+        'lon' => 'float',
+        'ele' => 'float',
+        'time' => 'datetime',
         'distance_from_start_km' => 'float',
-        'order'                  => 'integer',
+        'order' => 'integer',
     ];
 
     public function activity(): BelongsTo

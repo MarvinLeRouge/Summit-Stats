@@ -7,11 +7,11 @@ use App\Exceptions\GpxParseException;
 class GpxAnalysisOrchestrator
 {
     public function __construct(
-        private GpxParserService           $parser,
+        private GpxParserService $parser,
         private ElevationCalculatorService $calculator,
-        private ElevationEnrichmentService $enrichment,        
-        private SegmentationService        $segmentation,
-        private StatsAggregatorService     $aggregator,
+        private ElevationEnrichmentService $enrichment,
+        private SegmentationService $segmentation,
+        private StatsAggregatorService $aggregator,
     ) {}
 
     /**
@@ -26,8 +26,8 @@ class GpxAnalysisOrchestrator
      */
     public function analyze(string $gpxFilePath, ?callable $onProgress = null): array
     {
-        $points    = $this->parser->parse($gpxFilePath);
-        $points    = $this->enrichment->enrich($points, $onProgress);
+        $points = $this->parser->parse($gpxFilePath);
+        $points = $this->enrichment->enrich($points, $onProgress);
         $distances = $this->calculator->distancesFromStart($points);
 
         foreach ($points as $i => &$point) {

@@ -86,11 +86,11 @@ class ElevationCalculatorService
      * Calcule la distance cumulée depuis le départ pour chaque point.
      *
      * @param  array<int, array{lat: float, lon: float, ele: float|null, time: Carbon|null}>  $points
-     * @return array<int, float>  Distance cumulée en km pour chaque index
+     * @return array<int, float> Distance cumulée en km pour chaque index
      */
     public function distancesFromStart(array $points): array
     {
-        $distances  = [0.0];
+        $distances = [0.0];
         $cumulative = 0.0;
 
         for ($i = 1; $i < count($points); $i++) {
@@ -105,7 +105,7 @@ class ElevationCalculatorService
 
         return $distances;
     }
-    
+
     /**
      * Lisse les altitudes par moyenne glissante.
      *

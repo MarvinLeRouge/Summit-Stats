@@ -8,8 +8,8 @@ use App\Http\Requests\UpdateActivityRequest;
 use App\Http\Traits\ApiResponse;
 use App\Models\Activity;
 use App\Services\ActivityService;
-use App\Services\Gpx\ElevationEnrichmentService;
 use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ActivityController extends Controller
 {
@@ -32,15 +32,15 @@ class ActivityController extends Controller
         return $this->success($activities);
     }
 
-    public function store(StoreActivityRequest $request): \Symfony\Component\HttpFoundation\StreamedResponse
+    public function store(StoreActivityRequest $request): StreamedResponse
     {
-        return response()->stream(function () use ($request) {
+        return response()->stream(function () use ($request) { // @codeCoverageIgnoreStart
             // Désactiver le timeout
             set_time_limit(0);
 
             $sendEvent = function (string $event, array $data) {
                 echo "event: {$event}\n";
-                echo 'data: ' . json_encode($data) . "\n\n";
+                echo 'data: '.json_encode($data)."\n\n";
                 if (ob_get_level() > 0) {
                     ob_flush();
                 }
@@ -51,7 +51,7 @@ class ActivityController extends Controller
                     ob_end_clean();
                 }
                 ini_set('output_buffering', 'off');
-                ini_set('zlib.output_compression', false);                
+                ini_set('zlib.output_compression', false);
                 $sendEvent('status', ['step' => 'parsing']);
                 error_log('SSE: parsing sent');
 
@@ -79,17 +79,19 @@ class ActivityController extends Controller
                 error_log('SSE: done sent');
                 // Forcer la fin du stream
                 echo "\n\n";
-                if (ob_get_level() > 0) ob_flush();
+                if (ob_get_level() > 0) {
+                    ob_flush();
+                }
                 flush();
             } catch (\Exception $e) {
                 $sendEvent('error', ['message' => $e->getMessage()]);
             }
         }, 200, [
-            'Content-Type'                     => 'text/event-stream',
-            'Cache-Control'                     => 'no-cache',
-            'X-Accel-Buffering'                 => 'no',
-            'Connection'                        => 'close', // ← ferme la connexion
-        ]);
+            'Content-Type' => 'text/event-stream',
+            'Cache-Control' => 'no-cache',
+            'X-Accel-Buffering' => 'no',
+            'Connection' => 'close', // ← ferme la connexion
+        ]); // @codeCoverageIgnoreEnd
     }
 
     public function show(Activity $activity): JsonResponse

@@ -22,7 +22,7 @@ class ActivityService
      */
     public function store(array $metadata, UploadedFile $gpxFile, ?callable $onProgress = null): Activity
     {
-        $path     = $gpxFile->store('gpx', 'local');
+        $path = $gpxFile->store('gpx', 'local');
         $analysis = $this->orchestrator->analyze(Storage::disk('local')->path($path), $onProgress);
 
         $activity = Activity::create([
@@ -48,7 +48,7 @@ class ActivityService
     {
         if ($gpxFile !== null) {
             Storage::disk('local')->delete($activity->gpx_path);
-            $path     = $gpxFile->store('gpx', 'local');
+            $path = $gpxFile->store('gpx', 'local');
             $analysis = $this->orchestrator->analyze(Storage::disk('local')->path($path), $onProgress);
 
             $activity->segments()->delete();
@@ -76,7 +76,7 @@ class ActivityService
      */
     public function recalculate(Activity $activity): Activity
     {
-        $path     = Storage::disk('local')->path($activity->gpx_path);
+        $path = Storage::disk('local')->path($activity->gpx_path);
         $analysis = $this->orchestrator->analyze($path);
 
         $activity->segments()->delete();
@@ -108,20 +108,20 @@ class ActivityService
      */
     private function persistTrackPoints(Activity $activity, array $points): void
     {
-        $now    = now();
-        $rows   = [];
+        $now = now();
+        $rows = [];
 
         foreach ($points as $order => $point) {
             $rows[] = [
-                'activity_id'            => $activity->id,
-                'order'                  => $order,
-                'lat'                    => $point['lat'],
-                'lon'                    => $point['lon'],
-                'ele'                    => $point['ele'] ?? null,
-                'time'                   => isset($point['time']) ? $point['time']->toDateTimeString() : null,
+                'activity_id' => $activity->id,
+                'order' => $order,
+                'lat' => $point['lat'],
+                'lon' => $point['lon'],
+                'ele' => $point['ele'] ?? null,
+                'time' => isset($point['time']) ? $point['time']->toDateTimeString() : null,
                 'distance_from_start_km' => $point['distance_from_start_km'],
-                'created_at'             => $now,
-                'updated_at'             => $now,
+                'created_at' => $now,
+                'updated_at' => $now,
             ];
         }
 
@@ -137,7 +137,7 @@ class ActivityService
     public function needsElevationEnrichment(UploadedFile $gpxFile): bool
     {
         $points = $this->orchestrator->parseOnly($gpxFile->getPathname());
+
         return $this->enrichmentService->needsEnrichment($points);
     }
-
 }

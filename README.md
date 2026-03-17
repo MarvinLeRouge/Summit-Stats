@@ -23,7 +23,7 @@
 
 **V1 (actuelle — [v1.0.0](https://github.com/MarvinLeRouge/Summit-Stats/releases/tag/v1.0.0))** — Pipeline complet : parsing GPX, segmentation par pente, 22 métriques par activité, API REST, dashboard Vue.js 3, 99% de couverture de tests, CI GitHub Actions.
 
-**V2 (en cours)** — Visualisation géographique : profil altimétrique zoomable, carte OSM interactive avec tracé GPX.
+**V2 (en cours)** — Visualisation géographique : profil altimétrique zoomable, carte OSM interactive avec tracé GPX, enrichissement automatique des altitudes via OpenTopoData pour les GPX sans données d'élévation.
 
 ---
 
@@ -211,10 +211,10 @@ Projet personnel à double vocation :
 
 ### 🚧 V2 — En cours
 
-- [ ] **P1** — Stockage des points GPS + endpoint `/api/activities/{id}/track`
-- [ ] **P2** — Profil altimétrique (Chart.js + zoom)
-- [ ] **P3** — Carte OSM avec tracé GPX (Leaflet)
-- [ ] **P4** — Qualité (tests, couverture, linting)
+- [x] **P1** — Stockage des points GPS + endpoint `/api/activities/{id}/track`
+- [x] **P2** — Profil altimétrique (Chart.js + zoom)
+- [x] **P3** — Carte OSM avec tracé GPX (Leaflet)
+- [x] **P4** — Qualité (tests, couverture, linting)
 - [ ] **P5** — DevOps (mise à jour CI, documentation V2)
 
 ---
@@ -247,7 +247,7 @@ Ce projet est sous licence MIT - voir le fichier [LICENSE](LICENSE) pour plus de
 
 **V1 (current — [v1.0.0](https://github.com/MarvinLeRouge/Summit-Stats/releases/tag/v1.0.0))** — Full pipeline: GPX parsing, slope segmentation, 22 metrics per activity, REST API, Vue.js 3 dashboard, 99% test coverage, GitHub Actions CI.
 
-**V2 (in progress)** — Geographic visualization: elevation profile with zoom, interactive OSM map with GPX trace overlay.
+**V2 (in progress)** — Geographic visualization: zoomable elevation profile, interactive OSM map with GPX trace overlay, automatic altitude enrichment via OpenTopoData for GPX files without elevation data.
 
 ---
 
@@ -435,10 +435,10 @@ Personal project with a dual purpose:
 
 ### 🚧 V2 — In progress
 
-- [ ] **P1** — Track points storage + `/api/activities/{id}/track` endpoint
-- [ ] **P2** — Elevation profile (Chart.js + zoom)
-- [ ] **P3** — OSM map with GPX trace (Leaflet)
-- [ ] **P4** — Quality (tests, coverage, linting)
+- [x] **P1** — Track points storage + `/api/activities/{id}/track` endpoint
+- [x] **P2** — Elevation profile (Chart.js + zoom)
+- [x] **P3** — OSM map with GPX trace (Leaflet)
+- [x] **P4** — Quality (tests, coverage, linting)
 - [ ] **P5** — DevOps (CI update, V2 documentation)
 
 ---

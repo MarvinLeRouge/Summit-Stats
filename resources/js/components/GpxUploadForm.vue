@@ -158,38 +158,36 @@ const submit = async () => {
             for (const line of lines) {
                 if (line.startsWith('event: ')) {
                     currentEvent = line.slice(7).trim();
-
                 } else if (line.startsWith('data: ')) {
+                    let data = null;
+                    let parseError = null;
                     try {
-                        const data = JSON.parse(line.slice(6));
-
-                        if (currentEvent === 'status') {
-                            step.value = data.step;
-                            if (data.step === 'enriching') {
-                                progress.value = data.progress ?? 0;
-                            }
-
-                        } else if (currentEvent === 'done') {
-                            uploading.value = false;
-                            emit('uploaded', data.activity);
-                            streamDone = true;
-                            break;
-
-                        } else if (currentEvent === 'close') {
-                            streamDone = true;
-                            break;
-
-                        } else if (currentEvent === 'error') {
-                            throw new Error(data.message);
-
-                        } else {
-                            // Should not happen. Kept for debugging
-                        }
-
+                        data = JSON.parse(line.slice(6));
                     } catch (e) {
                         console.error('[SSE] Erreur de parsing JSON:', e, '| ligne:', line);
+                        continue;
+                    }
+
+                    console.log('[SSE] data parsée — event:', currentEvent, '| data:', data);
+
+                    if (currentEvent === 'status') {
+                        step.value = data.step;
+                        if (data.step === 'enriching') {
+                            progress.value = data.progress ?? 0;
+                        }
+                    } else if (currentEvent === 'done') {
+                        uploading.value = false;
+                        emit('uploaded', data.activity);
+                        streamDone = true;
+                        break;
+                    } else if (currentEvent === 'close') {
+                        streamDone = true;
+                        break;
+                    } else if (currentEvent === 'error') {
+                        throw new Error(data.message);
                     }
                 }
+
                 // Ignorer les lignes vides (séparateurs SSE)
             }
         }

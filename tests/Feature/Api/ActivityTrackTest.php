@@ -6,7 +6,7 @@ use App\Models\User;
 use Laravel\Sanctum\Sanctum;
 
 it('retourne les points de la trace pour une activité', function () {
-    $user     = User::factory()->create();
+    $user = User::factory()->create();
     $activity = Activity::factory()->create();
 
     TrackPoint::factory()->count(5)->create([
@@ -28,13 +28,13 @@ it('retourne les points de la trace pour une activité', function () {
 });
 
 it('retourne les points dans le bon ordre', function () {
-    $user     = User::factory()->create();
+    $user = User::factory()->create();
     $activity = Activity::factory()->create();
 
     foreach ([2, 0, 1, 4, 3] as $order) {
         TrackPoint::factory()->create([
             'activity_id' => $activity->id,
-            'order'       => $order,
+            'order' => $order,
         ]);
     }
 
@@ -47,7 +47,7 @@ it('retourne les points dans le bon ordre', function () {
 });
 
 it('retourne une liste vide si aucun point', function () {
-    $user     = User::factory()->create();
+    $user = User::factory()->create();
     $activity = Activity::factory()->create();
 
     Sanctum::actingAs($user);
@@ -67,7 +67,7 @@ it('retourne 404 si l\'activité n\'existe pas', function () {
 });
 
 it('retourne les points avec ele null pour un GPX sans altitude', function () {
-    $user     = User::factory()->create();
+    $user = User::factory()->create();
     $activity = Activity::factory()->create();
 
     TrackPoint::factory()->count(3)->withoutElevation()->create([

@@ -136,7 +136,7 @@ class SegmentationService
             }
         }
 
-        return 'gt35';
+        return 'gt35'; // @codeCoverageIgnore
     }
 
     /**

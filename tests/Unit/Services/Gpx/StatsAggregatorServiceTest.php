@@ -107,3 +107,24 @@ it('calculates global avg_speed correctly', function () {
 
     expect($result['activity_stats']['avg_speed_kmh'])->toBeGreaterThan(0);
 });
+
+it('retourne une pente nulle si la distance du segment est zéro', function () {
+    $points = [
+        ['lat' => 45.0, 'lon' => 6.0, 'ele' => 1000.0, 'time' => null, 'distance_from_start_km' => 0.0],
+        ['lat' => 45.0, 'lon' => 6.0, 'ele' => 1000.0, 'time' => null, 'distance_from_start_km' => 0.0],
+    ];
+
+    $segments = [
+        [
+            'type' => 'plat',
+            'slope_class' => 'lt5',
+            'points' => $points,
+            'point_index_start' => 0,
+            'point_index_end' => 1,
+        ],
+    ];
+
+    $result = $this->service->aggregate($segments, $points);
+
+    expect($result['segments'][0]['avg_slope_pct'])->toBe(0.0);
+});

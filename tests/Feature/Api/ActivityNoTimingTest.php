@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\User;
-use Illuminate\Http\UploadedFile;
 use Laravel\Sanctum\Sanctum;
 
 it('importe correctement un GPX sans timing', function () {
@@ -22,7 +21,7 @@ it('retourne les segments avec avg_speed_kmh null pour un GPX sans timing', func
     $user = User::factory()->create();
     Sanctum::actingAs($user);
 
-    $data       = postActivityWithGpx($this, base_path('tests/Fixtures/gpx/no_time.gpx'));
+    $data = postActivityWithGpx($this, base_path('tests/Fixtures/gpx/no_time.gpx'));
     $activityId = $data['activity']['id'];
 
     $detail = $this->getJson("/api/activities/{$activityId}");
@@ -37,7 +36,7 @@ it('retourne les track points pour un GPX sans timing', function () {
     $user = User::factory()->create();
     Sanctum::actingAs($user);
 
-    $data       = postActivityWithGpx($this, base_path('tests/Fixtures/gpx/no_time.gpx'));
+    $data = postActivityWithGpx($this, base_path('tests/Fixtures/gpx/no_time.gpx'));
     $activityId = $data['activity']['id'];
 
     $track = $this->getJson("/api/activities/{$activityId}/track");

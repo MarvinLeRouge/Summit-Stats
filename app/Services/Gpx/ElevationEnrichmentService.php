@@ -17,18 +17,18 @@ class ElevationEnrichmentService
      */
     public function enrich(array $points, ?callable $onProgress = null): array
     {
-        if (!config('geo.elevation_enabled') || empty($points)) {
+        if (! config('geo.elevation_enabled') || empty($points)) {
             return $points;
         }
 
-        if (!$this->needsEnrichment($points)) {
+        if (! $this->needsEnrichment($points)) {
             return $points;
         }
 
-        $chunks     = array_chunk($points, config('geo.elevation_max_points_per_req', 100), true);
-        $enriched   = $points;
+        $chunks = array_chunk($points, config('geo.elevation_max_points_per_req', 100), true);
+        $enriched = $points;
         $totalChunks = count($chunks);
-        $lastIndex  = $totalChunks - 1;
+        $lastIndex = $totalChunks - 1;
 
         foreach ($chunks as $chunkIndex => $chunk) {
             $elevations = $this->fetchElevations($chunk);
@@ -70,12 +70,12 @@ class ElevationEnrichmentService
      * Appelle l'API OpenTopoData pour un chunk de points.
      *
      * @param  array<int, array{lat: float, lon: float}>  $chunk
-     * @return array<int, float|null>  Clés = index originaux des points
+     * @return array<int, float|null> Clés = index originaux des points
      */
     private function fetchElevations(array $chunk): array
     {
         $locations = implode('|', array_map(
-            fn($p) => "{$p['lat']},{$p['lon']}",
+            fn ($p) => "{$p['lat']},{$p['lon']}",
             $chunk
         ));
 
@@ -88,7 +88,7 @@ class ElevationEnrichmentService
                 ]);
 
             if ($response->successful()) {
-                $data    = $response->json();
+                $data = $response->json();
                 $apiResults = $data['results'] ?? [];
                 $indices = array_keys($chunk);
 

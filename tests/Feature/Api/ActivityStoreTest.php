@@ -13,7 +13,7 @@ beforeEach(function () {
 
 it('creates an activity from a GPX file', function () {
     $data = postActivityWithGpx($this, base_path('tests/Fixtures/gpx/simple_track.gpx'), [
-        'title'   => 'Sortie test',
+        'title' => 'Sortie test',
         'comment' => 'Premier test',
     ]);
 
@@ -28,10 +28,10 @@ it('creates an activity from a GPX file', function () {
 
 it('returns 422 if GPX file is missing', function () {
     $this->postJson('/api/activities', [
-        'title'       => 'Sans fichier',
-        'type'        => 'randonnee',
+        'title' => 'Sans fichier',
+        'type' => 'randonnee',
         'environment' => 'montagne',
-        'date'        => '2024-06-15',
+        'date' => '2024-06-15',
     ])->assertUnprocessable();
 });
 
@@ -42,11 +42,10 @@ it('returns 422 if type is invalid', function () {
     );
 
     $this->postJson('/api/activities', [
-        'title'       => 'Type invalide',
-        'type'        => 'cyclisme',
+        'title' => 'Type invalide',
+        'type' => 'cyclisme',
         'environment' => 'montagne',
-        'date'        => '2024-06-15',
-        'gpx_file'    => $gpxFile,
+        'date' => '2024-06-15',
+        'gpx_file' => $gpxFile,
     ])->assertUnprocessable();
 });
-

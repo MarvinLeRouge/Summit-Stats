@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ main, 'feat/**' ]
+    branches: [ main, v2, 'feat/**' ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, v2 ]
 
 jobs:
   tests:
@@ -46,6 +46,9 @@ jobs:
       - name: Copy .env
         run: cp .env.example .env
 
+      - name: Disable elevation enrichment for CI
+        run: echo "ELEVATION_ENABLED=false" >> .env
+        
       - name: Generate app key
         run: php artisan key:generate
 

@@ -5,24 +5,22 @@ export const useActivitiesStore = defineStore('activities', {
     state: () => ({
         activities: [],
         total:      0,
+        currentPage: 1,
+        lastPage:    1,
         loading:    false,
-        filters: {
-            type:        null,
-            environment: null,
-            date_from:   null,
-            date_to:     null,
-        },
     }),
 
     actions: {
-        async fetch(page = 1) {
+        async fetch(filters = {}) {
             this.loading = true;
             try {
                 const { data } = await axios.get('/activities', {
-                    params: { ...this.filters, page },
+                    params: filters,
                 });
-                this.activities = data.data.data;
-                this.total      = data.data.total;
+                this.activities  = data.data.data;
+                this.total       = data.data.total;
+                this.currentPage = data.data.current_page;
+                this.lastPage    = data.data.last_page;
             } finally {
                 this.loading = false;
             }

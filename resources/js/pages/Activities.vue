@@ -12,30 +12,30 @@
 
         <!-- Filtres -->
         <div class="bg-white rounded-lg shadow-sm border p-4 mb-6 flex flex-wrap gap-4">
-            <select v-model="store.filters.type" class="border rounded px-3 py-1.5 text-sm" @change="store.fetch()">
-                <option :value="null">Tous les types</option>
+            <select :value="filters.type" class="border rounded px-3 py-1.5 text-sm" @change="setFilter('type', $event.target.value || null)">
+                <option value="">Tous les types</option>
                 <option value="randonnee">Randonnée</option>
                 <option value="trail">Trail</option>
             </select>
 
-            <select v-model="store.filters.environment" class="border rounded px-3 py-1.5 text-sm" @change="store.fetch()">
-                <option :value="null">Tous les milieux</option>
+            <select :value="filters.environment" class="border rounded px-3 py-1.5 text-sm" @change="setFilter('environment', $event.target.value || null)">
+                <option value="">Tous les milieux</option>
                 <option value="urbain">Urbain</option>
                 <option value="campagne">Campagne</option>
                 <option value="montagne">Montagne</option>
             </select>
 
             <input
-                v-model="store.filters.date_from"
+                :value="filters.date_from"
                 type="date"
                 class="border rounded px-3 py-1.5 text-sm"
-                @change="store.fetch()"
+                @change="setFilter('date_from', $event.target.value || null)"
             />
             <input
-                v-model="store.filters.date_to"
+                :value="filters.date_to"
                 type="date"
                 class="border rounded px-3 py-1.5 text-sm"
-                @change="store.fetch()"
+                @change="setFilter('date_to', $event.target.value || null)"
             />
 
             <button class="text-sm text-gray-500 hover:text-gray-700 underline" @click="resetFilters">
@@ -82,34 +82,85 @@
                     </tr>
                 </tbody>
             </table>
+
+            <!-- Pagination -->
+            <div v-if="store.lastPage > 1" class="flex items-center justify-between px-4 py-3 border-t text-sm text-gray-600">
+                <span>{{ store.total }} sortie{{ store.total > 1 ? 's' : '' }} — page {{ store.currentPage }} / {{ store.lastPage }}</span>
+                <div class="flex gap-2">
+                    <button
+                        :disabled="store.currentPage <= 1"
+                        class="px-3 py-1 border rounded hover:bg-gray-50 disabled:opacity-40"
+                        @click="goToPage(store.currentPage - 1)"
+                    >
+                        ← Précédente
+                    </button>
+                    <button
+                        :disabled="store.currentPage >= store.lastPage"
+                        class="px-3 py-1 border rounded hover:bg-gray-50 disabled:opacity-40"
+                        @click="goToPage(store.currentPage + 1)"
+                    >
+                        Suivante →
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
+
     <GpxUploadForm v-if="showForm" @close="showForm = false" @uploaded="onUploaded" />
     <Toast ref="toast" />
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import { useActivitiesStore } from '@/stores/activities';
 import { formatDate, formatDistance, formatDuration, formatElevation, formatSpeed } from '@/helpers/format';
+import GpxUploadForm from '@/components/GpxUploadForm.vue';
 import Toast from '@/components/Toast.vue';
 
-const toast = ref(null);
-const store    = useActivitiesStore();
+const route  = useRoute();
+const router = useRouter();
+const store  = useActivitiesStore();
+const toast  = ref(null);
 const showForm = ref(false);
 
-onMounted(() => store.fetch());
+// Filtres lus depuis l'URL
+const filters = computed(() => ({
+    type:        route.query.type        || null,
+    environment: route.query.environment || null,
+    date_from:   route.query.date_from   || null,
+    date_to:     route.query.date_to     || null,
+    page:        parseInt(route.query.page) || 1,
+}));
 
-const resetFilters = () => {
-    store.filters = { type: null, environment: null, date_from: null, date_to: null };
-    store.fetch();
+// Recharge les données à chaque changement d'URL
+watch(() => route.query, () => {
+    store.fetch(filters.value);
+}, { immediate: true });
+
+const setFilter = (key, value) => {
+    router.push({
+        query: {
+            ...route.query,
+            [key]: value || undefined,
+            page:  undefined, // reset page à 1 sur changement de filtre
+        },
+    });
 };
 
-import GpxUploadForm from '@/components/GpxUploadForm.vue';
+const goToPage = (page) => {
+    router.push({
+        query: { ...route.query, page: page > 1 ? page : undefined },
+    });
+};
+
+const resetFilters = () => {
+    router.push({ query: {} });
+};
 
 const onUploaded = () => {
     showForm.value = false;
-    store.fetch();
-    toast.value?.show('Sortie importée avec succès !');    
+    store.fetch(filters.value);
+    toast.value?.show('Sortie importée avec succès !');
 };
 </script>

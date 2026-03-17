@@ -57,10 +57,6 @@ const fetchPoints = async () => {
 };
 
 const buildChart = () => {
-    console.log('buildChart called');
-    console.log('canvas.value:', canvas.value);
-    console.log('hasElevation:', hasElevation.value);
-    console.log('points count:', points.value.length);
     if (!canvas.value || !hasElevation.value) return;
 
     const labels = points.value.map(p => parseFloat(p.distance_from_start_km).toFixed(2));

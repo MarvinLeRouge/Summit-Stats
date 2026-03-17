@@ -144,15 +144,10 @@ const submit = async () => {
         let   currentEvent = ''; // persiste entre les chunks
         let   streamDone   = false;
 
-        console.log('[SSE] Début de lecture du stream');
-
         while (!streamDone) {
             const { done, value } = await reader.read();
 
-            console.log('[SSE] reader.read() — done:', done, '| value length:', value?.length ?? 0);
-
             if (done) {
-                console.log('[SSE] Stream terminé (done=true) — buffer restant:', JSON.stringify(buffer));
                 break;
             }
 
@@ -160,44 +155,35 @@ const submit = async () => {
             const lines = buffer.split('\n');
             buffer = lines.pop(); // garde la ligne potentiellement incomplète
 
-            console.log('[SSE] Chunk décodé — lignes à traiter:', lines.length, '| buffer restant:', JSON.stringify(buffer));
-
             for (const line of lines) {
                 if (line.startsWith('event: ')) {
                     currentEvent = line.slice(7).trim();
-                    console.log('[SSE] event:', currentEvent);
 
                 } else if (line.startsWith('data: ')) {
-                    console.log('[SSE] data brute — event courant:', currentEvent, '| data:', line.slice(6));
                     try {
                         const data = JSON.parse(line.slice(6));
-                        console.log('[SSE] data parsée:', data);
 
                         if (currentEvent === 'status') {
                             step.value = data.step;
                             if (data.step === 'enriching') {
                                 progress.value = data.progress ?? 0;
                             }
-                            console.log('[SSE] step mis à jour:', step.value, '| progress:', progress.value);
 
                         } else if (currentEvent === 'done') {
-                            console.log('[SSE] événement done reçu — émission uploaded');
                             uploading.value = false;
                             emit('uploaded', data.activity);
                             streamDone = true;
                             break;
 
                         } else if (currentEvent === 'close') {
-                            console.log('[SSE] événement close reçu — fin du stream');
                             streamDone = true;
                             break;
 
                         } else if (currentEvent === 'error') {
-                            console.error('[SSE] événement error reçu:', data.message);
                             throw new Error(data.message);
 
                         } else {
-                            console.warn('[SSE] événement inconnu:', currentEvent, '| data:', data);
+                            // Should not happen. Kept for debugging
                         }
 
                     } catch (e) {
@@ -207,9 +193,6 @@ const submit = async () => {
                 // Ignorer les lignes vides (séparateurs SSE)
             }
         }
-
-        console.log('[SSE] Sortie de la boucle — streamDone:', streamDone);
-
     } catch (e) {
         console.error('[SSE] Erreur globale:', e);
         error.value     = e.message;

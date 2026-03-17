@@ -48,6 +48,9 @@ class GpxParserService
         if (empty($points)) {
             throw new GpxParseException('Aucun trackpoint trouvé dans le fichier GPX.');
         }
+        if (count($points) < 2) {
+            throw GpxParseException::insufficientPoints();
+        }
 
         return $points;
     }

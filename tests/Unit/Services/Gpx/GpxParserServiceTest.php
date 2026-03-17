@@ -56,3 +56,8 @@ it('throws exception when GPX has no trackpoints', function () {
     expect(fn () => $this->parser->parse(base_path('tests/Fixtures/gpx/empty_track.gpx')))
         ->toThrow(GpxParseException::class);
 });
+
+it('throws exception for a single point GPX', function () {
+    expect(fn () => $this->parser->parse(base_path('tests/Fixtures/gpx/single_point.gpx')))
+        ->toThrow(GpxParseException::class, 'La trace GPX doit contenir au moins 2 points.');
+});

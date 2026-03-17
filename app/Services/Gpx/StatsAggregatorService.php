@@ -2,10 +2,15 @@
 
 namespace App\Services\Gpx;
 
+use App\Services\Geo\GeoCalculatorService;
 use Carbon\Carbon;
 
 class StatsAggregatorService
 {
+    public function __construct(
+        private readonly GeoCalculatorService $geo,
+    ) {}
+
     /**
      * Agrège les stats de chaque segment et calcule les stats globales de l'activité.
      *
@@ -309,7 +314,7 @@ class StatsAggregatorService
         $distance = 0.0;
 
         for ($i = 1; $i < count($points); $i++) {
-            $distance += $this->haversine(
+            $distance += $this->geo->haversineKm(
                 $points[$i - 1]['lat'], $points[$i - 1]['lon'],
                 $points[$i]['lat'], $points[$i]['lon'],
             );
@@ -342,20 +347,5 @@ class StatsAggregatorService
         }
 
         return (int) $first['time']->diffInSeconds($last['time']);
-    }
-
-    /**
-     * Formule de Haversine — distance en km.
-     */
-    private function haversine(float $lat1, float $lon1, float $lat2, float $lon2): float
-    {
-        $R = config('geo.earth_radius_km');
-        $dLat = deg2rad($lat2 - $lat1);
-        $dLon = deg2rad($lon2 - $lon1);
-
-        $a = sin($dLat / 2) ** 2
-            + cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * sin($dLon / 2) ** 2;
-
-        return 2 * $R * asin(sqrt($a));
     }
 }

@@ -2,10 +2,15 @@
 
 namespace App\Services\Gpx;
 
+use App\Services\Geo\GeoCalculatorService;
 use Carbon\Carbon;
 
 class SegmentationService
 {
+    public function __construct(
+        private readonly GeoCalculatorService $geo,
+    ) {}
+
     /**
      * Segmente une liste de points GPS en intervalles homogènes selon le type et la classe de pente.
      * Les intervalles consécutifs de même type et classe sont fusionnés.
@@ -35,7 +40,7 @@ class SegmentationService
             $prev = $points[$i - 1];
             $curr = $points[$i];
 
-            $distanceM = $this->haversineMeters(
+            $distanceM = $this->geo->haversineMeters(
                 $prev['lat'], $prev['lon'],
                 $curr['lat'], $curr['lon'],
             );
@@ -137,20 +142,5 @@ class SegmentationService
         }
 
         return 'gt35'; // @codeCoverageIgnore
-    }
-
-    /**
-     * Formule de Haversine — distance en mètres entre deux points GPS.
-     */
-    private function haversineMeters(float $lat1, float $lon1, float $lat2, float $lon2): float
-    {
-        $R = config('geo.earth_radius_m');
-        $dLat = deg2rad($lat2 - $lat1);
-        $dLon = deg2rad($lon2 - $lon1);
-
-        $a = sin($dLat / 2) ** 2
-            + cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * sin($dLon / 2) ** 2;
-
-        return 2 * $R * asin(sqrt($a));
     }
 }

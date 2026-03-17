@@ -1,10 +1,11 @@
 <?php
 
+use App\Services\Geo\GeoCalculatorService;
 use App\Services\Gpx\StatsAggregatorService;
 use Carbon\Carbon;
 
 beforeEach(function () {
-    $this->service = new StatsAggregatorService;
+    $this->service = new StatsAggregatorService(new GeoCalculatorService);
 });
 
 function makeSegment(array $points, string $type = 'montee', string $slopeClass = '5_15'): array

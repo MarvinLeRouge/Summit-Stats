@@ -1,10 +1,11 @@
 <?php
 
+use App\Services\Geo\GeoCalculatorService;
 use App\Services\Gpx\ElevationCalculatorService;
 use Carbon\Carbon;
 
 beforeEach(function () {
-    $this->calculator = new ElevationCalculatorService;
+    $this->calculator = new ElevationCalculatorService(new GeoCalculatorService);
 });
 
 it('calculates distance between two points using Haversine formula', function () {

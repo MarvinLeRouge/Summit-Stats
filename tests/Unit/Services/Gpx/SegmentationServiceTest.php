@@ -1,10 +1,11 @@
 <?php
 
+use App\Services\Geo\GeoCalculatorService;
 use App\Services\Gpx\SegmentationService;
 use Carbon\Carbon;
 
 beforeEach(function () {
-    $this->service = new SegmentationService;
+    $this->service = new SegmentationService(new GeoCalculatorService);
 });
 
 /**

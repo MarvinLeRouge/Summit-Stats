@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Services\ActivityService;
+use App\Services\Geo\GeoCalculatorService;
 use App\Services\Gpx\ElevationCalculatorService;
 use App\Services\Gpx\ElevationEnrichmentService;
 use App\Services\Gpx\GpxAnalysisOrchestrator;
@@ -18,6 +19,28 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        $this->app->bind(GeoCalculatorService::class, function () {
+            return new GeoCalculatorService;
+        });
+
+        $this->app->bind(ElevationCalculatorService::class, function ($app) {
+            return new ElevationCalculatorService(
+                $app->make(GeoCalculatorService::class),
+            );
+        });
+
+        $this->app->bind(SegmentationService::class, function ($app) {
+            return new SegmentationService(
+                $app->make(GeoCalculatorService::class),
+            );
+        });
+
+        $this->app->bind(StatsAggregatorService::class, function ($app) {
+            return new StatsAggregatorService(
+                $app->make(GeoCalculatorService::class),
+            );
+        });
+
         $this->app->bind(ActivityService::class, function ($app) {
             return new ActivityService(
                 $app->make(GpxAnalysisOrchestrator::class),

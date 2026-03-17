@@ -37,11 +37,19 @@ class Segment extends Model
         'order' => 'integer',
     ];
 
+    /**
+     * Retourne l'activité à laquelle appartient ce segment.
+     *
+     * @return BelongsTo<Activity, Segment>
+     */
     public function activity(): BelongsTo
     {
         return $this->belongsTo(Activity::class);
     }
 
+    /**
+     * Indique si ce segment est une montée.
+     */
     public function isAscent(): bool
     {
         return $this->type === 'montee';

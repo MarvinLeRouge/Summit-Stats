@@ -21,7 +21,7 @@ export default [
             'vue/first-attribute-linebreak':    'off',
             'vue/require-default-prop':         'off',
             'no-unused-vars':                   'warn',
-            'no-console':                       'warn',
+            'no-console': ['warn', { allow: ['error', 'warn'] }],
         },
     },
     {

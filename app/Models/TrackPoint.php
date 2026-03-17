@@ -29,6 +29,11 @@ class TrackPoint extends Model
         'order' => 'integer',
     ];
 
+    /**
+     * Retourne l'activité à laquelle appartient ce point de trace.
+     *
+     * @return BelongsTo<Activity, TrackPoint>
+     */
     public function activity(): BelongsTo
     {
         return $this->belongsTo(Activity::class);

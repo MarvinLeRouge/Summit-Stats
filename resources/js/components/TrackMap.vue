@@ -28,7 +28,6 @@ import { ref, computed, onMounted, nextTick } from 'vue';
 import axios from 'axios';
 import { LMap, LPolyline, LMarker, LTooltip } from '@vue-leaflet/vue-leaflet';
 import 'leaflet/dist/leaflet.css';
-import L from 'leaflet';
 import { tileLayerOffline } from 'leaflet.offline';
 
 const props = defineProps({
@@ -60,16 +59,6 @@ const center = computed(() => {
     return [
         (Math.min(...lats) + Math.max(...lats)) / 2,
         (Math.min(...lons) + Math.max(...lons)) / 2,
-    ];
-});
-
-const bounds = computed(() => {
-    if (points.value.length === 0) return null;
-    const lats = points.value.map(p => p.lat);
-    const lons = points.value.map(p => p.lon);
-    return [
-        [Math.min(...lats), Math.min(...lons)],
-        [Math.max(...lats), Math.max(...lons)],
     ];
 });
 

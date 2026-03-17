@@ -57,11 +57,19 @@ class Activity extends Model
         'pct_descent_gt35' => 'float',
     ];
 
+    /**
+     * Retourne les segments associés à cette activité.
+     *
+     * @return HasMany<Segment>
+     */
     public function segments(): HasMany
     {
         return $this->hasMany(Segment::class);
     }
 
+    /**
+     * Retourne la durée formatée en heures et minutes.
+     */
     public function getFormattedDurationAttribute(): string
     {
         $h = intdiv($this->duration_seconds, 3600);
@@ -70,6 +78,11 @@ class Activity extends Model
         return "{$h}h".str_pad($m, 2, '0', STR_PAD_LEFT);
     }
 
+    /**
+     * Retourne les points de trace associés à cette activité, triés par ordre.
+     *
+     * @return HasMany<TrackPoint>
+     */
     public function trackPoints(): HasMany
     {
         return $this->hasMany(TrackPoint::class)->orderBy('order');

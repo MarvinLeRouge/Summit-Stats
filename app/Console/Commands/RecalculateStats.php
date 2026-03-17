@@ -13,6 +13,9 @@ class RecalculateStats extends Command
 
     protected $description = 'Recalcule les stats de toutes les activités depuis leur fichier GPX';
 
+    /**
+     * Exécute la commande de recalcul des statistiques.
+     */
     public function handle(GpxAnalysisOrchestrator $orchestrator): int
     {
         $query = Activity::query();

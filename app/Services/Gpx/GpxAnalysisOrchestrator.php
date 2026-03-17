@@ -43,6 +43,14 @@ class GpxAnalysisOrchestrator
         ];
     }
 
+    /**
+     * Parse uniquement les points d'une trace GPX sans lancer l'analyse complète.
+     *
+     * @param  string  $gpxFilePath  Chemin absolu vers le fichier GPX
+     * @return array<int, array{lat: float, lon: float, ele: float|null, time: mixed}>
+     *
+     * @throws GpxParseException Si le fichier est invalide ou introuvable
+     */
     public function parseOnly(string $gpxFilePath): array
     {
         return $this->parser->parse($gpxFilePath);

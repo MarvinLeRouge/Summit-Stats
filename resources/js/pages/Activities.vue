@@ -111,7 +111,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useActivitiesStore } from '@/stores/activities';
 import { formatDate, formatDistance, formatDuration, formatElevation, formatSpeed } from '@/helpers/format';

@@ -15,10 +15,16 @@ class ActivityController extends Controller
 {
     use ApiResponse;
 
+    /**
+     * Injecte le service d'activité.
+     */
     public function __construct(
         private readonly ActivityService $activityService,
     ) {}
 
+    /**
+     * Retourne la liste paginée des activités avec filtres optionnels.
+     */
     public function index(): JsonResponse
     {
         $activities = Activity::query()
@@ -32,6 +38,9 @@ class ActivityController extends Controller
         return $this->success($activities);
     }
 
+    /**
+     * Importe un fichier GPX, analyse la trace et persiste l'activité via un stream SSE.
+     */
     public function store(StoreActivityRequest $request): StreamedResponse
     {
         return response()->stream(function () use ($request) { // @codeCoverageIgnoreStart
@@ -94,11 +103,17 @@ class ActivityController extends Controller
         ]); // @codeCoverageIgnoreEnd
     }
 
+    /**
+     * Retourne le détail d'une activité avec ses segments.
+     */
     public function show(Activity $activity): JsonResponse
     {
         return $this->success($activity->load('segments'));
     }
 
+    /**
+     * Met à jour les métadonnées d'une activité, avec re-analyse GPX optionnelle.
+     */
     public function update(UpdateActivityRequest $request, Activity $activity): JsonResponse
     {
         $updated = $this->activityService->update(
@@ -110,6 +125,9 @@ class ActivityController extends Controller
         return $this->success($updated);
     }
 
+    /**
+     * Supprime une activité, ses segments, ses points et son fichier GPX.
+     */
     public function destroy(Activity $activity): JsonResponse
     {
         $this->activityService->destroy($activity);
@@ -117,6 +135,9 @@ class ActivityController extends Controller
         return $this->noContent();
     }
 
+    /**
+     * Recalcule les statistiques d'une activité depuis son fichier GPX brut.
+     */
     public function recalculate(Activity $activity): JsonResponse
     {
         $updated = $this->activityService->recalculate($activity);
@@ -124,6 +145,9 @@ class ActivityController extends Controller
         return $this->success($updated);
     }
 
+    /**
+     * Retourne les points de la trace GPX d'une activité.
+     */
     public function track(Activity $activity): JsonResponse
     {
         $points = $activity->trackPoints()

@@ -6,11 +6,19 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StoreActivityRequest extends FormRequest
 {
+    /**
+     * Détermine si l'utilisateur est autorisé à effectuer cette requête.
+     */
     public function authorize(): bool
     {
         return true;
     }
 
+    /**
+     * Retourne les règles de validation applicables à la requête.
+     *
+     * @return array<string, mixed>
+     */
     public function rules(): array
     {
         return [

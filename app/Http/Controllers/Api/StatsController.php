@@ -36,6 +36,9 @@ class StatsController extends Controller
         'avg_ascent_speed_mh',
     ];
 
+    /**
+     * Retourne les données de progression pour les graphes selon les filtres fournis.
+     */
     public function index(StatsRequest $request): JsonResponse
     {
         $metric = $request->input('metric');

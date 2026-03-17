@@ -160,15 +160,12 @@ const submit = async () => {
                     currentEvent = line.slice(7).trim();
                 } else if (line.startsWith('data: ')) {
                     let data = null;
-                    let parseError = null;
                     try {
                         data = JSON.parse(line.slice(6));
                     } catch (e) {
                         console.error('[SSE] Erreur de parsing JSON:', e, '| ligne:', line);
                         continue;
                     }
-
-                    console.log('[SSE] data parsée — event:', currentEvent, '| data:', data);
 
                     if (currentEvent === 'status') {
                         step.value = data.step;

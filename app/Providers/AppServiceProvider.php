@@ -13,6 +13,9 @@ use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
+    /**
+     * Enregistre les bindings du Service Container.
+     */
     public function register(): void
     {
         $this->app->bind(ActivityService::class, function ($app) {
@@ -32,6 +35,9 @@ class AppServiceProvider extends ServiceProvider
         });
     }
 
+    /**
+     * Exécute les actions de bootstrap après l'enregistrement des providers.
+     */
     public function boot(): void
     {
         //

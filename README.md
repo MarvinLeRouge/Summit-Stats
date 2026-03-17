@@ -8,7 +8,7 @@
 
 > *Une application full-stack Laravel 12 + Vue.js 3 construite en TDD strict, architecture en couches services et 99% de couverture de tests — du parsing algorithmique de traces GPX jusqu'au dashboard de progression.*
 
-![Status](https://img.shields.io/badge/Status-V2%20en%20développement-blue)
+![Status](https://img.shields.io/badge/Status-V2%20Livrée-brightgreen)
 [![CI](https://github.com/MarvinLeRouge/Summit-Stats/actions/workflows/laravel.yml/badge.svg)](https://github.com/MarvinLeRouge/Summit-Stats/actions)
 ![PHP](https://img.shields.io/badge/PHP-8.3-777BB4?logo=php&logoColor=white)
 ![Laravel](https://img.shields.io/badge/Laravel-12-FF2D20?logo=laravel&logoColor=white)
@@ -21,9 +21,9 @@
 
 ## Versions
 
-**V1 (actuelle — [v1.0.0](https://github.com/MarvinLeRouge/Summit-Stats/releases/tag/v1.0.0))** — Pipeline complet : parsing GPX, segmentation par pente, 22 métriques par activité, API REST, dashboard Vue.js 3, 99% de couverture de tests, CI GitHub Actions.
+**V2 (actuelle — [v2.0.0](https://github.com/MarvinLeRouge/Summit-Stats/releases/tag/v2.0.0))** — Visualisation géographique : profil altimétrique zoomable avec synchronisation carte, carte OSM interactive avec tracé GPX, enrichissement automatique des altitudes via OpenTopoData, progression SSE à l'upload.
 
-**V2 (en cours)** — Visualisation géographique : profil altimétrique zoomable, carte OSM interactive avec tracé GPX, enrichissement automatique des altitudes via OpenTopoData pour les GPX sans données d'élévation.
+**V1 ([v1.0.0](https://github.com/MarvinLeRouge/Summit-Stats/releases/tag/v1.0.0))** — Pipeline complet : parsing GPX, segmentation par pente, 22 métriques par activité, API REST, dashboard Vue.js 3, 99% de couverture de tests, CI GitHub Actions.
 
 ---
 
@@ -209,13 +209,13 @@ Projet personnel à double vocation :
 - [x] **P6** — Qualité (99% coverage, PHPDoc, Pint, ESLint)
 - [x] **P7** — DevOps (GitHub Actions CI, documentation)
 
-### 🚧 V2 — En cours
+### ✅ V2 — Livrée
 
 - [x] **P1** — Stockage des points GPS + endpoint `/api/activities/{id}/track`
 - [x] **P2** — Profil altimétrique (Chart.js + zoom)
 - [x] **P3** — Carte OSM avec tracé GPX (Leaflet)
 - [x] **P4** — Qualité (tests, couverture, linting)
-- [ ] **P5** — DevOps (mise à jour CI, documentation V2)
+- [x] **P5** — DevOps (mise à jour CI, documentation V2)
 
 ---
 
@@ -232,7 +232,7 @@ Ce projet est sous licence MIT - voir le fichier [LICENSE](LICENSE) pour plus de
 
 > *A full-stack Laravel 12 + Vue.js 3 application built with strict TDD, layered service architecture and 99% test coverage — from geospatial GPX parsing algorithms to a dynamic progression dashboard.*
 
-![Status](https://img.shields.io/badge/Status-V2%20in%20development-blue)
+![Status](https://img.shields.io/badge/Status-V2%20Delivered-brightgreen)
 [![CI](https://github.com/MarvinLeRouge/Summit-Stats/actions/workflows/laravel.yml/badge.svg)](https://github.com/MarvinLeRouge/Summit-Stats/actions)
 ![PHP](https://img.shields.io/badge/PHP-8.3-777BB4?logo=php&logoColor=white)
 ![Laravel](https://img.shields.io/badge/Laravel-12-FF2D20?logo=laravel&logoColor=white)
@@ -245,9 +245,9 @@ Ce projet est sous licence MIT - voir le fichier [LICENSE](LICENSE) pour plus de
 
 ## Versions
 
-**V1 (current — [v1.0.0](https://github.com/MarvinLeRouge/Summit-Stats/releases/tag/v1.0.0))** — Full pipeline: GPX parsing, slope segmentation, 22 metrics per activity, REST API, Vue.js 3 dashboard, 99% test coverage, GitHub Actions CI.
+**V2 (current — [v2.0.0](https://github.com/MarvinLeRouge/Summit-Stats/releases/tag/v2.0.0))** — Geographic visualization: zoomable elevation profile with map synchronization, interactive OSM map with GPX trace, automatic altitude enrichment via OpenTopoData, SSE upload progress.
 
-**V2 (in progress)** — Geographic visualization: zoomable elevation profile, interactive OSM map with GPX trace overlay, automatic altitude enrichment via OpenTopoData for GPX files without elevation data.
+**V1 ([v1.0.0](https://github.com/MarvinLeRouge/Summit-Stats/releases/tag/v1.0.0))** — Full pipeline: GPX parsing, slope segmentation, 22 metrics per activity, REST API, Vue.js 3 dashboard, 99% test coverage, GitHub Actions CI.
 
 ---
 
@@ -422,7 +422,7 @@ Personal project with a dual purpose:
 
 ## 🗺️ Roadmap
 
-### ✅ V1 — Livrée
+### ✅ V1 — Delivered
 
 - [x] Project scoping and architecture
 - [x] **P1** — Setup (Laravel 12, Pest, Sanctum, Vue.js 3)
@@ -433,13 +433,13 @@ Personal project with a dual purpose:
 - [x] **P6** — Quality (99% coverage, PHPDoc, Pint, ESLint)
 - [x] **P7** — DevOps (GitHub Actions CI, documentation)
 
-### 🚧 V2 — In progress
+### ✅ V2 — Delivered
 
 - [x] **P1** — Track points storage + `/api/activities/{id}/track` endpoint
 - [x] **P2** — Elevation profile (Chart.js + zoom)
 - [x] **P3** — OSM map with GPX trace (Leaflet)
 - [x] **P4** — Quality (tests, coverage, linting)
-- [ ] **P5** — DevOps (CI update, V2 documentation)
+- [x] **P5** — DevOps (CI update, V2 documentation)
 
 ---
 

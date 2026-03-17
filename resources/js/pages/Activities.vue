@@ -84,14 +84,17 @@
             </table>
         </div>
     </div>
-    <GpxUploadForm v-if="showForm" @close="showForm = false" @imported="onImported" />
+    <GpxUploadForm v-if="showForm" @close="showForm = false" @uploaded="onUploaded" />
+    <Toast ref="toast" />
 </template>
 
 <script setup>
 import { onMounted, ref } from 'vue';
 import { useActivitiesStore } from '@/stores/activities';
 import { formatDate, formatDistance, formatDuration, formatElevation, formatSpeed } from '@/helpers/format';
+import Toast from '@/components/Toast.vue';
 
+const toast = ref(null);
 const store    = useActivitiesStore();
 const showForm = ref(false);
 
@@ -104,8 +107,9 @@ const resetFilters = () => {
 
 import GpxUploadForm from '@/components/GpxUploadForm.vue';
 
-const onImported = () => {
+const onUploaded = () => {
     showForm.value = false;
     store.fetch();
+    toast.value?.show('Sortie importée avec succès !');    
 };
 </script>

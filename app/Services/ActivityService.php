@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Activity;
+use App\Services\Gpx\ElevationEnrichmentService;
 use App\Services\Gpx\GpxAnalysisOrchestrator;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -11,6 +12,7 @@ class ActivityService
 {
     public function __construct(
         private readonly GpxAnalysisOrchestrator $orchestrator,
+        private readonly ElevationEnrichmentService $enrichmentService,
     ) {}
 
     /**
@@ -18,10 +20,10 @@ class ActivityService
      *
      * @param  array{title: string, type: string, environment: string, date: string, comment: string|null}  $metadata
      */
-    public function store(array $metadata, UploadedFile $gpxFile): Activity
+    public function store(array $metadata, UploadedFile $gpxFile, ?callable $onProgress = null): Activity
     {
         $path     = $gpxFile->store('gpx', 'local');
-        $analysis = $this->orchestrator->analyze(Storage::disk('local')->path($path));
+        $analysis = $this->orchestrator->analyze(Storage::disk('local')->path($path), $onProgress);
 
         $activity = Activity::create([
             ...$metadata,
@@ -42,12 +44,12 @@ class ActivityService
      * Met à jour les métadonnées d'une activité.
      * Si un nouveau fichier GPX est fourni, relance l'analyse complète.
      */
-    public function update(Activity $activity, array $metadata, ?UploadedFile $gpxFile = null): Activity
+    public function update(Activity $activity, array $metadata, ?UploadedFile $gpxFile = null, ?callable $onProgress = null): Activity
     {
         if ($gpxFile !== null) {
             Storage::disk('local')->delete($activity->gpx_path);
             $path     = $gpxFile->store('gpx', 'local');
-            $analysis = $this->orchestrator->analyze(Storage::disk('local')->path($path));
+            $analysis = $this->orchestrator->analyze(Storage::disk('local')->path($path), $onProgress);
 
             $activity->segments()->delete();
             foreach ($analysis['segments'] as $segment) {
@@ -128,4 +130,14 @@ class ActivityService
             \DB::table('track_points')->insert($chunk);
         }
     }
+
+    /**
+     * Détermine si un fichier GPX nécessite un enrichissement altimétrique.
+     */
+    public function needsElevationEnrichment(UploadedFile $gpxFile): bool
+    {
+        $points = $this->orchestrator->parseOnly($gpxFile->getPathname());
+        return $this->enrichmentService->needsEnrichment($points);
+    }
+
 }

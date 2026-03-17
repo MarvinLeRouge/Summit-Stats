@@ -1,145 +1,219 @@
 <template>
     <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-white rounded-lg shadow-xl w-full max-w-lg p-6">
-            <div class="flex items-center justify-between mb-6">
-                <h2 class="text-lg font-bold text-gray-800">Importer une sortie</h2>
-                <button class="text-gray-400 hover:text-gray-600 text-xl" @click="$emit('close')">✕</button>
-            </div>
+        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md mx-4">
+            <h2 class="text-lg font-semibold text-gray-800 mb-4">Importer une sortie GPX</h2>
 
-            <!-- Zone de drop GPX -->
-            <div
-                class="border-2 border-dashed rounded-lg p-6 text-center mb-4 transition-colors"
-                :class="dragging ? 'border-blue-500 bg-blue-50' : 'border-gray-300'"
-                @dragover.prevent="dragging = true"
-                @dragleave="dragging = false"
-                @drop.prevent="onDrop"
-            >
-                <div v-if="!file">
-                    <p class="text-gray-500 text-sm mb-2">Glissez votre fichier GPX ici</p>
-                    <p class="text-gray-400 text-xs mb-3">ou</p>
-                    <label class="cursor-pointer bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm px-4 py-2 rounded">
-                        Parcourir
-                        <input type="file" accept=".gpx,.xml" class="hidden" @change="onFileSelect" />
-                    </label>
-                </div>
-                <div v-else class="flex items-center justify-center gap-2">
-                    <span class="text-green-600 text-sm font-medium">✓ {{ file.name }}</span>
-                    <button class="text-gray-400 hover:text-red-500 text-xs" @click="file = null">✕</button>
-                </div>
-            </div>
-
-            <!-- Métadonnées -->
-            <div class="space-y-3">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Titre *</label>
-                    <input v-model="form.title" type="text" class="w-full border rounded px-3 py-2 text-sm" />
-                </div>
-
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Type *</label>
-                        <select v-model="form.type" class="w-full border rounded px-3 py-2 text-sm">
-                            <option value="">-- Choisir --</option>
-                            <option value="randonnee">Randonnée</option>
-                            <option value="trail">Trail</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Milieu *</label>
-                        <select v-model="form.environment" class="w-full border rounded px-3 py-2 text-sm">
-                            <option value="">-- Choisir --</option>
-                            <option value="urbain">Urbain</option>
-                            <option value="campagne">Campagne</option>
-                            <option value="montagne">Montagne</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Date *</label>
-                    <input v-model="form.date" type="date" class="w-full border rounded px-3 py-2 text-sm" />
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Commentaire</label>
-                    <textarea v-model="form.comment" rows="2" class="w-full border rounded px-3 py-2 text-sm resize-none"></textarea>
-                </div>
-            </div>
-
-            <!-- Erreur -->
-            <p v-if="error" class="text-red-500 text-sm mt-3">{{ error }}</p>
-
-            <!-- Résultat -->
-            <div v-if="result" class="mt-4 bg-green-50 border border-green-200 rounded p-3 text-sm text-green-700">
-                ✓ Sortie importée — {{ result.distance_km }} km · {{ result.elevation_gain }} m D+ · {{ formatDuration(result.duration_seconds) }}
-            </div>
-
-            <!-- Actions -->
-            <div class="flex justify-end gap-3 mt-6">
-                <button class="text-sm text-gray-500 hover:text-gray-700" @click="$emit('close')">Annuler</button>
-                <button
-                    :disabled="loading || !file || !form.title || !form.type || !form.environment || !form.date"
-                    class="bg-blue-600 text-white px-4 py-2 rounded text-sm font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                    @click="submit"
+            <div v-if="!uploading">
+                <!-- Champ fichier -->
+                <div
+                    class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:border-blue-400 mb-4"
+                    @click="$refs.fileInput.click()"
+                    @dragover.prevent
+                    @drop.prevent="onDrop"
                 >
-                    {{ loading ? 'Analyse en cours...' : 'Importer' }}
-                </button>
+                    <p v-if="!file" class="text-gray-500 text-sm">Glissez un fichier GPX ou cliquez pour sélectionner</p>
+                    <p v-else class="text-blue-600 text-sm font-medium">{{ file.name }}</p>
+                </div>
+                <input ref="fileInput" type="file" accept=".gpx,.xml" class="hidden" @change="onFileChange" />
+
+                <!-- Métadonnées -->
+                <div class="space-y-3 mb-4">
+                    <input v-model="title" type="text" placeholder="Titre *" class="w-full border rounded px-3 py-2 text-sm" />
+                    <select v-model="type" class="w-full border rounded px-3 py-2 text-sm">
+                        <option value="">Type *</option>
+                        <option value="randonnee">Randonnée</option>
+                        <option value="trail">Trail</option>
+                    </select>
+                    <select v-model="environment" class="w-full border rounded px-3 py-2 text-sm">
+                        <option value="">Milieu *</option>
+                        <option value="urbain">Urbain</option>
+                        <option value="campagne">Campagne</option>
+                        <option value="montagne">Montagne</option>
+                    </select>
+                    <input v-model="date" type="date" class="w-full border rounded px-3 py-2 text-sm" />
+                    <textarea v-model="comment" placeholder="Commentaire" class="w-full border rounded px-3 py-2 text-sm" rows="2" />
+                </div>
+
+                <p v-if="error" class="text-red-500 text-sm mb-3">{{ error }}</p>
+
+                <!-- Actions -->
+                <div class="flex justify-end gap-3">
+                    <button class="px-4 py-2 text-sm text-gray-600 hover:text-gray-800" @click="$emit('close')">
+                        Annuler
+                    </button>
+                    <button
+                        :disabled="!canSubmit"
+                        class="px-4 py-2 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+                        @click="submit"
+                    >
+                        Importer
+                    </button>
+                </div>
+            </div>
+
+            <!-- Progression SSE -->
+            <div v-else class="py-4">
+                <p class="text-sm font-medium text-gray-700 mb-3">{{ statusLabel }}</p>
+
+                <!-- Barre de progression (enrichissement uniquement) -->
+                <div v-if="step === 'enriching'" class="w-full bg-gray-200 rounded-full h-2 mb-2">
+                    <div
+                        class="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                        :style="{ width: `${progress}%` }"
+                    />
+                </div>
+                <p v-if="step === 'enriching'" class="text-xs text-gray-500">{{ progress }}%</p>
+
+                <!-- Spinner pour les autres étapes -->
+                <div v-else class="flex items-center gap-2">
+                    <svg class="animate-spin h-4 w-4 text-blue-600" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/>
+                    </svg>
+                    <span class="text-sm text-gray-500">Veuillez patienter...</span>
+                </div>
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import axios from 'axios';
-import { formatDuration } from '@/helpers/format';
+import { ref, computed } from 'vue';
 
-const emit = defineEmits(['close', 'imported']);
+const emit = defineEmits(['uploaded', 'close']);
 
-const file    = ref(null);
-const dragging = ref(false);
-const loading  = ref(false);
-const error    = ref('');
-const result   = ref(null);
+const file        = ref(null);
+const title       = ref('');
+const type        = ref('');
+const environment = ref('');
+const date        = ref('');
+const comment     = ref('');
+const error       = ref('');
+const uploading   = ref(false);
+const step        = ref('');
+const progress    = ref(0);
 
-const form = ref({
-    title:       '',
-    type:        '',
-    environment: '',
-    date:        '',
-    comment:     '',
+const canSubmit = computed(() =>
+    file.value && title.value && type.value && environment.value && date.value
+);
+
+const statusLabel = computed(() => {
+    switch (step.value) {
+        case 'parsing':   return 'Lecture du fichier GPX...';
+        case 'enriching': return 'Récupération des données d\'altitude...';
+        case 'analyzing': return 'Calcul des statistiques...';
+        default:          return 'Traitement en cours...';
+    }
 });
 
-const onFileSelect = (e) => {
-    file.value = e.target.files[0] || null;
-};
-
-const onDrop = (e) => {
-    dragging.value = false;
-    file.value = e.dataTransfer.files[0] || null;
-};
+const onFileChange = (e) => { file.value = e.target.files[0] ?? null; };
+const onDrop       = (e) => { file.value = e.dataTransfer.files[0] ?? null; };
 
 const submit = async () => {
-    loading.value = true;
-    error.value   = '';
-    result.value  = null;
+    if (!canSubmit.value) return;
 
-    const formData = new FormData();
-    formData.append('gpx_file', file.value);
-    Object.entries(form.value).forEach(([k, v]) => {
-        if (v) formData.append(k, v);
-    });
+    uploading.value = true;
+    error.value     = '';
+    step.value      = '';
+    progress.value  = 0;
+
+    const form = new FormData();
+    form.append('gpx_file',    file.value);
+    form.append('title',       title.value);
+    form.append('type',        type.value);
+    form.append('environment', environment.value);
+    form.append('date',        date.value);
+    if (comment.value) form.append('comment', comment.value);
 
     try {
-        const { data } = await axios.post('/activities', formData, {
-            headers: { 'Content-Type': 'multipart/form-data' },
+        const token    = localStorage.getItem('sanctum_token');
+        const response = await fetch('/api/activities', {
+            method:  'POST',
+            headers: { 'Authorization': `Bearer ${token}` },
+            body:    form,
         });
-        result.value = data.data;
-        emit('imported', data.data);
+
+        if (!response.ok) {
+            const data = await response.json();
+            throw new Error(data.message ?? 'Erreur lors de l\'import.');
+        }
+
+        const reader       = response.body.getReader();
+        const decoder      = new TextDecoder();
+        let   buffer       = '';
+        let   currentEvent = ''; // persiste entre les chunks
+        let   streamDone   = false;
+
+        console.log('[SSE] Début de lecture du stream');
+
+        while (!streamDone) {
+            const { done, value } = await reader.read();
+
+            console.log('[SSE] reader.read() — done:', done, '| value length:', value?.length ?? 0);
+
+            if (done) {
+                console.log('[SSE] Stream terminé (done=true) — buffer restant:', JSON.stringify(buffer));
+                break;
+            }
+
+            buffer += decoder.decode(value, { stream: true });
+            const lines = buffer.split('\n');
+            buffer = lines.pop(); // garde la ligne potentiellement incomplète
+
+            console.log('[SSE] Chunk décodé — lignes à traiter:', lines.length, '| buffer restant:', JSON.stringify(buffer));
+
+            for (const line of lines) {
+                if (line.startsWith('event: ')) {
+                    currentEvent = line.slice(7).trim();
+                    console.log('[SSE] event:', currentEvent);
+
+                } else if (line.startsWith('data: ')) {
+                    console.log('[SSE] data brute — event courant:', currentEvent, '| data:', line.slice(6));
+                    try {
+                        const data = JSON.parse(line.slice(6));
+                        console.log('[SSE] data parsée:', data);
+
+                        if (currentEvent === 'status') {
+                            step.value = data.step;
+                            if (data.step === 'enriching') {
+                                progress.value = data.progress ?? 0;
+                            }
+                            console.log('[SSE] step mis à jour:', step.value, '| progress:', progress.value);
+
+                        } else if (currentEvent === 'done') {
+                            console.log('[SSE] événement done reçu — émission uploaded');
+                            uploading.value = false;
+                            emit('uploaded', data.activity);
+                            streamDone = true;
+                            break;
+
+                        } else if (currentEvent === 'close') {
+                            console.log('[SSE] événement close reçu — fin du stream');
+                            streamDone = true;
+                            break;
+
+                        } else if (currentEvent === 'error') {
+                            console.error('[SSE] événement error reçu:', data.message);
+                            throw new Error(data.message);
+
+                        } else {
+                            console.warn('[SSE] événement inconnu:', currentEvent, '| data:', data);
+                        }
+
+                    } catch (e) {
+                        console.error('[SSE] Erreur de parsing JSON:', e, '| ligne:', line);
+                    }
+                }
+                // Ignorer les lignes vides (séparateurs SSE)
+            }
+        }
+
+        console.log('[SSE] Sortie de la boucle — streamDone:', streamDone);
+
     } catch (e) {
-        error.value = e.response?.data?.message || 'Erreur lors de l\'import.';
-    } finally {
-        loading.value = false;
+        console.error('[SSE] Erreur globale:', e);
+        error.value     = e.message;
+        uploading.value = false;
     }
 };
 </script>

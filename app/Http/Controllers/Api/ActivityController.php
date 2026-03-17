@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateActivityRequest;
 use App\Http\Traits\ApiResponse;
 use App\Models\Activity;
 use App\Services\ActivityService;
+use App\Services\Gpx\ElevationEnrichmentService;
 use Illuminate\Http\JsonResponse;
 
 class ActivityController extends Controller
@@ -31,14 +32,64 @@ class ActivityController extends Controller
         return $this->success($activities);
     }
 
-    public function store(StoreActivityRequest $request): JsonResponse
+    public function store(StoreActivityRequest $request): \Symfony\Component\HttpFoundation\StreamedResponse
     {
-        $activity = $this->activityService->store(
-            $request->only('title', 'type', 'environment', 'date', 'comment'),
-            $request->file('gpx_file'),
-        );
+        return response()->stream(function () use ($request) {
+            // Désactiver le timeout
+            set_time_limit(0);
 
-        return $this->created($activity);
+            $sendEvent = function (string $event, array $data) {
+                echo "event: {$event}\n";
+                echo 'data: ' . json_encode($data) . "\n\n";
+                if (ob_get_level() > 0) {
+                    ob_flush();
+                }
+                flush();
+            };
+            try {
+                if (ob_get_level() > 0) {
+                    ob_end_clean();
+                }
+                ini_set('output_buffering', 'off');
+                ini_set('zlib.output_compression', false);                
+                $sendEvent('status', ['step' => 'parsing']);
+                error_log('SSE: parsing sent');
+
+                $needsEnrichment = $this->activityService->needsElevationEnrichment(
+                    $request->file('gpx_file')
+                );
+
+                if ($needsEnrichment) {
+                    $sendEvent('status', ['step' => 'enriching', 'progress' => 0]);
+                }
+
+                $activity = $this->activityService->store(
+                    $request->only('title', 'type', 'environment', 'date', 'comment'),
+                    $request->file('gpx_file'),
+                    function (int $percent) use ($sendEvent, $needsEnrichment) {
+                        if ($needsEnrichment) {
+                            $sendEvent('status', ['step' => 'enriching', 'progress' => $percent]);
+                        }
+                    }
+                );
+
+                $sendEvent('status', ['step' => 'analyzing']);
+                error_log('SSE: analyzing sent');
+                $sendEvent('done', ['activity' => $activity->toArray()]);
+                error_log('SSE: done sent');
+                // Forcer la fin du stream
+                echo "\n\n";
+                if (ob_get_level() > 0) ob_flush();
+                flush();
+            } catch (\Exception $e) {
+                $sendEvent('error', ['message' => $e->getMessage()]);
+            }
+        }, 200, [
+            'Content-Type'                     => 'text/event-stream',
+            'Cache-Control'                     => 'no-cache',
+            'X-Accel-Buffering'                 => 'no',
+            'Connection'                        => 'close', // ← ferme la connexion
+        ]);
     }
 
     public function show(Activity $activity): JsonResponse

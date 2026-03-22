@@ -78,6 +78,16 @@
 </template>
 
 <script setup>
+/**
+ * GPX import modal form with real-time SSE upload progress.
+ *
+ * Handles file selection (click or drag & drop), metadata input (title, type, environment, date),
+ * and submits the form via the Fetch API to receive Server-Sent Events during processing.
+ * SSE events: `status` (step + optional progress %), `done` (activity payload), `error`.
+ *
+ * @emits uploaded - Emitted with the created activity object when the import succeeds.
+ * @emits close - Emitted when the user cancels or closes the modal.
+ */
 import { ref, computed } from 'vue';
 
 const emit = defineEmits(['uploaded', 'close']);
@@ -106,9 +116,20 @@ const statusLabel = computed(() => {
     }
 });
 
+/** @param {Event} e - File input change event. */
 const onFileChange = (e) => { file.value = e.target.files[0] ?? null; };
+
+/** @param {DragEvent} e - Drop event from the drag-and-drop zone. */
 const onDrop       = (e) => { file.value = e.dataTransfer.files[0] ?? null; };
 
+/**
+ * Submits the GPX file and metadata to the API and consumes the SSE response stream.
+ *
+ * Uses the Fetch API (not Axios) to access the raw ReadableStream. Parses SSE lines
+ * manually to handle `status`, `done`, `close`, and `error` events.
+ *
+ * @returns {Promise<void>}
+ */
 const submit = async () => {
     if (!canSubmit.value) return;
 

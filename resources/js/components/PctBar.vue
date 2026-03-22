@@ -10,6 +10,14 @@
 </template>
 
 <script setup>
+/**
+ * Horizontal progress bar for displaying a slope-class percentage alongside its distance.
+ *
+ * @prop {string} label - Slope class label (e.g. "5–15%").
+ * @prop {number} [value=0] - Percentage value (0–100); capped at 100 in the bar width.
+ * @prop {string} [km=''] - Formatted distance string displayed to the right of the bar.
+ * @prop {string} [color='bg-blue-400'] - Tailwind background color class applied to the filled bar.
+ */
 defineProps({
     label: String,
     value: { type: Number, default: 0 },

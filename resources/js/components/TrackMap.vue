@@ -33,6 +33,17 @@
 </template>
 
 <script setup>
+/**
+ * GPS track map rendered with Leaflet and OpenStreetMap tiles.
+ *
+ * Fetches track points from the API, draws the GPX polyline, and places start/end markers.
+ * Tiles are cached offline via leaflet.offline. The map auto-fits its bounds to the track.
+ * Reactively renders a highlighted circle marker at the `hoveredPoint` coordinates
+ * (driven by the ElevationProfile hover event in the parent).
+ *
+ * @prop {number} activityId - ID of the activity whose track points are fetched.
+ * @prop {{ lat: number, lon: number }|null} [hoveredPoint=null] - Coordinates to highlight on the map.
+ */
 import { ref, computed, onMounted, nextTick } from 'vue';
 import axios from 'axios';
 import { LMap, LPolyline, LMarker, LTooltip, LCircleMarker } from '@vue-leaflet/vue-leaflet';
@@ -72,6 +83,11 @@ const center = computed(() => {
     ];
 });
 
+/**
+ * Fetches raw track points from the API and stores them in `points`.
+ *
+ * @returns {Promise<void>}
+ */
 const fetchPoints = async () => {
     loading.value = true;
     try {

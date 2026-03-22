@@ -29,6 +29,12 @@
 </template>
 
 <script setup>
+/**
+ * Token-based login page for single-user access.
+ *
+ * Validates the Sanctum token by making a test API request. On success, persists
+ * the token to localStorage and redirects to the dashboard.
+ */
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
@@ -38,6 +44,11 @@ const error  = ref('');
 const loading = ref(false);
 const router = useRouter();
 
+/**
+ * Validates the token against the API, persists it on success, or shows an error on 401.
+ *
+ * @returns {Promise<void>}
+ */
 const login = async () => {
     if (!token.value) return;
 

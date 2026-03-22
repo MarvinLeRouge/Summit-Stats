@@ -111,6 +111,13 @@
 </template>
 
 <script setup>
+/**
+ * Activity list page with URL-driven filters and pagination.
+ *
+ * Filter state is stored in the URL query string (type, environment, date_from, date_to, page),
+ * allowing browser history navigation. The Pinia store is re-fetched on every route query change.
+ * Includes the GPX upload modal and a success Toast notification.
+ */
 import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useActivitiesStore } from '@/stores/activities';
@@ -138,6 +145,12 @@ watch(() => route.query, () => {
     store.fetch(filters.value);
 }, { immediate: true });
 
+/**
+ * Updates a single filter in the URL query and resets pagination to page 1.
+ *
+ * @param {string} key - Query parameter name (e.g. 'type', 'environment').
+ * @param {string|null} value - New value, or null/empty to remove the parameter.
+ */
 const setFilter = (key, value) => {
     router.push({
         query: {
@@ -148,6 +161,11 @@ const setFilter = (key, value) => {
     });
 };
 
+/**
+ * Navigates to the given page number by updating the URL query.
+ *
+ * @param {number} page - Target page number.
+ */
 const goToPage = (page) => {
     router.push({
         query: { ...route.query, page: page > 1 ? page : undefined },
@@ -158,6 +176,7 @@ const resetFilters = () => {
     router.push({ query: {} });
 };
 
+/** Closes the upload form, refreshes the list, and shows a success toast. */
 const onUploaded = () => {
     showForm.value = false;
     store.fetch(filters.value);

@@ -112,6 +112,14 @@
 </template>
 
 <script setup>
+/**
+ * Progression dashboard — filterable time-series chart for any of the 22 activity metrics.
+ *
+ * Filters (metric, type, environment, activity, date range, slope range) are held in a
+ * reactive object and trigger a debounced API call on change. Slope range filters are
+ * converted from slope-class keys to numeric min/max before being sent to the API.
+ * Displays summary cards (count, average, maximum) above the Chart.js progression chart.
+ */
 import { ref, watch, computed, onMounted } from 'vue';
 import axios from 'axios';
 import StatCard from '@/components/StatCard.vue';
@@ -151,11 +159,24 @@ const slopeParams = computed(() => {
     };
 });
 
+/**
+ * Fetches the full activity list (up to 999 items) for the "Activité" filter dropdown.
+ *
+ * @returns {Promise<void>}
+ */
 const fetchActivityList = async () => {
     const { data } = await axios.get('/activities', { params: { per_page: 999 } });
     activityList.value = data.data.data;
 };
 
+/**
+ * Fetches filtered progression stats from the API and updates `stats` and `meta`.
+ *
+ * Merges the current filters with computed slope_min/slope_max, strips null/empty values,
+ * and removes the internal slope_from/slope_to keys before sending the request.
+ *
+ * @returns {Promise<void>}
+ */
 const fetchStats = async () => {
     loading.value = true;
     try {

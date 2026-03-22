@@ -191,6 +191,14 @@
 </template>
 
 <script setup>
+/**
+ * Activity detail page — full stats, elevation profile, OSM map, and segment table.
+ *
+ * Displays 22 aggregated metrics grouped by category (global stats, ascent speeds,
+ * flat/descent speeds, slope distribution). The elevation profile and OSM map are
+ * collapsible panels; hovering the profile emits coordinates that move a map marker.
+ * Supports on-demand stat recalculation and activity deletion (with confirmation).
+ */
 import { ref, computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import axios from 'axios';
@@ -240,7 +248,12 @@ const typeClass = (type) => ({
 
 const formatAscentSpeed = (val) => val ? `${Math.round(val)} m/h` : '--';
 
-// Arrondis corrects pour que montée + plat + descente = 100%
+/**
+ * Computes rounded integer percentages for ascent, flat, and descent that always sum to 100.
+ * Uses a largest-remainder method to distribute rounding errors.
+ *
+ * @returns {function(type: string): number} A function that returns the rounded percentage for a given type.
+ */
 const roundedPct = computed(() => {
     if (!activity.value) return () => 0;
     const raw = {
@@ -262,6 +275,16 @@ const pctToKm = (type) => {
     return `${km.toFixed(1)} km`;
 };
 
+/**
+ * Returns the slope-class percentage for a given segment type, adjusted by display mode.
+ *
+ * In 'total' mode: percentage of the full activity distance.
+ * In 'slope' mode: percentage relative to the ascent or descent portion only.
+ *
+ * @param {'ascent'|'descent'} type - Segment direction.
+ * @param {string} cls - Slope class key (e.g. '5_15', 'gt35').
+ * @returns {number} Rounded percentage.
+ */
 const pctSlope = (type, cls) => {
     if (!activity.value) return 0;
     const raw  = activity.value[`pct_${type}_${cls}`] ?? 0;
@@ -285,6 +308,11 @@ onMounted(async () => {
     }
 });
 
+/**
+ * Triggers on-demand stat recalculation for the current activity and refreshes the page data.
+ *
+ * @returns {Promise<void>}
+ */
 const recalculate = async () => {
     recalculating.value = true;
     try {
@@ -295,6 +323,11 @@ const recalculate = async () => {
     }
 };
 
+/**
+ * Prompts the user for confirmation, then deletes the activity and redirects to the list.
+ *
+ * @returns {Promise<void>}
+ */
 const confirmDelete = async () => {
     if (!confirm(`Supprimer "${activity.value.title}" ?`)) return;
     await axios.delete(`/activities/${activity.value.id}`);

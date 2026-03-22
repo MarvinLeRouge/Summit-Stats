@@ -25,6 +25,18 @@
 </template>
 
 <script setup>
+/**
+ * Interactive elevation profile for a GPX activity.
+ *
+ * Fetches track points from the API, renders a Chart.js area chart (distance vs altitude),
+ * and emits the geographic coordinates of the hovered point so the parent can sync a map marker.
+ * Supports scroll-wheel zoom and drag-to-zoom on the X axis; double-click resets the zoom.
+ *
+ * @prop {number} activityId - ID of the activity whose track points are fetched.
+ *
+ * @emits hover-point - Emitted on mousemove with `{ lat, lon }` of the hovered point,
+ *                      or `null` on mouseleave.
+ */
 import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue';
 import axios from 'axios';
 import { Chart, registerables } from 'chart.js';
@@ -48,6 +60,11 @@ const hasElevation = computed(() =>
     points.value.length > 0 && points.value.some(p => p.ele !== null)
 );
 
+/**
+ * Fetches raw track points from the API and stores them in `points`.
+ *
+ * @returns {Promise<void>}
+ */
 const fetchPoints = async () => {
     loading.value = true;
     try {
@@ -58,6 +75,10 @@ const fetchPoints = async () => {
     }
 };
 
+/**
+ * Instantiates the Chart.js elevation chart after track points have been loaded.
+ * No-op if the canvas ref is not ready or if no elevation data is available.
+ */
 const buildChart = () => {
     if (!canvas.value || !hasElevation.value) return;
 
@@ -132,6 +153,11 @@ const buildChart = () => {
 const resetZoom = () => chart?.resetZoom();
 const onDblClick = () => chart?.resetZoom();
 
+/**
+ * Resolves the track point under the cursor and emits its coordinates as `hover-point`.
+ *
+ * @param {MouseEvent} e - Native mousemove event from the canvas.
+ */
 const onMouseMove = (e) => {
     if (!chart) return;
     const elements = chart.getElementsAtEventForMode(e, 'index', { intersect: false }, false);

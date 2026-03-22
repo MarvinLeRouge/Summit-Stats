@@ -25,6 +25,15 @@ const router = createRouter({
     ],
 });
 
+/**
+ * Global navigation guard — redirects unauthenticated users to /login.
+ *
+ * Reads the Sanctum token from localStorage. Routes with `meta.requiresAuth`
+ * are protected; all others (e.g. /login) are publicly accessible.
+ *
+ * @param {import('vue-router').RouteLocationNormalized} to - Target route.
+ * @returns {string|undefined} '/login' redirect path, or undefined to proceed.
+ */
 router.beforeEach((to) => {
     const token = localStorage.getItem('sanctum_token');
     if (to.meta.requiresAuth && !token) return '/login';

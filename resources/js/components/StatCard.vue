@@ -7,6 +7,13 @@
 </template>
 
 <script setup>
+/**
+ * Displays a single labeled metric in a card (label + primary value + optional secondary value).
+ *
+ * @prop {string} label - Metric label displayed above the value.
+ * @prop {string} value - Primary metric value.
+ * @prop {string} [sub] - Optional secondary value displayed below the primary one.
+ */
 defineProps({
     label: String,
     value: String,

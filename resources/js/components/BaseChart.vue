@@ -5,6 +5,16 @@
 </template>
 
 <script setup>
+/**
+ * Generic Chart.js wrapper component.
+ *
+ * Instantiates a Chart.js chart on mount, destroys it on unmount, and reactively
+ * updates the chart data when the `data` prop changes.
+ *
+ * @prop {string} type - Chart.js chart type (e.g. 'line', 'bar').
+ * @prop {Object} data - Chart.js data object (labels + datasets).
+ * @prop {Object} [options={}] - Chart.js options object.
+ */
 import { ref, onMounted, onUnmounted, watch } from 'vue';
 import { Chart, registerables } from 'chart.js';
 

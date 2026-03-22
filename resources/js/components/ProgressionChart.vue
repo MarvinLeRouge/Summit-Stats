@@ -5,6 +5,16 @@
 </template>
 
 <script setup>
+/**
+ * Time-series progression chart for a single metric.
+ *
+ * Renders a Chart.js line chart with a time-based X axis (date-fns adapter, fr locale),
+ * scroll-wheel and drag-to-zoom support, and a unit label on the Y axis.
+ * Rebuilds chart options on each data update to reflect the current unit prop.
+ *
+ * @prop {Object} data - Chart.js data object with time-series datasets ({ x: date, y: value }).
+ * @prop {string} [unit=''] - Unit label appended to tooltip values and the Y axis title.
+ */
 import { ref, onMounted, onUnmounted, watch } from 'vue';
 import { Chart, registerables } from 'chart.js';
 import 'chartjs-adapter-date-fns';
@@ -21,6 +31,12 @@ const props = defineProps({
 const canvasRef    = ref(null);
 let   chartInstance = null;
 
+/**
+ * Builds the Chart.js options object with the current unit prop.
+ * Called on mount and on each data update so the Y axis title stays in sync.
+ *
+ * @returns {Object} Chart.js options configuration.
+ */
 const buildOptions = () => ({
     responsive:          true,
     maintainAspectRatio: false,

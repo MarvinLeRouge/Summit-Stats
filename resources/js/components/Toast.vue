@@ -20,6 +20,15 @@ const visible = ref(false);
 const message = ref('');
 const type    = ref('success');
 
+/**
+ * Displays the toast notification for a given duration.
+ *
+ * Exposed via `defineExpose` so parent components can call it with a template ref.
+ *
+ * @param {string} msg - Message to display.
+ * @param {'success'|'error'} [toastType='success'] - Visual style of the notification.
+ * @param {number} [duration=3000] - Auto-hide delay in milliseconds.
+ */
 const show = (msg, toastType = 'success', duration = 3000) => {
     message.value = msg;
     type.value    = toastType;

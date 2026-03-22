@@ -1,3 +1,9 @@
+/**
+ * Axios bootstrap — configures base URL, default headers, and auth interceptors.
+ *
+ * Sets the Bearer token from localStorage on startup.
+ * Redirects to /login and clears the stored token on any 401 response.
+ */
 import axios from 'axios';
 
 axios.defaults.baseURL = '/api';

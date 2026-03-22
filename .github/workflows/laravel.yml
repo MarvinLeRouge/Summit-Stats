@@ -56,7 +56,15 @@ jobs:
         run: touch database/database.sqlite
         
       - name: Run tests with coverage
-        run: php artisan test --coverage --min=80
+        run: php artisan test --coverage --coverage-clover=coverage.xml --min=80
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./coverage.xml
+          fail_ci_if_error: false
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
       - name: Lint PHP
         run: vendor/bin/pint --test

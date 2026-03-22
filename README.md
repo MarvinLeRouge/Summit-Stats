@@ -11,7 +11,7 @@
 ![PHP](https://img.shields.io/badge/PHP-8.3-777BB4?logo=php&logoColor=white)
 ![Laravel](https://img.shields.io/badge/Laravel-12-FF2D20?logo=laravel&logoColor=white)
 ![Vue.js](https://img.shields.io/badge/Vue.js-3-4FC08D?logo=vuedotjs&logoColor=white)
-![Coverage](https://img.shields.io/badge/Coverage-100%25-brightgreen)
+[![codecov](https://codecov.io/gh/MarvinLeRouge/Summit-Stats/graph/badge.svg)](https://codecov.io/gh/MarvinLeRouge/Summit-Stats)
 ![Tests](https://img.shields.io/badge/Tests-118%20passing-brightgreen)
 ![License](https://img.shields.io/github/license/MarvinLeRouge/Summit-Stats?cacheSeconds=3600)
 

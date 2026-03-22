@@ -1,0 +1,42 @@
+name: 🐛 Bug Report
+description: Report a bug / Signaler un bug
+labels: ["bug"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        🇬🇧 Please fill in as much detail as possible.
+        🇫🇷 Merci de remplir ce formulaire avec le plus de détails possible.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: "Description"
+      description: |
+        🇬🇧 What happened? What did you expect?
+        🇫🇷 Que s'est-il passé ? Quel était le comportement attendu ?
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: "Steps to reproduce / Étapes pour reproduire"
+      placeholder: |
+        1. ...
+        2. ...
+        3. ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: "Environment / Environnement"
+      placeholder: |
+        OS: ...
+        PHP: ...
+        Browser: ...
+    validations:
+      required: false

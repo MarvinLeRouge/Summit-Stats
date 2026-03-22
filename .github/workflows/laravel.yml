@@ -10,6 +10,9 @@ jobs:
   tests:
     name: Tests & Coverage
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
 
     steps:
       - name: Checkout
@@ -59,12 +62,11 @@ jobs:
         run: php artisan test --coverage --min=80
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           files: ./coverage.xml
           fail_ci_if_error: false
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+          use_oidc: true
 
       - name: Lint PHP
         run: vendor/bin/pint --test

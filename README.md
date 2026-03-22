@@ -4,15 +4,15 @@
 
 # 🏔️ Summit Stats
 
-> *A full-stack Laravel 12 + Vue.js 3 application built with strict TDD, layered service architecture and 99% test coverage — from geospatial GPX parsing algorithms to a dynamic progression dashboard.*
+> *A full-stack Laravel 12 + Vue.js 3 application built with strict TDD, layered service architecture and 100% test coverage — from geospatial GPX parsing algorithms to a dynamic progression dashboard.*
 
 ![Status](https://img.shields.io/badge/Status-V2%20Delivered-brightgreen)
 [![CI](https://github.com/MarvinLeRouge/Summit-Stats/actions/workflows/laravel.yml/badge.svg)](https://github.com/MarvinLeRouge/Summit-Stats/actions)
 ![PHP](https://img.shields.io/badge/PHP-8.3-777BB4?logo=php&logoColor=white)
 ![Laravel](https://img.shields.io/badge/Laravel-12-FF2D20?logo=laravel&logoColor=white)
 ![Vue.js](https://img.shields.io/badge/Vue.js-3-4FC08D?logo=vuedotjs&logoColor=white)
-![Coverage](https://img.shields.io/badge/Coverage-99%25-brightgreen)
-![Tests](https://img.shields.io/badge/Tests-89%20passing-brightgreen)
+![Coverage](https://img.shields.io/badge/Coverage-100%25-brightgreen)
+![Tests](https://img.shields.io/badge/Tests-118%20passing-brightgreen)
 ![License](https://img.shields.io/github/license/MarvinLeRouge/Summit-Stats?cacheSeconds=3600)
 
 ---
@@ -41,8 +41,8 @@ Summit Stats segments each GPX trace by terrain type and slope class, then lets 
 
 | Metric | Value |
 |---|---|
-| Test coverage | **99%** |
-| Automated tests | **89 tests, 271+ assertions** |
+| Test coverage | **100%** |
+| Automated tests | **118 tests, 376+ assertions** |
 | API endpoints | **7 REST routes** |
 | Metrics per activity | **22 stats stored in database** |
 | GPX pipeline | **4 services, strict TDD** |
@@ -187,7 +187,7 @@ Personal project with a dual purpose:
 | Frontend | Vue.js 3 + Vite |
 | Charts | Chart.js + chartjs-adapter-date-fns |
 | State | Pinia |
-| Testing | Pest — strict TDD, 99% coverage |
+| Testing | Pest — strict TDD, 100% coverage |
 | PHP linting | Laravel Pint (PSR-12) |
 | JS linting | ESLint + Prettier |
 | CI | GitHub Actions |

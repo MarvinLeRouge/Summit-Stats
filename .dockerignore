@@ -1,0 +1,53 @@
+# Version control
+.git
+.github
+.gitignore
+.gitattributes
+
+# Environment files — never bake secrets into the image
+.env
+.env.*
+!.env.example
+
+# JavaScript dependencies (rebuilt in node-builder stage)
+node_modules
+
+# PHP dev dependencies (rebuilt in composer-builder stage without --dev)
+vendor
+
+# Laravel generated files (recreated at runtime)
+storage/app
+storage/logs
+storage/framework/cache
+storage/framework/sessions
+storage/framework/views
+bootstrap/cache
+
+# Built assets (rebuilt in node-builder stage)
+public/build
+public/hot
+
+# Documentation
+docs
+*.md
+CHANGELOG*
+LICENSE
+
+# Tests (not needed in production image)
+tests
+phpunit.xml
+.phpunit.result.cache
+coverage.xml
+
+# Dev tooling
+.editorconfig
+.prettierrc
+eslint.config.js
+docker-compose*.yml
+Dockerfile
+
+# IDE & OS artifacts
+.idea
+.vscode
+*.DS_Store
+Thumbs.db

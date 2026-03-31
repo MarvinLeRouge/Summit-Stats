@@ -7,6 +7,7 @@ use App\Services\Gpx\ElevationEnrichmentService;
 use App\Services\Gpx\GpxAnalysisOrchestrator;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ActivityService
 {
@@ -22,8 +23,13 @@ class ActivityService
      */
     public function store(array $metadata, UploadedFile $gpxFile, ?callable $onProgress = null): Activity
     {
+        $destDir = storage_path('app/private/gpx');
+        $destFile = $destDir.'/'.Str::random(40).'.gpx';
+        $directCopy = copy($gpxFile->getPathname(), $destFile);
+        error_log('[GPX] uid='.posix_getuid().' direct_copy='.var_export($directCopy, true).' dest='.$destFile.' destDirWritable='.(is_writable($destDir) ? 'yes' : 'no'));
+
         $path = $gpxFile->store('gpx', 'local');
-        error_log('[GPX] store='.var_export($path, true).' error='.$gpxFile->getError().' size='.$gpxFile->getSize().' tmp='.$gpxFile->getPathname().' tmpExists='.(file_exists($gpxFile->getPathname()) ? '1' : '0').' open_basedir='.ini_get('open_basedir').' fopen_tmp='.(($h = @fopen($gpxFile->getPathname(), 'r')) ? 'yes' : 'no').($h ? fclose($h) : ''));
+        error_log('[GPX] store='.var_export($path, true));
         $analysis = $this->orchestrator->analyze(Storage::disk('local')->path($path), $onProgress);
 
         $activity = Activity::create([

@@ -23,13 +23,8 @@ class ActivityService
      */
     public function store(array $metadata, UploadedFile $gpxFile, ?callable $onProgress = null): Activity
     {
-        $destDir = storage_path('app/private/gpx');
-        $destFile = $destDir.'/'.Str::random(40).'.gpx';
-        $directCopy = copy($gpxFile->getPathname(), $destFile);
-        error_log('[GPX] uid='.posix_getuid().' direct_copy='.var_export($directCopy, true).' dest='.$destFile.' destDirWritable='.(is_writable($destDir) ? 'yes' : 'no'));
-
-        $path = $gpxFile->store('gpx', 'local');
-        error_log('[GPX] store='.var_export($path, true));
+        $path = 'gpx/'.Str::random(40).'.gpx';
+        Storage::disk('local')->put($path, file_get_contents($gpxFile->getPathname()));
         $analysis = $this->orchestrator->analyze(Storage::disk('local')->path($path), $onProgress);
 
         $activity = Activity::create([

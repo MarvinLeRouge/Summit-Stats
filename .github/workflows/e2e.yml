@@ -58,16 +58,6 @@ jobs:
           docker compose logs app
           exit 1
 
-      - name: Initialize storage directories
-        run: |
-          docker compose exec -T app mkdir -p \
-            storage/app/private \
-            storage/app/public \
-            storage/framework/sessions \
-            storage/framework/views \
-            storage/framework/cache \
-            storage/logs
-
       - name: Run migrations and seed the test user
         run: |
           docker compose exec -T app php artisan migrate --force

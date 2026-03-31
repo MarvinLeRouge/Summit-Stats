@@ -84,6 +84,8 @@ COPY docker/entrypoint-dev.sh /usr/local/bin/entrypoint-dev.sh
 RUN chmod +x /usr/local/bin/entrypoint-dev.sh
 
 # Workers PHP-FPM en root pour les volumes bind-mount en dev
+# Supprime le pool par défaut (user=www-data) pour éviter le conflit avec www-dev.conf
+RUN rm -f /usr/local/etc/php-fpm.d/www.conf
 COPY docker/php/www-dev.conf /usr/local/etc/php-fpm.d/www-dev.conf
 
 EXPOSE 9000

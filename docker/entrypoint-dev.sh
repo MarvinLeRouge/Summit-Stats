@@ -4,6 +4,7 @@ set -e
 # Ensure Laravel writable directories exist in the storage volume
 mkdir -p \
     storage/app/private \
+    storage/app/private/gpx \
     storage/app/public \
     storage/framework/views \
     storage/framework/cache \

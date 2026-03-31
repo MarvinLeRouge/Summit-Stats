@@ -98,6 +98,7 @@ jobs:
         run: |
           cp .env.example .env
           echo "ELEVATION_ENABLED=false" >> .env
+          echo "DB_PASSWORD=secret" >> .env
           echo "APP_USER_NAME=${{ secrets.APP_USER_NAME }}" >> .env
           echo "APP_USER_EMAIL=${{ secrets.APP_USER_EMAIL }}" >> .env
           echo "APP_USER_PASSWORD=${{ secrets.APP_USER_PASSWORD }}" >> .env

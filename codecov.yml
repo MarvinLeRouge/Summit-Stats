@@ -1,0 +1,29 @@
+ignore:
+  # One-shot utility commands — not unit-testable by design
+  - "app/Console/Commands/MigrateFromSqlite.php"
+  # DDL and fixture data — no business logic
+  - "database/migrations/**"
+  - "database/seeders/**"
+  - "database/factories/**"
+  # Framework wiring — not testable in isolation
+  - "bootstrap/**"
+  - "public/**"
+  - "routes/**"
+  - "config/**"
+  # Resources — Blade views and frontend assets
+  - "resources/**"
+
+coverage:
+  status:
+    project:
+      default:
+        enabled: true
+        target: 80%
+        threshold: 2%
+        informational: false
+    patch:
+      default:
+        enabled: true
+        target: 70%
+        threshold: 5%
+        informational: false

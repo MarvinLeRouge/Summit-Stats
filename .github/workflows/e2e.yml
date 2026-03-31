@@ -1,0 +1,91 @@
+name: E2E
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  e2e:
+    name: E2E Tests (Playwright)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install JS dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Build assets
+        run: npm run build
+
+      - name: Create .env for Docker Compose
+        run: |
+          cp .env.example .env
+          echo "APP_KEY=base64:$(openssl rand -base64 32)" >> .env
+          echo "ELEVATION_ENABLED=false" >> .env
+          echo "DB_PASSWORD=secret" >> .env
+          echo "APP_USER_NAME=${{ secrets.APP_USER_NAME }}" >> .env
+          echo "APP_USER_EMAIL=${{ secrets.APP_USER_EMAIL }}" >> .env
+          echo "APP_USER_PASSWORD=${{ secrets.APP_USER_PASSWORD }}" >> .env
+
+      - name: Start Docker stack
+        run: docker compose up -d --build
+
+      - name: Wait for the app to be ready
+        run: |
+          echo "Waiting for http://localhost:8081 ..."
+          for i in $(seq 1 40); do
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8081/login)
+            if [ "$STATUS" = "200" ]; then
+              echo "App is ready after $((i * 2))s (HTTP 200)"
+              exit 0
+            fi
+            echo "  attempt $i — HTTP $STATUS"
+            sleep 2
+          done
+          echo "App did not become ready in time"
+          docker compose logs app
+          exit 1
+
+      - name: Run migrations and seed the test user
+        run: |
+          docker compose exec -T app php artisan migrate --force
+          docker compose exec -T app php artisan db:seed --class=UserSeeder
+
+      - name: Create a Sanctum test token
+        run: |
+          TOKEN=$(docker compose exec -T app php -r "
+            require 'vendor/autoload.php';
+            \$app = require 'bootstrap/app.php';
+            \$app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap();
+            echo App\Models\User::first()->createToken('ci-e2e')->plainTextToken;
+          ")
+          echo "TEST_TOKEN=${TOKEN}" >> $GITHUB_ENV
+
+      - name: Run Playwright E2E tests
+        run: npm run test:e2e
+        env:
+          E2E_BASE_URL: http://localhost:8081
+
+      - name: Upload Playwright report on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
+
+      - name: Stop Docker stack
+        if: always()
+        run: docker compose down -v

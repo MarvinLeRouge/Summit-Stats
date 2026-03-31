@@ -21,7 +21,7 @@ class ActivitySeeder extends Seeder
             return;
         }
 
-        if ($user->activities()->exists()) {
+        if (\App\Models\Activity::exists()) {
             $this->command->info('Activities already seeded, skipping.');
 
             return;

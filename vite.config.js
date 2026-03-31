@@ -23,6 +23,11 @@ export default defineConfig({
         alias: { '@': '/resources/js' },
     },
     server: {
+        host: '0.0.0.0',
+        port: 5174,
+        hmr: {
+            host: 'localhost',
+        },
         watch: {
             ignored: ['**/storage/framework/views/**'],
         },

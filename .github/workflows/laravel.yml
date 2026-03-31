@@ -97,6 +97,7 @@ jobs:
       - name: Create .env for Docker Compose
         run: |
           cp .env.example .env
+          echo "APP_KEY=base64:$(openssl rand -base64 32)" >> .env
           echo "ELEVATION_ENABLED=false" >> .env
           echo "DB_PASSWORD=secret" >> .env
           echo "APP_USER_NAME=${{ secrets.APP_USER_NAME }}" >> .env
@@ -109,13 +110,18 @@ jobs:
       - name: Wait for the app to be ready
         run: |
           echo "Waiting for http://localhost:8081 ..."
-          for i in $(seq 1 30); do
-            if curl -sf http://localhost:8081/login > /dev/null 2>&1; then
-              echo "App is ready after ${i}s"
-              break
+          for i in $(seq 1 40); do
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8081/login)
+            if [ "$STATUS" = "200" ]; then
+              echo "App is ready after $((i * 2))s (HTTP 200)"
+              exit 0
             fi
+            echo "  attempt $i — HTTP $STATUS"
             sleep 2
           done
+          echo "App did not become ready in time"
+          docker compose logs app
+          exit 1
 
       - name: Run migrations and seed the test user
         run: |

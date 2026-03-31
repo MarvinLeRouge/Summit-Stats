@@ -29,6 +29,10 @@ Thumbs.db
 # Db
 database.sqlite
 
+# Test artifacts
+coverage.xml
+.env.prod
+
 docs/work-in-progress
 
 # Claude Code

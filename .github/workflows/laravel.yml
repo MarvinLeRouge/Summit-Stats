@@ -21,8 +21,8 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.3'
-          extensions: dom, mbstring, sqlite3, pcov
+          php-version: '8.4'
+          extensions: dom, mbstring, sqlite3, pgsql, pdo_pgsql, redis, pcov
           coverage: pcov
 
       - name: Cache Composer
@@ -55,9 +55,6 @@ jobs:
       - name: Generate app key
         run: php artisan key:generate
 
-      - name: Create SQLite database
-        run: touch database/database.sqlite
-        
       - name: Run tests with coverage
         run: php artisan test --coverage --min=80
 

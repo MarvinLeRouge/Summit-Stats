@@ -1,0 +1,108 @@
+networks:
+  traefik:
+    external: true
+
+services:
+  app:
+    build:
+      context: .
+      target: production
+    restart: unless-stopped
+    volumes:
+      - storage_data:/app/storage
+      - bootstrap_cache:/app/bootstrap/cache
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    env_file:
+      - .env.prod
+    networks:
+      - default
+
+  nginx:
+    build:
+      context: .
+      target: nginx-prod
+    restart: unless-stopped
+    depends_on:
+      - app
+    networks:
+      - default
+      - traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik"
+
+      # HTTPS router
+      - "traefik.http.routers.summit-stats.rule=Host(`${DOMAIN}`)"
+      - "traefik.http.routers.summit-stats.entrypoints=websecure"
+      - "traefik.http.routers.summit-stats.tls=true"
+      - "traefik.http.routers.summit-stats.tls.certresolver=letsencrypt"
+
+      # HTTP → HTTPS redirect
+      - "traefik.http.routers.summit-stats-http.rule=Host(`${DOMAIN}`)"
+      - "traefik.http.routers.summit-stats-http.entrypoints=web"
+      - "traefik.http.routers.summit-stats-http.middlewares=https-redirect"
+      - "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.https-redirect.redirectscheme.permanent=true"
+
+      # Internal port served by nginx
+      - "traefik.http.services.summit-stats.loadbalancer.server.port=80"
+
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    networks:
+      - default
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_DATABASE} -d ${DB_DATABASE}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    # PostgreSQL is not exposed outside the Docker network
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: redis-server --save 60 1 --loglevel warning
+    volumes:
+      - redis_data:/data
+    networks:
+      - default
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  queue:
+    build:
+      context: .
+      target: production
+    restart: unless-stopped
+    command: php artisan queue:work redis --sleep=3 --tries=3 --max-time=3600
+    volumes:
+      - storage_data:/app/storage
+    depends_on:
+      app:
+        condition: service_started
+      redis:
+        condition: service_healthy
+    env_file:
+      - .env.prod
+    networks:
+      - default
+
+volumes:
+  postgres_data:
+  redis_data:
+  storage_data:
+  bootstrap_cache:

@@ -32,6 +32,8 @@ database.sqlite
 # Test artifacts
 coverage.xml
 coverage-frontend/
+playwright-report/
+test-results/
 .env.prod
 
 docs/work-in-progress

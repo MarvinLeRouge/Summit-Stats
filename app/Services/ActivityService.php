@@ -24,8 +24,9 @@ class ActivityService
     public function store(array $metadata, UploadedFile $gpxFile, ?callable $onProgress = null): Activity
     {
         $path = 'gpx/'.Str::random(40).'.gpx';
-        Storage::disk('local')->put($path, file_get_contents($gpxFile->getPathname()));
-        $analysis = $this->orchestrator->analyze(Storage::disk('local')->path($path), $onProgress);
+        $absolutePath = Storage::disk('local')->path($path);
+        $this->copyGpxFile($gpxFile->getPathname(), $absolutePath);
+        $analysis = $this->orchestrator->analyze($absolutePath, $onProgress);
 
         $activity = Activity::create([
             ...$metadata,
@@ -50,8 +51,10 @@ class ActivityService
     {
         if ($gpxFile !== null) {
             Storage::disk('local')->delete($activity->gpx_path);
-            $path = $gpxFile->store('gpx', 'local');
-            $analysis = $this->orchestrator->analyze(Storage::disk('local')->path($path), $onProgress);
+            $path = 'gpx/'.Str::random(40).'.gpx';
+            $absolutePath = Storage::disk('local')->path($path);
+            $this->copyGpxFile($gpxFile->getPathname(), $absolutePath);
+            $analysis = $this->orchestrator->analyze($absolutePath, $onProgress);
 
             $activity->segments()->delete();
             foreach ($analysis['segments'] as $segment) {
@@ -101,6 +104,19 @@ class ActivityService
     {
         Storage::disk('local')->delete($activity->gpx_path);
         $activity->delete(); // cascade supprime segments et track_points
+    }
+
+    /**
+     * Copie un fichier GPX depuis son chemin source vers la destination absolue.
+     * Utilise copy() natif pour éviter les problèmes de LOCK_EX de Flysystem sur Docker.
+     */
+    private function copyGpxFile(string $sourcePath, string $destPath): void
+    {
+        $dir = dirname($destPath);
+        if (! is_dir($dir)) {
+            mkdir($dir, 0755, true);
+        }
+        copy($sourcePath, $destPath);
     }
 
     /**

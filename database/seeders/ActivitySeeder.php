@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Activity;
 use App\Models\User;
 use App\Services\ActivityService;
 use Illuminate\Database\Seeder;
@@ -21,7 +22,7 @@ class ActivitySeeder extends Seeder
             return;
         }
 
-        if ($user->activities()->exists()) {
+        if (Activity::exists()) {
             $this->command->info('Activities already seeded, skipping.');
 
             return;

@@ -74,6 +74,23 @@ jobs:
           ")
           echo "TEST_TOKEN=${TOKEN}" >> $GITHUB_ENV
 
+      - name: Smoke-test upload API
+        run: |
+          echo "Storage state:"
+          docker compose exec -T app find storage/app -type d
+          echo "---"
+          echo "Testing upload via curl..."
+          RESPONSE=$(curl -s \
+            -H "Authorization: Bearer ${TEST_TOKEN}" \
+            -F "gpx_file=@e2e/fixtures/test-upload.gpx" \
+            -F "title=CI Smoke Test" \
+            -F "type=trail" \
+            -F "environment=montagne" \
+            -F "date=2024-01-01" \
+            http://localhost:8081/api/activities)
+          echo "Response: $RESPONSE"
+          echo "$RESPONSE" | grep -q 'event: done' && echo "Upload smoke test OK" || echo "Upload smoke test FAILED (non-blocking)"
+
       - name: Run Playwright E2E tests
         run: npm run test:e2e
         env:

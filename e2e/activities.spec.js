@@ -17,19 +17,15 @@ test.describe('activities list', () => {
     });
 
     test('shows the activity table or the empty state message', async ({ authenticatedPage: page }) => {
-        const hasTable   = await page.locator('table').isVisible().catch(() => false);
-        const hasEmpty   = await page.getByText('Aucune sortie trouvée').isVisible().catch(() => false);
+        await page.waitForLoadState('networkidle');
+        const hasTable = await page.locator('table').isVisible().catch(() => false);
+        const hasEmpty = await page.locator('text=Aucune sortie trouvée').isVisible().catch(() => false);
         expect(hasTable || hasEmpty).toBe(true);
     });
 
     test('clicking on an activity row navigates to the detail page', async ({ authenticatedPage: page }) => {
-        const firstRow = page.locator('tbody tr').first();
-        const hasRow = await firstRow.isVisible().catch(() => false);
-        if (!hasRow) {
-            test.skip();
-            return;
-        }
-        await firstRow.click();
+        await page.waitForLoadState('networkidle');
+        await page.locator('tbody tr').first().click();
         await expect(page).toHaveURL(/\/activities\/\d+/);
     });
 
@@ -50,6 +46,6 @@ test.describe('activities list', () => {
 
     test('upload modal opens when clicking the import button', async ({ authenticatedPage: page }) => {
         await page.getByRole('button', { name: '+ Importer une sortie' }).click();
-        await expect(page.getByText('Importer une sortie')).toBeVisible();
+        await expect(page.getByText('Importer une sortie GPX')).toBeVisible();
     });
 });

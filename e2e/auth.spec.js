@@ -4,7 +4,7 @@ import { getTestToken } from './helpers/auth.js';
 test.describe('authentication', () => {
     test('login page renders the token input and submit button', async ({ page }) => {
         await page.goto('/login');
-        await expect(page.getByText('Summit Stats')).toBeVisible();
+        await expect(page.getByRole('heading', { name: 'Summit Stats' })).toBeVisible();
         await expect(page.getByPlaceholder('Votre token Sanctum')).toBeVisible();
         await expect(page.getByRole('button', { name: 'Se connecter' })).toBeVisible();
     });

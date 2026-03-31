@@ -20,7 +20,7 @@ test.describe('GPX upload', () => {
         await expect(page.getByPlaceholder('Titre *')).toBeVisible();
         await expect(page.locator('select').filter({ hasText: 'Type *' })).toBeVisible();
         await expect(page.locator('select').filter({ hasText: 'Milieu *' })).toBeVisible();
-        await expect(page.getByRole('button', { name: 'Importer' })).toBeDisabled();
+        await expect(page.getByRole('button', { name: 'Importer', exact: true })).toBeDisabled();
     });
 
     test('cancel button closes the modal', async ({ authenticatedPage: page }) => {
@@ -34,19 +34,16 @@ test.describe('GPX upload', () => {
     test('import button is enabled only when all required fields are filled', async ({ authenticatedPage: page }) => {
         await page.getByRole('button', { name: '+ Importer une sortie' }).click();
 
-        const submitBtn = page.getByRole('button', { name: 'Importer' });
+        const submitBtn = page.getByRole('button', { name: 'Importer', exact: true });
         await expect(submitBtn).toBeDisabled();
 
-        // Attach GPX file
-        const [fileChooser] = await Promise.all([
-            page.waitForEvent('filechooser'),
-            page.locator('input[type="file"]').evaluate(el => el.click()),
-        ]);
-        await fileChooser.setFiles(GPX_FILE);
+        // Attach GPX file via setInputFiles (more reliable than filechooser on hidden inputs)
+        await page.locator('input[type="file"]').setInputFiles(GPX_FILE);
 
         await page.getByPlaceholder('Titre *').fill('Test E2E Activity');
         await page.locator('select').filter({ hasText: 'Type *' }).selectOption('trail');
         await page.locator('select').filter({ hasText: 'Milieu *' }).selectOption('montagne');
+        await page.locator('.max-w-md input[type="date"]').fill('2024-06-15');
 
         await expect(submitBtn).toBeEnabled();
     });
@@ -54,17 +51,14 @@ test.describe('GPX upload', () => {
     test('uploading a valid GPX file shows success and closes the modal', async ({ authenticatedPage: page }) => {
         await page.getByRole('button', { name: '+ Importer une sortie' }).click();
 
-        const [fileChooser] = await Promise.all([
-            page.waitForEvent('filechooser'),
-            page.locator('input[type="file"]').evaluate(el => el.click()),
-        ]);
-        await fileChooser.setFiles(GPX_FILE);
+        await page.locator('input[type="file"]').setInputFiles(GPX_FILE);
 
         await page.getByPlaceholder('Titre *').fill('Test E2E Upload');
         await page.locator('select').filter({ hasText: 'Type *' }).selectOption('trail');
         await page.locator('select').filter({ hasText: 'Milieu *' }).selectOption('montagne');
+        await page.locator('.max-w-md input[type="date"]').fill('2024-06-15');
 
-        await page.getByRole('button', { name: 'Importer' }).click();
+        await page.getByRole('button', { name: 'Importer', exact: true }).click();
 
         // Wait for the upload to complete (modal closes, toast appears)
         await expect(page.getByText('Importer une sortie GPX')).not.toBeVisible({ timeout: 20_000 });

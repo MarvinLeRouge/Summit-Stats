@@ -1,4 +1,8 @@
 import { defineConfig, devices } from '@playwright/test';
+import { config } from 'dotenv';
+
+// Load E2E-specific env vars (TEST_TOKEN, E2E_BASE_URL) without overriding process.env
+config({ path: '.env.e2e', override: false });
 
 export default defineConfig({
     testDir: './e2e',

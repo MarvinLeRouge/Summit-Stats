@@ -29,6 +29,9 @@ Thumbs.db
 # Db
 database.sqlite
 
+# E2E environment
+.env.e2e
+
 # Test artifacts
 coverage.xml
 coverage-frontend/

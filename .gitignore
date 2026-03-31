@@ -31,6 +31,7 @@ database.sqlite
 
 # Test artifacts
 coverage.xml
+coverage-frontend/
 .env.prod
 
 docs/work-in-progress

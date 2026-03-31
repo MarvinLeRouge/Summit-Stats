@@ -103,6 +103,8 @@ jobs:
             http://localhost:8081/api/activities)
           echo "Response: $RESPONSE"
           echo "$RESPONSE" | grep -q 'event: done' && echo "Upload smoke test OK" || echo "Upload smoke test FAILED (non-blocking)"
+          echo "=== PHP-FPM logs ==="
+          docker compose logs app --tail=20
 
       - name: Run Playwright E2E tests
         run: npm run test:e2e

@@ -23,7 +23,7 @@ class ActivityService
     public function store(array $metadata, UploadedFile $gpxFile, ?callable $onProgress = null): Activity
     {
         $path = $gpxFile->store('gpx', 'local');
-        error_log('[GPX] store=' . var_export($path, true) . ' error=' . $gpxFile->getError() . ' size=' . $gpxFile->getSize() . ' tmp=' . $gpxFile->getPathname() . ' tmpExists=' . (file_exists($gpxFile->getPathname()) ? '1' : '0'));
+        error_log('[GPX] store='.var_export($path, true).' error='.$gpxFile->getError().' size='.$gpxFile->getSize().' tmp='.$gpxFile->getPathname().' tmpExists='.(file_exists($gpxFile->getPathname()) ? '1' : '0'));
         $analysis = $this->orchestrator->analyze(Storage::disk('local')->path($path), $onProgress);
 
         $activity = Activity::create([

@@ -7,6 +7,7 @@ use App\Services\Gpx\ElevationEnrichmentService;
 use App\Services\Gpx\GpxAnalysisOrchestrator;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ActivityService
 {
@@ -22,8 +23,8 @@ class ActivityService
      */
     public function store(array $metadata, UploadedFile $gpxFile, ?callable $onProgress = null): Activity
     {
-        $path = $gpxFile->store('gpx', 'local');
-        error_log('[GPX] store='.var_export($path, true).' error='.$gpxFile->getError().' size='.$gpxFile->getSize().' tmp='.$gpxFile->getPathname().' tmpExists='.(file_exists($gpxFile->getPathname()) ? '1' : '0').' open_basedir='.ini_get('open_basedir').' fopen_tmp='.(($h = @fopen($gpxFile->getPathname(), 'r')) ? 'yes' : 'no').($h ? fclose($h) : ''));
+        $path = 'gpx/'.Str::random(40).'.gpx';
+        Storage::disk('local')->put($path, file_get_contents($gpxFile->getPathname()));
         $analysis = $this->orchestrator->analyze(Storage::disk('local')->path($path), $onProgress);
 
         $activity = Activity::create([

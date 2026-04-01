@@ -7,7 +7,7 @@
 > *A full-stack Laravel 12 + Vue.js 3 application built with strict TDD, layered service architecture and 100% test coverage — from geospatial GPX parsing algorithms to a dynamic progression dashboard.*
 
 ![Status](https://img.shields.io/badge/Status-V2%20Delivered-brightgreen)
-[![CI](https://github.com/MarvinLeRouge/Summit-Stats/actions/workflows/laravel.yml/badge.svg)](https://github.com/MarvinLeRouge/Summit-Stats/actions/workflows/laravel.yml)
+[![CI](https://github.com/MarvinLeRouge/Summit-Stats/actions/workflows/ci.yml/badge.svg)](https://github.com/MarvinLeRouge/Summit-Stats/actions/workflows/ci.yml)
 [![E2E](https://github.com/MarvinLeRouge/Summit-Stats/actions/workflows/e2e.yml/badge.svg)](https://github.com/MarvinLeRouge/Summit-Stats/actions/workflows/e2e.yml)
 ![PHP](https://img.shields.io/badge/PHP-8.4-777BB4?logo=php&logoColor=white)
 ![Laravel](https://img.shields.io/badge/Laravel-12-FF2D20?logo=laravel&logoColor=white)
@@ -132,7 +132,7 @@ npm run test:e2e    # requires the Docker stack to be running (see Docker sectio
 
 Two GitHub Actions workflows run on every push to `main`:
 
-**[`CI`](.github/workflows/laravel.yml)** — triggers on push and pull request to `main`:
+**[`CI`](.github/workflows/ci.yml)** — triggers on push and pull request to `main`:
 - PHP backend tests with coverage (Pest + pcov) — report uploaded to Codecov (`backend` flag)
 - PHP linting (Pint) + JS linting (ESLint)
 - Frontend unit tests (Vitest) — report uploaded to Codecov (`frontend` flag)

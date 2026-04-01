@@ -1,17 +1,31 @@
-ignore:
-  # One-shot utility commands — not unit-testable by design
-  - "app/Console/Commands/MigrateFromSqlite.php"
-  # DDL and fixture data — no business logic
-  - "database/migrations/**"
-  - "database/seeders/**"
-  - "database/factories/**"
-  # Framework wiring — not testable in isolation
-  - "bootstrap/**"
-  - "public/**"
-  - "routes/**"
-  - "config/**"
-  # Resources — Blade views and frontend assets
-  - "resources/**"
+flag_management:
+  default_rules:
+    ignore:
+      # One-shot utility commands — not unit-testable by design
+      - "app/Console/Commands/MigrateFromSqlite.php"
+      # DDL and fixture data — no business logic
+      - "database/migrations/**"
+      - "database/seeders/**"
+      - "database/factories/**"
+      # Framework wiring — not testable in isolation
+      - "bootstrap/**"
+      - "public/**"
+      - "routes/**"
+      - "config/**"
+      # Resources — excluded by default (backend flag)
+      - "resources/**"
+
+flags:
+  frontend:
+    paths:
+      - "resources/js/**"
+    ignore:
+      - "app/**"
+      - "database/**"
+      - "bootstrap/**"
+      - "public/**"
+      - "routes/**"
+      - "config/**"
 
 coverage:
   status:

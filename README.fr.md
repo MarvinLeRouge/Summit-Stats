@@ -7,12 +7,13 @@
 > *Une application full-stack Laravel 12 + Vue.js 3 construite en TDD strict, architecture en couches services et 100% de couverture de tests — du parsing algorithmique de traces GPX jusqu'au dashboard de progression.*
 
 ![Status](https://img.shields.io/badge/Status-V2%20Livrée-brightgreen)
-[![CI](https://github.com/MarvinLeRouge/Summit-Stats/actions/workflows/laravel.yml/badge.svg)](https://github.com/MarvinLeRouge/Summit-Stats/actions)
-![PHP](https://img.shields.io/badge/PHP-8.3-777BB4?logo=php&logoColor=white)
+[![CI](https://github.com/MarvinLeRouge/Summit-Stats/actions/workflows/laravel.yml/badge.svg)](https://github.com/MarvinLeRouge/Summit-Stats/actions/workflows/laravel.yml)
+[![E2E](https://github.com/MarvinLeRouge/Summit-Stats/actions/workflows/e2e.yml/badge.svg)](https://github.com/MarvinLeRouge/Summit-Stats/actions/workflows/e2e.yml)
+![PHP](https://img.shields.io/badge/PHP-8.4-777BB4?logo=php&logoColor=white)
 ![Laravel](https://img.shields.io/badge/Laravel-12-FF2D20?logo=laravel&logoColor=white)
 ![Vue.js](https://img.shields.io/badge/Vue.js-3-4FC08D?logo=vuedotjs&logoColor=white)
 [![codecov](https://codecov.io/gh/MarvinLeRouge/Summit-Stats/graph/badge.svg)](https://codecov.io/gh/MarvinLeRouge/Summit-Stats)
-![Tests](https://img.shields.io/badge/Tests-118%20passing-brightgreen)
+![Tests](https://img.shields.io/badge/Tests-212%20passing-brightgreen)
 ![License](https://img.shields.io/github/license/MarvinLeRouge/Summit-Stats?cacheSeconds=3600)
 
 ---
@@ -41,8 +42,8 @@ Summit Stats segmente chaque trace GPX par type de terrain et classe de pente, p
 
 | Métrique | Valeur |
 |---|---|
-| Couverture de tests | **100%** |
-| Tests automatisés | **118 tests, 376+ assertions** |
+| Couverture de tests | **100%** (backend + frontend) |
+| Tests automatisés | **118 backend · 62 unit frontend · 32 E2E = 212 tests** |
 | Endpoints API | **7 routes REST** |
 | Métriques par activité | **22 stats stockées en base** |
 | Pipeline GPX | **4 services en TDD strict** |
@@ -92,6 +93,8 @@ resources/js/
 
 ## Tests
 
+### Backend — Pest
+
 ```bash
 php artisan test                        # lancer tous les tests
 php artisan test --coverage             # avec rapport de couverture (nécessite pcov)
@@ -102,7 +105,43 @@ php artisan test --coverage --min=80    # avec seuil minimum
 - **Feature tests** sur les 7 endpoints API + commande Artisan
 - **Tests unitaires** sur les modèles et le trait `ApiResponse`
 - **Test de régression** sur une vraie trace GPX (11.8 km, ~470 m D+)
-- Base de test SQLite en mémoire (`:memory:`) — isolation totale, suite complète en < 1s
+- Base de test SQLite en mémoire (`:memory:`) — isolation totale, suite complète en < 3s
+
+### Frontend — Vitest
+
+```bash
+npm run test:coverage    # tests unitaires avec rapport de couverture
+```
+
+- 62 tests, 100% de couverture sur les composants, les helpers et le store Pinia
+- Environnement JSDOM, Vue Test Utils
+
+### E2E — Playwright
+
+```bash
+npm run test:e2e    # nécessite le stack Docker en cours d'exécution (voir section Docker)
+```
+
+- 5 fichiers de spec, 32 scénarios couvrant l'auth, l'upload, le dashboard, la liste et le détail des activités
+- S'exécute sur le stack Docker complet (Nginx + PHP-FPM + PostgreSQL)
+- Chromium uniquement
+
+---
+
+## CI
+
+Deux workflows GitHub Actions s'exécutent à chaque push sur `main` :
+
+**[`CI`](.github/workflows/laravel.yml)** — déclenché sur push et pull request vers `main` :
+- Tests backend PHP avec couverture (Pest + pcov) — rapport envoyé à Codecov (flag `backend`)
+- Lint PHP (Pint) + lint JS (ESLint)
+- Tests unitaires frontend (Vitest) — rapport envoyé à Codecov (flag `frontend`)
+
+**[`E2E`](.github/workflows/e2e.yml)** — déclenché sur push vers `main` :
+- Build et démarrage du stack Docker complet
+- Migrations et seed des données de test (utilisateur + activité exemple)
+- Exécution de la suite Playwright (Chromium)
+- Upload du rapport HTML Playwright en artifact en cas d'échec (rétention 7 jours)
 
 ---
 
@@ -156,6 +195,33 @@ npm run dev                               # → http://localhost:5173 (HMR)
 
 ---
 
+## Docker
+
+Un stack de développement complet est fourni via Docker Compose :
+
+| Service | Description | Port hôte |
+|---|---|---|
+| `nginx` | Serveur web | 8081 |
+| `app` | PHP-FPM (Laravel) | — |
+| `postgres` | PostgreSQL 16 | 5433 |
+| `redis` | Redis 7 | 6379 |
+| `queue` | Worker de file Laravel | — |
+| `vite` | Serveur Vite (HMR) | 5174 |
+
+```bash
+cp .env.example .env
+# Renseigner APP_USER_NAME, APP_USER_EMAIL, APP_USER_PASSWORD et DB_PASSWORD
+docker compose up -d --build
+docker compose exec app php artisan migrate
+docker compose exec app php artisan db:seed --class=UserSeeder   # token affiché dans la console
+```
+
+L'application est alors disponible sur `http://localhost:8081`.
+
+> Note : PostgreSQL est utilisé dans Docker. SQLite (`:memory:`) est réservé aux tests unitaires et feature.
+
+---
+
 ## Contexte
 
 Projet personnel à double vocation :
@@ -181,16 +247,20 @@ Projet personnel à double vocation :
 
 | Couche | Technologie |
 |---|---|
-| Backend | Laravel 12 |
-| Database | SQLite |
+| Backend | ![Laravel](https://img.shields.io/badge/Laravel_12-FF2D20?logo=laravel&logoColor=white&style=flat-square) ![PHP](https://img.shields.io/badge/PHP_8.4-777BB4?logo=php&logoColor=white&style=flat-square) |
+| Database | ![PostgreSQL](https://img.shields.io/badge/PostgreSQL_16-336791?logo=postgresql&logoColor=white&style=flat-square) ![SQLite](https://img.shields.io/badge/SQLite_%3Amemory%3A_(tests)-003B57?logo=sqlite&logoColor=white&style=flat-square) |
 | Auth | Laravel Sanctum (single-user token) |
-| Frontend | Vue.js 3 + Vite |
-| Charts | Chart.js + chartjs-adapter-date-fns |
-| State | Pinia |
-| Testing | Pest — strict TDD, 100% coverage |
-| PHP linting | Laravel Pint (PSR-12) |
-| JS linting | ESLint + Prettier |
-| CI | GitHub Actions |
+| Frontend | ![Vue.js](https://img.shields.io/badge/Vue.js_3-4FC08D?logo=vuedotjs&logoColor=white&style=flat-square) ![Vite](https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=white&style=flat-square) |
+| Charts | ![Chart.js](https://img.shields.io/badge/Chart.js-FF6384?logo=chartdotjs&logoColor=white&style=flat-square) |
+| Map | ![Leaflet](https://img.shields.io/badge/Leaflet-199900?logo=leaflet&logoColor=white&style=flat-square) |
+| State | ![Pinia](https://img.shields.io/badge/Pinia-FFD859?logo=pinia&logoColor=black&style=flat-square) |
+| Tests backend | ![Pest](https://img.shields.io/badge/Pest-8A2BE2?style=flat-square) — strict TDD, 100% coverage |
+| Tests frontend | ![Vitest](https://img.shields.io/badge/Vitest-6E9F18?logo=vitest&logoColor=white&style=flat-square) + Vue Test Utils — 100% coverage |
+| Tests E2E | ![Playwright](https://img.shields.io/badge/Playwright-2EAD33?logo=playwright&logoColor=white&style=flat-square) (Chromium) |
+| PHP linting | ![Pint](https://img.shields.io/badge/Laravel_Pint-FF2D20?logo=laravel&logoColor=white&style=flat-square) (PSR-12) |
+| JS linting | ![ESLint](https://img.shields.io/badge/ESLint-4B32C3?logo=eslint&logoColor=white&style=flat-square) ![Prettier](https://img.shields.io/badge/Prettier-F7B93E?logo=prettier&logoColor=black&style=flat-square) |
+| Infrastructure | ![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white&style=flat-square) ![Nginx](https://img.shields.io/badge/Nginx-009639?logo=nginx&logoColor=white&style=flat-square) PHP-FPM |
+| CI | ![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?logo=githubactions&logoColor=white&style=flat-square) ![Codecov](https://img.shields.io/badge/Codecov-F01F7A?logo=codecov&logoColor=white&style=flat-square) |
 
 ---
 
@@ -214,6 +284,13 @@ Projet personnel à double vocation :
 - [x] **P3** — Carte OSM avec tracé GPX (Leaflet)
 - [x] **P4** — Qualité (tests, couverture, linting)
 - [x] **P5** — DevOps (mise à jour CI, documentation V2)
+
+### 🚧 V3 — En cours
+
+- [x] Suite de tests E2E (Playwright — 32 scénarios, workflow CI dédié)
+- [x] Stack Docker Compose (Nginx, PHP-FPM, PostgreSQL, Redis, worker de file)
+- [x] Couverture frontend sur Codecov (badges par flag)
+- [ ] Déploiement en production avec Traefik *(en cours)*
 
 ---
 

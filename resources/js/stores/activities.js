@@ -12,13 +12,13 @@ export const useActivitiesStore = defineStore('activities', {
         /** @type {Array<Object>} Current page of activities. */
         activities: [],
         /** @type {number} Total number of activities matching the current filters. */
-        total:      0,
+        total: 0,
         /** @type {number} Current page number. */
         currentPage: 1,
         /** @type {number} Last available page number. */
-        lastPage:    1,
+        lastPage: 1,
         /** @type {boolean} True while an API request is in progress. */
-        loading:    false,
+        loading: false,
     }),
 
     actions: {
@@ -36,10 +36,10 @@ export const useActivitiesStore = defineStore('activities', {
                 const { data } = await axios.get('/activities', {
                     params: filters,
                 });
-                this.activities  = data.data.data;
-                this.total       = data.data.total;
+                this.activities = data.data.data;
+                this.total = data.data.total;
                 this.currentPage = data.data.current_page;
-                this.lastPage    = data.data.last_page;
+                this.lastPage = data.data.last_page;
             } finally {
                 this.loading = false;
             }
@@ -53,7 +53,7 @@ export const useActivitiesStore = defineStore('activities', {
          */
         async destroy(id) {
             await axios.delete(`/activities/${id}`);
-            this.activities = this.activities.filter(a => a.id !== id);
+            this.activities = this.activities.filter((a) => a.id !== id);
         },
     },
 });

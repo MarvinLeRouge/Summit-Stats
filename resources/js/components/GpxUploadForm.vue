@@ -11,14 +11,21 @@
                     @dragover.prevent
                     @drop.prevent="onDrop"
                 >
-                    <p v-if="!file" class="text-gray-500 text-sm">Glissez un fichier GPX ou cliquez pour sélectionner</p>
+                    <p v-if="!file" class="text-gray-500 text-sm">
+                        Glissez un fichier GPX ou cliquez pour sélectionner
+                    </p>
                     <p v-else class="text-blue-600 text-sm font-medium">{{ file.name }}</p>
                 </div>
                 <input ref="fileInput" type="file" accept=".gpx,.xml" class="hidden" @change="onFileChange" />
 
                 <!-- Métadonnées -->
                 <div class="space-y-3 mb-4">
-                    <input v-model="title" type="text" placeholder="Titre *" class="w-full border rounded px-3 py-2 text-sm" />
+                    <input
+                        v-model="title"
+                        type="text"
+                        placeholder="Titre *"
+                        class="w-full border rounded px-3 py-2 text-sm"
+                    />
                     <select v-model="type" class="w-full border rounded px-3 py-2 text-sm">
                         <option value="">Type *</option>
                         <option value="randonnee">Randonnée</option>
@@ -31,7 +38,12 @@
                         <option value="montagne">Montagne</option>
                     </select>
                     <input v-model="date" type="date" class="w-full border rounded px-3 py-2 text-sm" />
-                    <textarea v-model="comment" placeholder="Commentaire" class="w-full border rounded px-3 py-2 text-sm" rows="2" />
+                    <textarea
+                        v-model="comment"
+                        placeholder="Commentaire"
+                        class="w-full border rounded px-3 py-2 text-sm"
+                        rows="2"
+                    />
                 </div>
 
                 <p v-if="error" class="text-red-500 text-sm mb-3">{{ error }}</p>
@@ -67,8 +79,8 @@
                 <!-- Spinner pour les autres étapes -->
                 <div v-else class="flex items-center gap-2">
                     <svg class="animate-spin h-4 w-4 text-blue-600" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/>
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
                     </svg>
                     <span class="text-sm text-gray-500">Veuillez patienter...</span>
                 </div>
@@ -92,35 +104,41 @@ import { ref, computed } from 'vue';
 
 const emit = defineEmits(['uploaded', 'close']);
 
-const file        = ref(null);
-const title       = ref('');
-const type        = ref('');
+const file = ref(null);
+const title = ref('');
+const type = ref('');
 const environment = ref('');
-const date        = ref('');
-const comment     = ref('');
-const error       = ref('');
-const uploading   = ref(false);
-const step        = ref('');
-const progress    = ref(0);
+const date = ref('');
+const comment = ref('');
+const error = ref('');
+const uploading = ref(false);
+const step = ref('');
+const progress = ref(0);
 
-const canSubmit = computed(() =>
-    file.value && title.value && type.value && environment.value && date.value
-);
+const canSubmit = computed(() => file.value && title.value && type.value && environment.value && date.value);
 
 const statusLabel = computed(() => {
     switch (step.value) {
-        case 'parsing':   return 'Lecture du fichier GPX...';
-        case 'enriching': return 'Récupération des données d\'altitude...';
-        case 'analyzing': return 'Calcul des statistiques...';
-        default:          return 'Traitement en cours...';
+        case 'parsing':
+            return 'Lecture du fichier GPX...';
+        case 'enriching':
+            return "Récupération des données d'altitude...";
+        case 'analyzing':
+            return 'Calcul des statistiques...';
+        default:
+            return 'Traitement en cours...';
     }
 });
 
 /** @param {Event} e - File input change event. */
-const onFileChange = (e) => { file.value = e.target.files[0] ?? null; };
+const onFileChange = (e) => {
+    file.value = e.target.files[0] ?? null;
+};
 
 /** @param {DragEvent} e - Drop event from the drag-and-drop zone. */
-const onDrop       = (e) => { file.value = e.dataTransfer.files[0] ?? null; };
+const onDrop = (e) => {
+    file.value = e.dataTransfer.files[0] ?? null;
+};
 
 /**
  * Submits the GPX file and metadata to the API and consumes the SSE response stream.
@@ -134,36 +152,36 @@ const submit = async () => {
     if (!canSubmit.value) return;
 
     uploading.value = true;
-    error.value     = '';
-    step.value      = '';
-    progress.value  = 0;
+    error.value = '';
+    step.value = '';
+    progress.value = 0;
 
     const form = new FormData();
-    form.append('gpx_file',    file.value);
-    form.append('title',       title.value);
-    form.append('type',        type.value);
+    form.append('gpx_file', file.value);
+    form.append('title', title.value);
+    form.append('type', type.value);
     form.append('environment', environment.value);
-    form.append('date',        date.value);
+    form.append('date', date.value);
     if (comment.value) form.append('comment', comment.value);
 
     try {
-        const token    = localStorage.getItem('sanctum_token');
+        const token = localStorage.getItem('sanctum_token');
         const response = await fetch('/api/activities', {
-            method:  'POST',
-            headers: { 'Authorization': `Bearer ${token}` },
-            body:    form,
+            method: 'POST',
+            headers: { Authorization: `Bearer ${token}` },
+            body: form,
         });
 
         if (!response.ok) {
             const data = await response.json();
-            throw new Error(data.message ?? 'Erreur lors de l\'import.');
+            throw new Error(data.message ?? "Erreur lors de l'import.");
         }
 
-        const reader       = response.body.getReader();
-        const decoder      = new TextDecoder();
-        let   buffer       = '';
-        let   currentEvent = ''; // persiste entre les chunks
-        let   streamDone   = false;
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = '';
+        let currentEvent = ''; // persiste entre les chunks
+        let streamDone = false;
 
         while (!streamDone) {
             const { done, value } = await reader.read();
@@ -211,7 +229,7 @@ const submit = async () => {
         }
     } catch (e) {
         console.error('[SSE] Erreur globale:', e);
-        error.value     = e.message;
+        error.value = e.message;
         uploading.value = false;
     }
 };

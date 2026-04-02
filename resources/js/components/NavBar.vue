@@ -3,20 +3,22 @@
         <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
             <div class="flex items-center gap-6">
                 <span class="font-bold text-gray-800 text-lg">⛰ Summit Stats</span>
-                <RouterLink to="/"
+                <RouterLink
+                    to="/"
                     class="text-sm text-gray-600 hover:text-blue-600"
-                    :class="{ 'text-blue-600 font-semibold': $route.path === '/' }">
+                    :class="{ 'text-blue-600 font-semibold': $route.path === '/' }"
+                >
                     Dashboard
                 </RouterLink>
-                <RouterLink to="/activities"
+                <RouterLink
+                    to="/activities"
                     class="text-sm text-gray-600 hover:text-blue-600"
-                    :class="{ 'text-blue-600 font-semibold': $route.path.startsWith('/activities') }">
+                    :class="{ 'text-blue-600 font-semibold': $route.path.startsWith('/activities') }"
+                >
                     Sorties
                 </RouterLink>
             </div>
-            <button class="text-sm text-gray-400 hover:text-red-500" @click="logout">
-                Déconnexion
-            </button>
+            <button class="text-sm text-gray-400 hover:text-red-500" @click="logout">Déconnexion</button>
         </div>
     </nav>
 </template>

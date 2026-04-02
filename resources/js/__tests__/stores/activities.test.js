@@ -12,10 +12,10 @@ const makeActivity = (id) => ({ id, name: `Activity ${id}` });
 const makePaginatedResponse = (items, { total = items.length, currentPage = 1, lastPage = 1 } = {}) => ({
     data: {
         data: {
-            data:         items,
+            data: items,
             total,
             current_page: currentPage,
-            last_page:    lastPage,
+            last_page: lastPage,
         },
     },
 });
@@ -110,7 +110,7 @@ describe('useActivitiesStore', () => {
 
             await store.destroy(2);
 
-            expect(store.activities.map(a => a.id)).toEqual([1, 3]);
+            expect(store.activities.map((a) => a.id)).toEqual([1, 3]);
         });
 
         it('calls DELETE on the correct endpoint', async () => {

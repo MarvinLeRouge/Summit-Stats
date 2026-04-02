@@ -12,13 +12,21 @@
 
         <!-- Filtres -->
         <div class="bg-white rounded-lg shadow-sm border p-4 mb-6 flex flex-wrap gap-4">
-            <select :value="filters.type" class="border rounded px-3 py-1.5 text-sm" @change="setFilter('type', $event.target.value || null)">
+            <select
+                :value="filters.type"
+                class="border rounded px-3 py-1.5 text-sm"
+                @change="setFilter('type', $event.target.value || null)"
+            >
                 <option value="">Tous les types</option>
                 <option value="randonnee">Randonnée</option>
                 <option value="trail">Trail</option>
             </select>
 
-            <select :value="filters.environment" class="border rounded px-3 py-1.5 text-sm" @change="setFilter('environment', $event.target.value || null)">
+            <select
+                :value="filters.environment"
+                class="border rounded px-3 py-1.5 text-sm"
+                @change="setFilter('environment', $event.target.value || null)"
+            >
                 <option value="">Tous les milieux</option>
                 <option value="urbain">Urbain</option>
                 <option value="campagne">Campagne</option>
@@ -76,16 +84,26 @@
                         <td class="px-4 py-3 text-gray-600 capitalize">{{ activity.environment }}</td>
                         <td class="px-4 py-3 text-gray-600">{{ formatDate(activity.date) }}</td>
                         <td class="px-4 py-3 text-right text-gray-600">{{ formatDistance(activity.distance_km) }}</td>
-                        <td class="px-4 py-3 text-right text-gray-600">{{ formatElevation(activity.elevation_gain) }}</td>
-                        <td class="px-4 py-3 text-right text-gray-600">{{ formatDuration(activity.duration_seconds) }}</td>
+                        <td class="px-4 py-3 text-right text-gray-600">
+                            {{ formatElevation(activity.elevation_gain) }}
+                        </td>
+                        <td class="px-4 py-3 text-right text-gray-600">
+                            {{ formatDuration(activity.duration_seconds) }}
+                        </td>
                         <td class="px-4 py-3 text-right text-gray-600">{{ formatSpeed(activity.avg_speed_kmh) }}</td>
                     </tr>
                 </tbody>
             </table>
 
             <!-- Pagination -->
-            <div v-if="store.lastPage > 1" class="flex items-center justify-between px-4 py-3 border-t text-sm text-gray-600">
-                <span>{{ store.total }} sortie{{ store.total > 1 ? 's' : '' }} — page {{ store.currentPage }} / {{ store.lastPage }}</span>
+            <div
+                v-if="store.lastPage > 1"
+                class="flex items-center justify-between px-4 py-3 border-t text-sm text-gray-600"
+            >
+                <span
+                    >{{ store.total }} sortie{{ store.total > 1 ? 's' : '' }} — page {{ store.currentPage }} /
+                    {{ store.lastPage }}</span
+                >
                 <div class="flex gap-2">
                     <button
                         :disabled="store.currentPage <= 1"
@@ -125,25 +143,29 @@ import { formatDate, formatDistance, formatDuration, formatElevation, formatSpee
 import GpxUploadForm from '@/components/GpxUploadForm.vue';
 import Toast from '@/components/Toast.vue';
 
-const route  = useRoute();
+const route = useRoute();
 const router = useRouter();
-const store  = useActivitiesStore();
-const toast  = ref(null);
+const store = useActivitiesStore();
+const toast = ref(null);
 const showForm = ref(false);
 
 // Filtres lus depuis l'URL
 const filters = computed(() => ({
-    type:        route.query.type        || null,
+    type: route.query.type || null,
     environment: route.query.environment || null,
-    date_from:   route.query.date_from   || null,
-    date_to:     route.query.date_to     || null,
-    page:        parseInt(route.query.page) || 1,
+    date_from: route.query.date_from || null,
+    date_to: route.query.date_to || null,
+    page: parseInt(route.query.page) || 1,
 }));
 
 // Recharge les données à chaque changement d'URL
-watch(() => route.query, () => {
-    store.fetch(filters.value);
-}, { immediate: true });
+watch(
+    () => route.query,
+    () => {
+        store.fetch(filters.value);
+    },
+    { immediate: true }
+);
 
 /**
  * Updates a single filter in the URL query and resets pagination to page 1.
@@ -156,7 +178,7 @@ const setFilter = (key, value) => {
         query: {
             ...route.query,
             [key]: value || undefined,
-            page:  undefined, // reset page à 1 sur changement de filtre
+            page: undefined, // reset page à 1 sur changement de filtre
         },
     });
 };

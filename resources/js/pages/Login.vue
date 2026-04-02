@@ -39,8 +39,8 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
 
-const token  = ref('');
-const error  = ref('');
+const token = ref('');
+const error = ref('');
 const loading = ref(false);
 const router = useRouter();
 
@@ -53,7 +53,7 @@ const login = async () => {
     if (!token.value) return;
 
     loading.value = true;
-    error.value   = '';
+    error.value = '';
 
     try {
         axios.defaults.headers.common['Authorization'] = `Bearer ${token.value}`;

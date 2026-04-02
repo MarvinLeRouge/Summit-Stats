@@ -28,8 +28,8 @@ const props = defineProps({
     unit: { type: String, default: '' },
 });
 
-const canvasRef    = ref(null);
-let   chartInstance = null;
+const canvasRef = ref(null);
+let chartInstance = null;
 
 /**
  * Builds the Chart.js options object with the current unit prop.
@@ -38,7 +38,7 @@ let   chartInstance = null;
  * @returns {Object} Chart.js options configuration.
  */
 const buildOptions = () => ({
-    responsive:          true,
+    responsive: true,
     maintainAspectRatio: false,
     interaction: { mode: 'index', intersect: false },
     plugins: {
@@ -53,7 +53,7 @@ const buildOptions = () => ({
         x: {
             type: 'time',
             time: {
-                unit:           'day',
+                unit: 'day',
                 displayFormats: { day: 'dd/MM/yy' },
             },
             adapters: { date: { locale: fr } },
@@ -63,7 +63,7 @@ const buildOptions = () => ({
             beginAtZero: false,
             title: {
                 display: true,
-                text:    props.unit,
+                text: props.unit,
             },
         },
     },
@@ -71,19 +71,23 @@ const buildOptions = () => ({
 
 onMounted(() => {
     chartInstance = new Chart(canvasRef.value, {
-        type:    'line',
-        data:    props.data,
+        type: 'line',
+        data: props.data,
         options: buildOptions(),
     });
 });
 
 onUnmounted(() => chartInstance?.destroy());
 
-watch(() => props.data, (newData) => {
-    if (chartInstance) {
-        chartInstance.data    = newData;
-        chartInstance.options = buildOptions();
-        chartInstance.update();
-    }
-}, { deep: true });
+watch(
+    () => props.data,
+    (newData) => {
+        if (chartInstance) {
+            chartInstance.data = newData;
+            chartInstance.options = buildOptions();
+            chartInstance.update();
+        }
+    },
+    { deep: true }
+);
 </script>

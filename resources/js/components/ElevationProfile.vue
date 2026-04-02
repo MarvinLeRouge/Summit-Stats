@@ -10,14 +10,11 @@
 
         <div v-else>
             <div class="flex justify-end mb-2">
-                <button
-                    class="text-xs text-gray-500 hover:text-gray-700 underline"
-                    @click="resetZoom"
-                >
+                <button class="text-xs text-gray-500 hover:text-gray-700 underline" @click="resetZoom">
                     Réinitialiser le zoom
                 </button>
             </div>
-            <div style="position: relative; height: 220px;">
+            <div style="position: relative; height: 220px">
                 <canvas ref="canvas" />
             </div>
         </div>
@@ -51,14 +48,12 @@ const props = defineProps({
 
 const emit = defineEmits(['hover-point']);
 
-const canvas   = ref(null);
-const loading  = ref(true);
-const points   = ref([]);
-let chart      = null;
+const canvas = ref(null);
+const loading = ref(true);
+const points = ref([]);
+let chart = null;
 
-const hasElevation = computed(() =>
-    points.value.length > 0 && points.value.some(p => p.ele !== null)
-);
+const hasElevation = computed(() => points.value.length > 0 && points.value.some((p) => p.ele !== null));
 
 /**
  * Fetches raw track points from the API and stores them in `points`.
@@ -82,50 +77,52 @@ const fetchPoints = async () => {
 const buildChart = () => {
     if (!canvas.value || !hasElevation.value) return;
 
-    const labels = points.value.map(p => parseFloat(p.distance_from_start_km).toFixed(2));
-    const data   = points.value.map(p => p.ele);
+    const labels = points.value.map((p) => parseFloat(p.distance_from_start_km).toFixed(2));
+    const data = points.value.map((p) => p.ele);
 
     chart = new Chart(canvas.value, {
         type: 'line',
         data: {
             labels,
-            datasets: [{
-                data,
-                borderColor:     '#3B82F6',
-                backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                borderWidth:      1.5,
-                pointRadius:      0,
-                pointHoverRadius: 8,
-                fill:             true,
-                tension:          0.2,
-            }],
+            datasets: [
+                {
+                    data,
+                    borderColor: '#3B82F6',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    borderWidth: 1.5,
+                    pointRadius: 0,
+                    pointHoverRadius: 8,
+                    fill: true,
+                    tension: 0.2,
+                },
+            ],
         },
         options: {
-            responsive:          true,
+            responsive: true,
             maintainAspectRatio: false,
-            animation:           false,
+            animation: false,
             plugins: {
                 legend: { display: false },
                 tooltip: {
                     callbacks: {
-                        title:  (items) => `${items[0].label} km`,
-                        label:  (item)  => `${Math.round(item.raw)} m`,
+                        title: (items) => `${items[0].label} km`,
+                        label: (item) => `${Math.round(item.raw)} m`,
                     },
                 },
                 zoom: {
-                    pan:  { 
-                        enabled: false, 
+                    pan: {
+                        enabled: false,
                     },
                     zoom: {
-                        wheel:  { enabled: true },
-                        pinch:  { enabled: true },
+                        wheel: { enabled: true },
+                        pinch: { enabled: true },
                         drag: {
                             enabled: true,
                             backgroundColor: 'rgba(59, 130, 246, 0.1)',
                             borderColor: '#3B82F6',
                             borderWidth: 1,
                         },
-                        mode:   'x',
+                        mode: 'x',
                         onZoomComplete: () => {},
                     },
                 },
@@ -162,7 +159,7 @@ const onMouseMove = (e) => {
     if (!chart) return;
     const elements = chart.getElementsAtEventForMode(e, 'index', { intersect: false }, false);
     if (elements.length > 0) {
-        const idx   = elements[0].index;
+        const idx = elements[0].index;
         const point = points.value[idx];
         if (point) emit('hover-point', { lat: point.lat, lon: point.lon });
     }

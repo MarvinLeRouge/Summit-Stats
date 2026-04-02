@@ -16,8 +16,8 @@ if (token) {
 
 // Intercepteur : redirection si 401
 axios.interceptors.response.use(
-    res => res,
-    err => {
+    (res) => res,
+    (err) => {
         if (err.response?.status === 401 && window.location.pathname !== '/login') {
             localStorage.removeItem('sanctum_token');
             window.location.href = '/login';

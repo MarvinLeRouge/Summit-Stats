@@ -105,9 +105,9 @@ onMounted(async () => {
     const leafletMap = map.value?.leafletObject;
     if (!leafletMap) return;
 
-    // Tile layer avec cache offline
+    // Tile layer — proxied and cached server-side via /tiles/
     const tileLayer = tileLayerOffline(
-        'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+        '/tiles/{z}/{x}/{y}.png',
         {
             attribution: "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors",
             maxZoom: 19,

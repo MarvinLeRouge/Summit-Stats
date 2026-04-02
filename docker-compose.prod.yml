@@ -22,6 +22,8 @@ services:
   nginx:
     image: ghcr.io/marvinlerouge/summit-stats/nginx:${IMAGE_TAG:-latest}
     restart: unless-stopped
+    volumes:
+      - tile_cache:/var/cache/nginx/tiles
     depends_on:
       - app
     networks:
@@ -100,3 +102,4 @@ volumes:
   redis_data:
   storage_data:
   bootstrap_cache:
+  tile_cache:

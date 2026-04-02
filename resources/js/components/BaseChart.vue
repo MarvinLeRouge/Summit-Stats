@@ -21,8 +21,8 @@ import { Chart, registerables } from 'chart.js';
 Chart.register(...registerables);
 
 const props = defineProps({
-    type:    { type: String, required: true },
-    data:    { type: Object, required: true },
+    type: { type: String, required: true },
+    data: { type: Object, required: true },
     options: { type: Object, default: () => ({}) },
 });
 
@@ -41,10 +41,14 @@ onUnmounted(() => {
     chartInstance?.destroy();
 });
 
-watch(() => props.data, (newData) => {
-    if (chartInstance) {
-        chartInstance.data = newData;
-        chartInstance.update();
-    }
-}, { deep: true });
+watch(
+    () => props.data,
+    (newData) => {
+        if (chartInstance) {
+            chartInstance.data = newData;
+            chartInstance.update();
+        }
+    },
+    { deep: true }
+);
 </script>

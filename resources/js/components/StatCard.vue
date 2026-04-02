@@ -17,6 +17,6 @@
 defineProps({
     label: String,
     value: String,
-    sub:   { type: String, default: null },
+    sub: { type: String, default: null },
 });
 </script>

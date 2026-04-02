@@ -1,11 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import {
-    formatDuration,
-    formatDistance,
-    formatElevation,
-    formatSpeed,
-    formatDate,
-} from '@/helpers/format.js';
+import { formatDuration, formatDistance, formatElevation, formatSpeed, formatDate } from '@/helpers/format.js';
 
 describe('formatDuration', () => {
     it('returns "--" for null', () => {

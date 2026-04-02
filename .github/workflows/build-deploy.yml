@@ -71,19 +71,6 @@ jobs:
       DEPLOY_PATH: /home/mlr/marvinlerouge.dev/summit-stats/compose
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Copy docker-compose.prod.yml to server
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.DEPLOY_SSH_HOST }}
-          username: ${{ secrets.DEPLOY_SSH_USER }}
-          key: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
-          source: docker-compose.prod.yml
-          target: ${{ env.DEPLOY_PATH }}
-          overwrite: true
-
       - name: Deploy over SSH
         uses: appleboy/ssh-action@v1.2.0
         env:
@@ -91,17 +78,24 @@ jobs:
           GHCR_USER: ${{ github.actor }}
           IMAGE_TAG: ${{ needs.build-and-push.outputs.image_tag }}
           DEPLOY_PATH: /home/mlr/marvinlerouge.dev/summit-stats/compose
+          GITHUB_SHA: ${{ github.sha }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
         with:
           host: ${{ secrets.DEPLOY_SSH_HOST }}
           username: ${{ secrets.DEPLOY_SSH_USER }}
           key: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
-          envs: GHCR_TOKEN,GHCR_USER,IMAGE_TAG,DEPLOY_PATH
+          envs: GHCR_TOKEN,GHCR_USER,IMAGE_TAG,DEPLOY_PATH,GITHUB_SHA,GITHUB_REPOSITORY
           script_stop: true
           script: |
             set -Eeuo pipefail
 
             echo "==> Authenticate to GHCR"
             echo "${GHCR_TOKEN}" | docker login ghcr.io -u "${GHCR_USER}" --password-stdin
+
+            echo "==> Fetch docker-compose.prod.yml (commit: ${GITHUB_SHA})"
+            curl -fsSL \
+              "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/${GITHUB_SHA}/docker-compose.prod.yml" \
+              -o "${DEPLOY_PATH}/docker-compose.prod.yml"
 
             cd "${DEPLOY_PATH}"
 

@@ -9,6 +9,7 @@
 ![Status](https://img.shields.io/badge/Status-V2%20Livrée-brightgreen)
 [![CI](https://github.com/MarvinLeRouge/Summit-Stats/actions/workflows/ci.yml/badge.svg)](https://github.com/MarvinLeRouge/Summit-Stats/actions/workflows/ci.yml)
 [![E2E](https://github.com/MarvinLeRouge/Summit-Stats/actions/workflows/e2e.yml/badge.svg)](https://github.com/MarvinLeRouge/Summit-Stats/actions/workflows/e2e.yml)
+[![CD](https://github.com/MarvinLeRouge/Summit-Stats/actions/workflows/build-deploy.yml/badge.svg)](https://github.com/MarvinLeRouge/Summit-Stats/actions/workflows/build-deploy.yml)
 ![PHP](https://img.shields.io/badge/PHP-8.4-777BB4?logo=php&logoColor=white)
 ![Laravel](https://img.shields.io/badge/Laravel-12-FF2D20?logo=laravel&logoColor=white)
 ![Vue.js](https://img.shields.io/badge/Vue.js-3-4FC08D?logo=vuedotjs&logoColor=white)
@@ -130,20 +131,76 @@ npm run test:e2e    # nécessite le stack Docker en cours d'exécution (voir sec
 
 ---
 
-## CI
+## CI/CD
 
-Deux workflows GitHub Actions s'exécutent à chaque push sur `main` :
+### Hooks pre-commit
 
-**[`CI`](.github/workflows/ci.yml)** — déclenché sur push et pull request vers `main` :
-- Tests backend PHP avec couverture (Pest + pcov) — rapport envoyé à Codecov (flag `backend`)
-- Lint PHP (Pint) + lint JS (ESLint)
-- Tests unitaires frontend (Vitest) — rapport envoyé à Codecov (flag `frontend`)
+Husky + lint-staged s'exécutent automatiquement à chaque `git commit` :
 
-**[`E2E`](.github/workflows/e2e.yml)** — déclenché sur push vers `main` :
+- **Fichiers JS/Vue** stagés — `eslint --fix` puis `prettier --write`
+- **Fichiers PHP** stagés — `vendor/bin/pint`
+
+Les problèmes de style sont corrigés avant l'enregistrement du commit — ils n'atteignent jamais la CI.
+
+### Workflow CI
+
+[`CI`](.github/workflows/ci.yml) — déclenché sur push et pull request vers `main` :
+
+1. Lint PHP (Pint) + lint JS (ESLint) — exécuté **avant** les tests pour échouer rapidement sur les problèmes de style
+2. Tests backend PHP avec couverture (Pest + pcov) — rapport envoyé à Codecov (flag `backend`)
+3. Tests unitaires frontend (Vitest) — rapport envoyé à Codecov (flag `frontend`)
+
+### Workflow E2E
+
+[`E2E`](.github/workflows/e2e.yml) — déclenché sur push vers `main` :
+
 - Build et démarrage du stack Docker complet
 - Migrations et seed des données de test (utilisateur + activité exemple)
 - Exécution de la suite Playwright (Chromium)
 - Upload du rapport HTML Playwright en artifact en cas d'échec (rétention 7 jours)
+- **Conditionne le déploiement** — le workflow CD ne se déclenche que si l'E2E passe
+
+### Workflow CD
+
+[`build-deploy`](.github/workflows/build-deploy.yml) — déclenché par le succès de l'E2E via `workflow_run` :
+
+- Build et push de deux images Docker vers GHCR : `app` (PHP-FPM) et `nginx` (assets intégrés)
+- Images taguées avec le SHA court (`sha-xxxxxxx`) et `latest`
+- Déploiement sur le serveur de production via SSH : pull des nouvelles images, `docker compose up -d`, application des migrations en attente
+- `workflow_dispatch` disponible pour les redéploiements manuels (hotfixes, rollbacks) — bypass du gate E2E
+
+```
+push main
+    ├── CI ─────────── lint → tests → couverture
+    └── E2E ─────────── Playwright (stack Docker complet)
+              │ workflow_run (succès uniquement)
+              ▼
+         build-deploy ── build → GHCR → deploy SSH
+
+workflow_dispatch ──────► build-deploy  (manuel, bypass E2E)
+```
+
+---
+
+## Production
+
+L'application tourne sur un VPS derrière un reverse proxy Traefik partagé avec TLS automatique via Let's Encrypt. Les images sont buildées en CI et stockées dans GHCR — pas de code source sur le serveur, pas d'étape de build en production.
+
+### Stack
+
+| Service | Image | Rôle |
+|---|---|---|
+| `nginx` | custom (nginx:alpine) | Serveur web, assets statiques, proxy cache tuiles OSM |
+| `app` | custom (PHP 8.4-FPM) | Application Laravel |
+| `postgres` | postgres:16-alpine | Base de données production |
+| `redis` | redis:7-alpine | Cache, sessions, file |
+| `queue` | custom (PHP 8.4-FPM) | Worker de file Laravel |
+
+Seul `nginx` est exposé à Traefik via le réseau Docker partagé `traefik-public`. Les autres services tournent dans un réseau Docker privé.
+
+### Cache de tuiles OSM
+
+Nginx proxifie les requêtes de tuiles OpenStreetMap via `/tiles/{z}/{x}/{y}.png` et met en cache les réponses sur un volume Docker persistant (plafonné à 1 Go, TTL 30 jours). Réduit la charge sur l'infrastructure OSM et accélère l'affichage des zones déjà explorées.
 
 ---
 
@@ -262,7 +319,10 @@ Projet personnel à double vocation :
 | PHP linting | ![Pint](https://img.shields.io/badge/Laravel_Pint-FF2D20?logo=laravel&logoColor=white&style=flat-square) (PSR-12) |
 | JS linting | ![ESLint](https://img.shields.io/badge/ESLint-4B32C3?logo=eslint&logoColor=white&style=flat-square) ![Prettier](https://img.shields.io/badge/Prettier-F7B93E?logo=prettier&logoColor=black&style=flat-square) |
 | Infrastructure | ![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white&style=flat-square) ![Nginx](https://img.shields.io/badge/Nginx-009639?logo=nginx&logoColor=white&style=flat-square) PHP-FPM |
+| Production | ![Traefik](https://img.shields.io/badge/Traefik-24A1C1?logo=traefikproxy&logoColor=white&style=flat-square) reverse proxy + TLS Let's Encrypt |
+| Pre-commit | ![Husky](https://img.shields.io/badge/Husky-000000?style=flat-square&logo=git&logoColor=white) + lint-staged (auto-fix sur les fichiers stagés) |
 | CI | ![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?logo=githubactions&logoColor=white&style=flat-square) ![Codecov](https://img.shields.io/badge/Codecov-F01F7A?logo=codecov&logoColor=white&style=flat-square) |
+| CD | ![GHCR](https://img.shields.io/badge/GHCR-181717?logo=github&logoColor=white&style=flat-square) GitHub Container Registry |
 
 ---
 
@@ -287,12 +347,14 @@ Projet personnel à double vocation :
 - [x] **P4** — Qualité (tests, couverture, linting)
 - [x] **P5** — DevOps (mise à jour CI, documentation V2)
 
-### 🚧 V3 — En cours
+### ✅ V3 — Livrée
 
 - [x] Suite de tests E2E (Playwright — 32 scénarios, workflow CI dédié)
 - [x] Stack Docker Compose (Nginx, PHP-FPM, PostgreSQL, Redis, worker de file)
 - [x] Couverture frontend sur Codecov (badges par flag)
-- [ ] Déploiement en production avec Traefik *(en cours)*
+- [x] Déploiement en production — Traefik, HTTPS, GHCR, pipeline CD par SSH
+- [x] Hooks pre-commit — Husky + lint-staged (auto-fix PHP et JS/Vue)
+- [x] Pipeline CI/CD optimisé — lint en premier, déploiement conditionné par l'E2E, workflow chaining
 
 ---
 

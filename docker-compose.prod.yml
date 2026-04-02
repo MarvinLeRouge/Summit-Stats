@@ -1,12 +1,10 @@
 networks:
-  traefik:
+  traefik-public:
     external: true
 
 services:
   app:
-    build:
-      context: .
-      target: production
+    image: ghcr.io/marvinlerouge/summit-stats/app:${IMAGE_TAG:-latest}
     restart: unless-stopped
     volumes:
       - storage_data:/app/storage
@@ -22,18 +20,16 @@ services:
       - default
 
   nginx:
-    build:
-      context: .
-      target: nginx-prod
+    image: ghcr.io/marvinlerouge/summit-stats/nginx:${IMAGE_TAG:-latest}
     restart: unless-stopped
     depends_on:
       - app
     networks:
       - default
-      - traefik
+      - traefik-public
     labels:
       - "traefik.enable=true"
-      - "traefik.docker.network=traefik"
+      - "traefik.docker.network=traefik-public"
 
       # HTTPS router
       - "traefik.http.routers.summit-stats.rule=Host(`${DOMAIN}`)"
@@ -44,9 +40,9 @@ services:
       # HTTP → HTTPS redirect
       - "traefik.http.routers.summit-stats-http.rule=Host(`${DOMAIN}`)"
       - "traefik.http.routers.summit-stats-http.entrypoints=web"
-      - "traefik.http.routers.summit-stats-http.middlewares=https-redirect"
-      - "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
-      - "traefik.http.middlewares.https-redirect.redirectscheme.permanent=true"
+      - "traefik.http.routers.summit-stats-http.middlewares=summit-stats-https-redirect"
+      - "traefik.http.middlewares.summit-stats-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.summit-stats-https-redirect.redirectscheme.permanent=true"
 
       # Internal port served by nginx
       - "traefik.http.services.summit-stats.loadbalancer.server.port=80"
@@ -63,7 +59,7 @@ services:
     networks:
       - default
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_DATABASE} -d ${DB_DATABASE}"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d ${DB_DATABASE}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -84,9 +80,7 @@ services:
       retries: 5
 
   queue:
-    build:
-      context: .
-      target: production
+    image: ghcr.io/marvinlerouge/summit-stats/app:${IMAGE_TAG:-latest}
     restart: unless-stopped
     command: php artisan queue:work redis --sleep=3 --tries=3 --max-time=3600
     volumes:

@@ -1,3 +1,5 @@
+name: summit-stats
+
 networks:
   traefik-public:
     external: true

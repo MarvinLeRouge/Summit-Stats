@@ -356,6 +356,13 @@ Projet personnel à double vocation :
 - [x] Hooks pre-commit — Husky + lint-staged (auto-fix PHP et JS/Vue)
 - [x] Pipeline CI/CD optimisé — lint en premier, déploiement conditionné par l'E2E, workflow chaining
 
+### 🔜 V4 — Planifiée
+
+- [ ] **Sauvegarde automatique de la base** — `pg_dump` planifié sur le VPS, rotation des fichiers, documentation du process de restore
+- [ ] **Authentification email / mot de passe** — remplace la gestion manuelle du token par un vrai formulaire de login (Sanctum via identifiants)
+- [ ] **Export des activités** — téléchargement des données au format CSV ou JSON depuis l'interface
+- [ ] **Multi-utilisateurs** — comptes distincts avec données isolées, permettant le partage de l'app avec un petit groupe d'utilisateurs
+
 ---
 
 ## 📋 Licence

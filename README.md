@@ -356,6 +356,13 @@ Personal project with a dual purpose:
 - [x] Pre-commit hooks — Husky + lint-staged (auto-fix PHP and JS/Vue)
 - [x] Optimised CI/CD pipeline — lint-first, E2E-gated deploy, workflow chaining
 
+### 🔜 V4 — Planned
+
+- [ ] **Automated database backup** — scheduled `pg_dump` on the VPS, file rotation, restore documentation
+- [ ] **Email / password authentication** — replace manual token management with a real login form (Sanctum via credentials)
+- [ ] **Activity export** — download data as CSV or JSON from the interface
+- [ ] **Multi-user support** — separate accounts with isolated activity data, opening the app to a small group of users
+
 ---
 
 ## 📋 License

@@ -3,6 +3,8 @@ name: summit-stats
 networks:
   traefik-public:
     external: true
+  internal:
+    driver: bridge
 
 services:
   app:
@@ -19,7 +21,7 @@ services:
     env_file:
       - .env.prod
     networks:
-      - default
+      - internal
 
   nginx:
     image: ghcr.io/marvinlerouge/summit-stats/nginx:${IMAGE_TAG:-latest}
@@ -29,26 +31,16 @@ services:
     depends_on:
       - app
     networks:
-      - default
+      - internal
       - traefik-public
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=traefik-public"
 
-      # HTTPS router
       - "traefik.http.routers.summit-stats.rule=Host(`${DOMAIN}`)"
       - "traefik.http.routers.summit-stats.entrypoints=websecure"
       - "traefik.http.routers.summit-stats.tls=true"
       - "traefik.http.routers.summit-stats.tls.certresolver=letsencrypt"
-
-      # HTTP → HTTPS redirect
-      - "traefik.http.routers.summit-stats-http.rule=Host(`${DOMAIN}`)"
-      - "traefik.http.routers.summit-stats-http.entrypoints=web"
-      - "traefik.http.routers.summit-stats-http.middlewares=summit-stats-https-redirect"
-      - "traefik.http.middlewares.summit-stats-https-redirect.redirectscheme.scheme=https"
-      - "traefik.http.middlewares.summit-stats-https-redirect.redirectscheme.permanent=true"
-
-      # Internal port served by nginx
       - "traefik.http.services.summit-stats.loadbalancer.server.port=80"
 
   postgres:
@@ -61,7 +53,7 @@ services:
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     networks:
-      - default
+      - internal
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d ${DB_DATABASE}"]
       interval: 10s
@@ -76,7 +68,7 @@ services:
     volumes:
       - redis_data:/data
     networks:
-      - default
+      - internal
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
@@ -97,7 +89,7 @@ services:
     env_file:
       - .env.prod
     networks:
-      - default
+      - internal
 
 volumes:
   postgres_data:

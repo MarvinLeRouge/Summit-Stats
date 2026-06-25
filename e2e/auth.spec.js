@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { getTestToken, getTestPassword } from './helpers/auth.js';
+import { getTestPassword } from './helpers/auth.js';
 
 test.describe('authentication', () => {
     test('login page renders the password input and submit button', async ({ page }) => {
@@ -39,9 +39,13 @@ test.describe('authentication', () => {
     });
 
     test('logout clears the token and redirects to /login', async ({ page }) => {
-        // Inject token and navigate to the dashboard
-        await page.addInitScript((t) => { localStorage.setItem('sanctum_token', t); }, getTestToken());
-        await page.goto('/');
+        // Authenticate via the login UI to obtain a fresh session token.
+        // Using TEST_TOKEN here would revoke it server-side and break all subsequent tests.
+        const password = getTestPassword();
+        await page.goto('/login');
+        await page.getByPlaceholder('Mot de passe').fill(password);
+        await page.getByRole('button', { name: 'Se connecter' }).click();
+        await expect(page).toHaveURL('/');
         await expect(page.getByRole('button', { name: 'Déconnexion' })).toBeVisible();
 
         await page.getByRole('button', { name: 'Déconnexion' }).click();

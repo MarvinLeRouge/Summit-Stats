@@ -1,11 +1,11 @@
 import { test, expect } from '@playwright/test';
-import { getTestToken } from './helpers/auth.js';
+import { getTestToken, getTestPassword } from './helpers/auth.js';
 
 test.describe('authentication', () => {
-    test('login page renders the token input and submit button', async ({ page }) => {
+    test('login page renders the password input and submit button', async ({ page }) => {
         await page.goto('/login');
         await expect(page.getByRole('heading', { name: 'Summit Stats' })).toBeVisible();
-        await expect(page.getByPlaceholder('Votre token Sanctum')).toBeVisible();
+        await expect(page.getByPlaceholder('Mot de passe')).toBeVisible();
         await expect(page.getByRole('button', { name: 'Se connecter' })).toBeVisible();
     });
 
@@ -14,27 +14,27 @@ test.describe('authentication', () => {
         await expect(page.getByRole('button', { name: 'Se connecter' })).toBeDisabled();
     });
 
-    test('entering an invalid token shows an error message', async ({ page }) => {
+    test('entering an invalid password shows an error message', async ({ page }) => {
         await page.goto('/login');
-        await page.getByPlaceholder('Votre token Sanctum').fill('invalid-token-xyz');
+        await page.getByPlaceholder('Mot de passe').fill('wrong-password-xyz');
         await page.getByRole('button', { name: 'Se connecter' }).click();
-        await expect(page.getByText('Token invalide')).toBeVisible();
+        await expect(page.getByText('Mot de passe incorrect')).toBeVisible();
     });
 
-    test('entering a valid token redirects to the dashboard', async ({ page }) => {
-        const token = getTestToken();
+    test('entering a valid password redirects to the dashboard', async ({ page }) => {
+        const password = getTestPassword();
         await page.goto('/login');
-        await page.getByPlaceholder('Votre token Sanctum').fill(token);
+        await page.getByPlaceholder('Mot de passe').fill(password);
         await page.getByRole('button', { name: 'Se connecter' }).click();
         await expect(page).toHaveURL('/');
         await expect(page.getByText('Progression')).toBeVisible();
     });
 
     test('pressing Enter in the input submits the form', async ({ page }) => {
-        const token = getTestToken();
+        const password = getTestPassword();
         await page.goto('/login');
-        await page.getByPlaceholder('Votre token Sanctum').fill(token);
-        await page.getByPlaceholder('Votre token Sanctum').press('Enter');
+        await page.getByPlaceholder('Mot de passe').fill(password);
+        await page.getByPlaceholder('Mot de passe').press('Enter');
         await expect(page).toHaveURL('/');
     });
 

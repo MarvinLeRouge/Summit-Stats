@@ -30,11 +30,18 @@ import axios from 'axios';
 const router = useRouter();
 
 /**
- * Clears the Sanctum token from localStorage and Axios headers, then redirects to /login.
+ * Revokes the Sanctum token server-side, clears it from localStorage and Axios headers,
+ * then redirects to /login.
+ *
+ * @returns {Promise<void>}
  */
-const logout = () => {
-    localStorage.removeItem('sanctum_token');
-    delete axios.defaults.headers.common['Authorization'];
-    router.push('/login');
+const logout = async () => {
+    try {
+        await axios.post('/api/logout');
+    } finally {
+        localStorage.removeItem('sanctum_token');
+        delete axios.defaults.headers.common['Authorization'];
+        router.push('/login');
+    }
 };
 </script>

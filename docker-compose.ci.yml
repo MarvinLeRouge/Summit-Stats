@@ -1,0 +1,9 @@
+networks:
+  traefik-public:
+    external: false
+    driver: bridge
+
+services:
+  nginx:
+    ports:
+      - "8081:80"

@@ -43,7 +43,7 @@ jobs:
           echo "APP_USER_PASSWORD=${{ secrets.APP_USER_PASSWORD }}" >> .env
 
       - name: Start Docker stack
-        run: docker compose up -d --build
+        run: docker compose -f docker-compose.yml -f docker-compose.ci.yml up -d --build
 
       - name: Wait for the app to be ready
         run: |
@@ -58,18 +58,18 @@ jobs:
             sleep 2
           done
           echo "App did not become ready in time"
-          docker compose logs app
+          docker compose -f docker-compose.yml -f docker-compose.ci.yml logs app
           exit 1
 
       - name: Run migrations and seed the test user
         run: |
-          docker compose exec -T app php artisan migrate --force
-          docker compose exec -T app php artisan db:seed --class=UserSeeder
-          docker compose exec -T app php artisan db:seed --class=ActivitySeeder
+          docker compose -f docker-compose.yml -f docker-compose.ci.yml exec -T app php artisan migrate --force
+          docker compose -f docker-compose.yml -f docker-compose.ci.yml exec -T app php artisan db:seed --class=UserSeeder
+          docker compose -f docker-compose.yml -f docker-compose.ci.yml exec -T app php artisan db:seed --class=ActivitySeeder
 
       - name: Create a Sanctum test token
         run: |
-          TOKEN=$(docker compose exec -T app php -r "
+          TOKEN=$(docker compose -f docker-compose.yml -f docker-compose.ci.yml exec -T app php -r "
             require 'vendor/autoload.php';
             \$app = require 'bootstrap/app.php';
             \$app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap();
@@ -79,7 +79,7 @@ jobs:
 
       - name: Diagnose PHP upload environment
         run: |
-          docker compose exec -T app php -r "
+          docker compose -f docker-compose.yml -f docker-compose.ci.yml exec -T app php -r "
             echo 'file_uploads: '     . ini_get('file_uploads')     . PHP_EOL;
             echo 'upload_tmp_dir: '   . ini_get('upload_tmp_dir')   . PHP_EOL;
             echo 'sys_get_temp_dir: ' . sys_get_temp_dir()           . PHP_EOL;
@@ -107,7 +107,7 @@ jobs:
           echo "Response: $RESPONSE"
           echo "$RESPONSE" | grep -q 'event: done' && echo "Upload smoke test OK" || echo "Upload smoke test FAILED (non-blocking)"
           echo "=== PHP-FPM logs ==="
-          docker compose logs app --tail=20
+          docker compose -f docker-compose.yml -f docker-compose.ci.yml logs app --tail=20
 
       - name: Run Playwright E2E tests
         run: npm run test:e2e
@@ -124,4 +124,4 @@ jobs:
 
       - name: Stop Docker stack
         if: always()
-        run: docker compose down -v
+        run: docker compose -f docker-compose.yml -f docker-compose.ci.yml down -v

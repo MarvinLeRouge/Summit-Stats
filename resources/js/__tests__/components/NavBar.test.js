@@ -7,6 +7,7 @@ import axios from 'axios';
 vi.mock('axios', () => ({
     default: {
         defaults: { headers: { common: {} } },
+        post: vi.fn().mockResolvedValue({}),
     },
 }));
 
@@ -61,6 +62,7 @@ describe('NavBar', () => {
         const wrapper = mount(NavBar, { global: { plugins: [router] } });
 
         await wrapper.find('button').trigger('click');
+        await flushPromises();
 
         expect(localStorage.getItem('sanctum_token')).toBeNull();
         expect(axios.defaults.headers.common['Authorization']).toBeUndefined();

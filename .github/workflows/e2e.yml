@@ -50,7 +50,7 @@ jobs:
         run: |
           echo "Waiting for http://localhost:8081 ..."
           for i in $(seq 1 40); do
-            STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8081/login)
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8081/login || echo "000")
             if [ "$STATUS" = "200" ]; then
               echo "App is ready after $((i * 2))s (HTTP 200)"
               exit 0

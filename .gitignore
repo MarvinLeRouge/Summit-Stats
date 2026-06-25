@@ -39,7 +39,7 @@ playwright-report/
 test-results/
 .env.prod
 
-docs/work-in-progress
+docs/ai
 
 # Claude Code
 CLAUDE.md

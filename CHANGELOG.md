@@ -12,6 +12,9 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Changed
 - Badges and key figures updated: 118 tests, 376 assertions, 100% coverage
 - JSDoc added to all Vue components, pages, Pinia store, router, and helpers
+- **Docker dev stack**: nginx no longer bound to a host port; routing now goes through a local Traefik instance at `summit-stats.marvinlerouge.local`; debug ports (postgres, redis, vite) restricted to `127.0.0.1`; explicit `traefik-public` (external) and `internal` (bridge) networks on all services
+- **Docker prod stack**: implicit `default` network replaced by explicit `internal` bridge; HTTP→HTTPS redirect router removed (handled at the Traefik level)
+- **Vite dev server**: `cors: true` added to allow asset loading when the app is accessed via a domain name through Traefik
 
 ---
 

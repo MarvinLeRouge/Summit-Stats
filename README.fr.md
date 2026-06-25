@@ -260,12 +260,18 @@ Un stack de développement complet est fourni via Docker Compose :
 
 | Service | Description | Port hôte |
 |---|---|---|
-| `nginx` | Serveur web | 8081 |
+| `nginx` | Serveur web | via Traefik |
 | `app` | PHP-FPM (Laravel) | — |
-| `postgres` | PostgreSQL 16 | 5433 |
-| `redis` | Redis 7 | 6379 |
+| `postgres` | PostgreSQL 16 | `127.0.0.1:5433` |
+| `redis` | Redis 7 | `127.0.0.1:6379` |
 | `queue` | Worker de file Laravel | — |
-| `vite` | Serveur Vite (HMR) | 5174 |
+| `vite` | Serveur Vite (HMR) | `127.0.0.1:5174` |
+
+**Prérequis :** une instance Traefik locale doit être en cours d'exécution et attachée au réseau Docker `traefik-public`. Ajouter l'entrée suivante dans `/etc/hosts` :
+
+```
+127.0.0.1 summit-stats.marvinlerouge.local
+```
 
 ```bash
 cp .env.example .env
@@ -275,7 +281,7 @@ docker compose exec app php artisan migrate
 docker compose exec app php artisan db:seed --class=UserSeeder   # token affiché dans la console
 ```
 
-L'application est alors disponible sur `http://localhost:8081`.
+L'application est alors disponible sur `http://summit-stats.marvinlerouge.local`.
 
 > Note : PostgreSQL est utilisé dans Docker. SQLite (`:memory:`) est réservé aux tests unitaires et feature.
 

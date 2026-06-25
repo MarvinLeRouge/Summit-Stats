@@ -9,6 +9,11 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+- **Password-based login** — `POST /api/login` (public) validates the password against the seeded user and returns a fresh Sanctum token; the login page now shows a password field instead of a raw token input
+- **Server-side logout** — `POST /api/logout` (Bearer) revokes the current token; the NavBar logout button calls it before clearing localStorage
+- **`docker-compose.ci.yml`** — CI override: `traefik-public` declared as a local bridge (no external Traefik required), nginx exposed on port `8081`
+
 ### Changed
 - Badges and key figures updated: 118 tests, 376 assertions, 100% coverage
 - JSDoc added to all Vue components, pages, Pinia store, router, and helpers

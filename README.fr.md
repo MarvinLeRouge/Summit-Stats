@@ -47,7 +47,7 @@ Summit Stats segmente chaque trace GPX par type de terrain et classe de pente, p
 |---|---|
 | Couverture de tests | **100%** (backend + frontend) |
 | Tests automatisés | **118 backend · 62 unit frontend · 32 E2E = 212 tests** |
-| Endpoints API | **7 routes REST** |
+| Endpoints API | **9 routes REST** |
 | Métriques par activité | **22 stats stockées en base** |
 | Pipeline GPX | **4 services en TDD strict** |
 | Lignes de code PHP | ~2 000 (hors migrations et config) |
@@ -105,7 +105,7 @@ php artisan test --coverage --min=80    # avec seuil minimum
 ```
 
 - **TDD strict** sur les 4 services GPX — tests écrits avant le code
-- **Feature tests** sur les 7 endpoints API + commande Artisan
+- **Feature tests** sur les 9 endpoints API + commande Artisan
 - **Tests unitaires** sur les modèles et le trait `ApiResponse`
 - **Test de régression** sur une vraie trace GPX (11.8 km, ~470 m D+)
 - Base de test SQLite en mémoire (`:memory:`) — isolation totale, suite complète en < 3s
@@ -206,17 +206,17 @@ Nginx proxifie les requêtes de tuiles OpenStreetMap via `/tiles/{z}/{x}/{y}.png
 
 ## Endpoints API
 
-Toutes les routes protégées par `Authorization: Bearer {token}`.
-
-| Méthode | Route | Description |
-|---|---|---|
-| `POST` | `/api/activities` | Import GPX + analyse automatique |
-| `GET` | `/api/activities` | Liste paginée (filtres disponibles) |
-| `GET` | `/api/activities/{id}` | Détail + segments |
-| `PUT` | `/api/activities/{id}` | Mise à jour des métadonnées |
-| `DELETE` | `/api/activities/{id}` | Suppression activité + fichier GPX |
-| `POST` | `/api/activities/{id}/recalculate` | Recalcul des stats depuis le GPX brut |
-| `GET` | `/api/stats` | Données de progression pour graphes |
+| Méthode | Route | Auth | Description |
+|---|---|---|---|
+| `POST` | `/api/login` | — | Authentification par mot de passe, retourne un token Sanctum |
+| `POST` | `/api/logout` | Bearer | Révocation du token courant |
+| `POST` | `/api/activities` | Bearer | Import GPX + analyse automatique |
+| `GET` | `/api/activities` | Bearer | Liste paginée (filtres disponibles) |
+| `GET` | `/api/activities/{id}` | Bearer | Détail + segments |
+| `PUT` | `/api/activities/{id}` | Bearer | Mise à jour des métadonnées |
+| `DELETE` | `/api/activities/{id}` | Bearer | Suppression activité + fichier GPX |
+| `POST` | `/api/activities/{id}/recalculate` | Bearer | Recalcul des stats depuis le GPX brut |
+| `GET` | `/api/stats` | Bearer | Données de progression pour graphes |
 
 **Exemple — `/api/stats`**
 
@@ -247,7 +247,7 @@ cp .env.example .env
 php artisan key:generate
 # ⚠️ Créer manuellement .env.testing avec DB_DATABASE=:memory: (non committé)
 touch database/database.sqlite && php artisan migrate
-php artisan db:seed --class=UserSeeder   # token affiché dans la console
+php artisan db:seed --class=UserSeeder   # crée l'utilisateur défini dans .env
 php artisan serve                         # → http://localhost:8000
 npm run dev                               # → http://localhost:5173 (HMR)
 ```
@@ -278,7 +278,7 @@ cp .env.example .env
 # Renseigner APP_USER_NAME, APP_USER_EMAIL, APP_USER_PASSWORD et DB_PASSWORD
 docker compose up -d --build
 docker compose exec app php artisan migrate
-docker compose exec app php artisan db:seed --class=UserSeeder   # token affiché dans la console
+docker compose exec app php artisan db:seed --class=UserSeeder   # crée l'utilisateur défini dans .env
 ```
 
 L'application est alors disponible sur `http://summit-stats.marvinlerouge.local`.
@@ -314,7 +314,7 @@ Projet personnel à double vocation :
 |---|---|
 | Backend | ![Laravel](https://img.shields.io/badge/Laravel_12-FF2D20?logo=laravel&logoColor=white&style=flat-square) ![PHP](https://img.shields.io/badge/PHP_8.4-777BB4?logo=php&logoColor=white&style=flat-square) |
 | Database | ![PostgreSQL](https://img.shields.io/badge/PostgreSQL_16-336791?logo=postgresql&logoColor=white&style=flat-square) ![SQLite](https://img.shields.io/badge/SQLite_%3Amemory%3A_(tests)-003B57?logo=sqlite&logoColor=white&style=flat-square) |
-| Auth | Laravel Sanctum (single-user token) |
+| Auth | Laravel Sanctum (login par mot de passe, mono-utilisateur) |
 | Frontend | ![Vue.js](https://img.shields.io/badge/Vue.js_3-4FC08D?logo=vuedotjs&logoColor=white&style=flat-square) ![Vite](https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=white&style=flat-square) |
 | Charts | ![Chart.js](https://img.shields.io/badge/Chart.js-FF6384?logo=chartdotjs&logoColor=white&style=flat-square) |
 | Map | ![Leaflet](https://img.shields.io/badge/Leaflet-199900?logo=leaflet&logoColor=white&style=flat-square) |
@@ -365,7 +365,7 @@ Projet personnel à double vocation :
 ### 🔜 V4 — Planifiée
 
 - [ ] **Sauvegarde automatique de la base** — `pg_dump` planifié sur le VPS, rotation des fichiers, documentation du process de restore
-- [ ] **Authentification email / mot de passe** — remplace la gestion manuelle du token par un vrai formulaire de login (Sanctum via identifiants)
+- [x] **Authentification par mot de passe** — remplace la gestion manuelle du token par un formulaire de login (Sanctum via identifiants)
 - [ ] **Export des activités** — téléchargement des données au format CSV ou JSON depuis l'interface
 - [ ] **Multi-utilisateurs** — comptes distincts avec données isolées, permettant le partage de l'app avec un petit groupe d'utilisateurs
 

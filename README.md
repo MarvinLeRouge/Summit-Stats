@@ -47,7 +47,7 @@ Summit Stats segments each GPX trace by terrain type and slope class, then lets 
 |---|---|
 | Test coverage | **100%** (backend + frontend) |
 | Automated tests | **118 backend · 62 frontend unit · 32 E2E = 212 tests** |
-| API endpoints | **7 REST routes** |
+| API endpoints | **9 REST routes** |
 | Metrics per activity | **22 stats stored in database** |
 | GPX pipeline | **4 services, strict TDD** |
 | PHP lines of code | ~2,000 (excluding migrations and config) |
@@ -105,7 +105,7 @@ php artisan test --coverage --min=80    # with minimum threshold
 ```
 
 - **Strict TDD** on all 4 GPX services — tests written before implementation
-- **Feature tests** on all 7 API endpoints + Artisan command
+- **Feature tests** on all 9 API endpoints + Artisan command
 - **Unit tests** on models and the `ApiResponse` trait
 - **Regression test** on a real GPX trace (11.8 km, ~470 m elevation gain)
 - In-memory SQLite (`:memory:`) — full isolation, entire suite runs in < 3s
@@ -206,17 +206,17 @@ Nginx proxies OpenStreetMap tile requests through `/tiles/{z}/{x}/{y}.png` and c
 
 ## API endpoints
 
-All routes protected by `Authorization: Bearer {token}`.
-
-| Method | Route | Description |
-|---|---|---|
-| `POST` | `/api/activities` | GPX import + automatic analysis |
-| `GET` | `/api/activities` | Paginated list (filters available) |
-| `GET` | `/api/activities/{id}` | Detail + segments |
-| `PUT` | `/api/activities/{id}` | Update metadata |
-| `DELETE` | `/api/activities/{id}` | Delete activity + GPX file |
-| `POST` | `/api/activities/{id}/recalculate` | Recalculate stats from raw GPX |
-| `GET` | `/api/stats` | Progression data for charts |
+| Method | Route | Auth | Description |
+|---|---|---|---|
+| `POST` | `/api/login` | — | Authenticate with password, returns a Sanctum token |
+| `POST` | `/api/logout` | Bearer | Revoke the current token |
+| `POST` | `/api/activities` | Bearer | GPX import + automatic analysis |
+| `GET` | `/api/activities` | Bearer | Paginated list (filters available) |
+| `GET` | `/api/activities/{id}` | Bearer | Detail + segments |
+| `PUT` | `/api/activities/{id}` | Bearer | Update metadata |
+| `DELETE` | `/api/activities/{id}` | Bearer | Delete activity + GPX file |
+| `POST` | `/api/activities/{id}/recalculate` | Bearer | Recalculate stats from raw GPX |
+| `GET` | `/api/stats` | Bearer | Progression data for charts |
 
 **Example — `/api/stats`**
 
@@ -248,7 +248,7 @@ cp .env.example .env
 php artisan key:generate
 # ⚠️ Manually create .env.testing with DB_DATABASE=:memory: (not committed)
 touch database/database.sqlite && php artisan migrate
-php artisan db:seed --class=UserSeeder   # token printed in console
+php artisan db:seed --class=UserSeeder   # creates the user defined in .env
 php artisan serve                         # → http://localhost:8000
 npm run dev                               # → http://localhost:5173 (HMR)
 ```
@@ -278,7 +278,7 @@ cp .env.example .env
 # Fill in APP_USER_NAME, APP_USER_EMAIL, APP_USER_PASSWORD and DB_PASSWORD
 docker compose up -d --build
 docker compose exec app php artisan migrate
-docker compose exec app php artisan db:seed --class=UserSeeder   # token printed in console
+docker compose exec app php artisan db:seed --class=UserSeeder   # creates the user defined in .env
 ```
 
 The app is then available at `http://summit-stats.marvinlerouge.local`.
@@ -314,7 +314,7 @@ Personal project with a dual purpose:
 |---|---|
 | Backend | ![Laravel](https://img.shields.io/badge/Laravel_12-FF2D20?logo=laravel&logoColor=white&style=flat-square) ![PHP](https://img.shields.io/badge/PHP_8.4-777BB4?logo=php&logoColor=white&style=flat-square) |
 | Database | ![PostgreSQL](https://img.shields.io/badge/PostgreSQL_16-336791?logo=postgresql&logoColor=white&style=flat-square) ![SQLite](https://img.shields.io/badge/SQLite_%3Amemory%3A_(tests)-003B57?logo=sqlite&logoColor=white&style=flat-square) |
-| Auth | Laravel Sanctum (single-user token) |
+| Auth | Laravel Sanctum (password login, single-user) |
 | Frontend | ![Vue.js](https://img.shields.io/badge/Vue.js_3-4FC08D?logo=vuedotjs&logoColor=white&style=flat-square) ![Vite](https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=white&style=flat-square) |
 | Charts | ![Chart.js](https://img.shields.io/badge/Chart.js-FF6384?logo=chartdotjs&logoColor=white&style=flat-square) |
 | Map | ![Leaflet](https://img.shields.io/badge/Leaflet-199900?logo=leaflet&logoColor=white&style=flat-square) |
@@ -365,7 +365,7 @@ Personal project with a dual purpose:
 ### 🔜 V4 — Planned
 
 - [ ] **Automated database backup** — scheduled `pg_dump` on the VPS, file rotation, restore documentation
-- [ ] **Email / password authentication** — replace manual token management with a real login form (Sanctum via credentials)
+- [x] **Password authentication** — replaced manual token management with a password-based login form (Sanctum via credentials)
 - [ ] **Activity export** — download data as CSV or JSON from the interface
 - [ ] **Multi-user support** — separate accounts with isolated activity data, opening the app to a small group of users
 

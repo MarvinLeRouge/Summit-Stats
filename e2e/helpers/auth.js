@@ -13,6 +13,18 @@ export const getTestToken = () => {
 };
 
 /**
+ * Returns the test user password from the environment.
+ * Throws a clear error if the variable is missing.
+ *
+ * @returns {string}
+ */
+export const getTestPassword = () => {
+    const password = process.env.TEST_PASSWORD;
+    if (!password) throw new Error('TEST_PASSWORD environment variable is required to run E2E tests.');
+    return password;
+};
+
+/**
  * Playwright fixture that opens any page with the Sanctum token already stored in
  * localStorage, bypassing the login UI. Mirrors bootstrap.js behaviour: the token is
  * injected via an init script so it is available before any page JS runs.

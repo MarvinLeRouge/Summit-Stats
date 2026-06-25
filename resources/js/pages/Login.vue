@@ -56,7 +56,7 @@ const login = async () => {
     error.value = '';
 
     try {
-        const { data } = await axios.post('/api/login', { password: password.value });
+        const { data } = await axios.post('login', { password: password.value });
         const token = data.data.token;
         localStorage.setItem('sanctum_token', token);
         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;

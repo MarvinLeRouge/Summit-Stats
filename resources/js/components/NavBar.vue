@@ -37,7 +37,7 @@ const router = useRouter();
  */
 const logout = async () => {
     try {
-        await axios.post('/api/logout');
+        await axios.post('logout');
     } finally {
         localStorage.removeItem('sanctum_token');
         delete axios.defaults.headers.common['Authorization'];

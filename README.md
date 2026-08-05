@@ -6,7 +6,7 @@
 
 > *A full-stack Laravel 12 + Vue.js 3 application built with strict TDD, layered service architecture and 100% test coverage — from geospatial GPX parsing algorithms to a dynamic progression dashboard.*
 
-![Status](https://img.shields.io/badge/Status-V2%20Delivered-brightgreen)
+![Status](https://img.shields.io/badge/Status-V3%20Delivered-brightgreen)
 [![CI](https://github.com/MarvinLeRouge/Summit-Stats/actions/workflows/ci.yml/badge.svg)](https://github.com/MarvinLeRouge/Summit-Stats/actions/workflows/ci.yml)
 [![E2E](https://github.com/MarvinLeRouge/Summit-Stats/actions/workflows/e2e.yml/badge.svg)](https://github.com/MarvinLeRouge/Summit-Stats/actions/workflows/e2e.yml)
 [![CD](https://github.com/MarvinLeRouge/Summit-Stats/actions/workflows/build-deploy.yml/badge.svg)](https://github.com/MarvinLeRouge/Summit-Stats/actions/workflows/build-deploy.yml)
@@ -23,9 +23,13 @@
 
 ## Versions
 
-**V2 (current — [v2.0.0](https://github.com/MarvinLeRouge/Summit-Stats/releases/tag/v2.0.0))** — Geographic visualization: zoomable elevation profile with map synchronization, interactive OSM map with GPX trace, automatic altitude enrichment via OpenTopoData, SSE upload progress.
+**V4 (in progress)** - Security hardening, read-only sharing with email invite, portfolio deployment on a public subdomain, full design overhaul with dark mode. See roadmap below.
 
-**V1 ([v1.0.0](https://github.com/MarvinLeRouge/Summit-Stats/releases/tag/v1.0.0))** — Full pipeline: GPX parsing, slope segmentation, 22 metrics per activity, REST API, Vue.js 3 dashboard, 99% test coverage, GitHub Actions CI.
+**V3 (current, [v3.0.0](https://github.com/MarvinLeRouge/Summit-Stats/releases/tag/v3.0.0))** - Docker Compose stack (PostgreSQL, Redis), Playwright E2E suite, production deployment behind Traefik with automated CI/CD.
+
+**V2 ([v2.0.0](https://github.com/MarvinLeRouge/Summit-Stats/releases/tag/v2.0.0))** - Geographic visualization: zoomable elevation profile with map synchronization, interactive OSM map with GPX trace, automatic altitude enrichment via OpenTopoData, SSE upload progress.
+
+**V1 ([v1.0.0](https://github.com/MarvinLeRouge/Summit-Stats/releases/tag/v1.0.0))** - Full pipeline: GPX parsing, slope segmentation, 22 metrics per activity, REST API, Vue.js 3 dashboard, 99% test coverage, GitHub Actions CI.
 
 ---
 
@@ -362,12 +366,30 @@ Personal project with a dual purpose:
 - [x] Pre-commit hooks — Husky + lint-staged (auto-fix PHP and JS/Vue)
 - [x] Optimised CI/CD pipeline — lint-first, E2E-gated deploy, workflow chaining
 
-### 🔜 V4 — Planned
+### 🔜 V4 - In progress
 
-- [ ] **Automated database backup** — scheduled `pg_dump` on the VPS, file rotation, restore documentation
-- [x] **Password authentication** — replaced manual token management with a password-based login form (Sanctum via credentials)
-- [ ] **Activity export** — download data as CSV or JSON from the interface
-- [ ] **Multi-user support** — separate accounts with isolated activity data, opening the app to a small group of users
+Full plan: `docs/ai/work-in-progress/v4-action-plan.md` (local file, not tracked in git).
+
+**Phase 1 - Security hardening (target v3.1.0)**
+- [x] Password authentication - password-based login form (Sanctum via credentials)
+- [ ] Rate limiting on login, Sanctum token expiration policy
+- [ ] Explicit CORS configuration and security headers (CSP, HSTS, X-Frame-Options, ...)
+- [ ] Automated database backup - scheduled `pg_dump` on the VPS, rotation, restore documentation
+- [ ] OWASP Top 10:2025 + ASVS audit pass
+
+**Phase 2 - Read-only sharing (target v4.0.0)**
+- [ ] Read-only viewer accounts with per-activity visibility control
+- [ ] Email invite and activation flow (Brevo)
+- [ ] Public read-only demo account
+
+**Phase 3 - Portfolio deployment (target v4.1.0)**
+- [ ] Public subdomain live behind Traefik, dev/prod parity maintained
+- [ ] Activity export - CSV or JSON download from the interface
+
+**Phase 4 - Design overhaul (target v4.2.0)**
+- [ ] Full visual identity refresh
+- [ ] Dark mode
+- [ ] Accessibility pass
 
 ---
 

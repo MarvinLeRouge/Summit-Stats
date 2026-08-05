@@ -63,3 +63,9 @@ it('rejects a token older than the configured expiration', function () {
 
     $this->travelBack();
 });
+
+it('does not reflect an unexpected origin in CORS headers', function () {
+    $response = $this->getJson('/api/stats', ['Origin' => 'https://evil.example.com']);
+
+    expect($response->headers->get('Access-Control-Allow-Origin'))->not->toBe('*');
+});

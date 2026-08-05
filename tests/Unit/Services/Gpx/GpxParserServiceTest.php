@@ -61,3 +61,20 @@ it('throws exception for a single point GPX', function () {
     expect(fn () => $this->parser->parse(base_path('tests/Fixtures/gpx/single_point.gpx')))
         ->toThrow(GpxParseException::class, 'La trace GPX doit contenir au moins 2 points.');
 });
+
+it('rejects a GPX file containing a DOCTYPE declaration', function () {
+    $gpx = <<<'XML'
+    <?xml version="1.0"?>
+    <!DOCTYPE gpx [<!ENTITY xxe SYSTEM "file:///etc/passwd">]>
+    <gpx version="1.1" xmlns="http://www.topografix.com/GPX/1/1">
+        <trk><trkseg>
+            <trkpt lat="45.83" lon="6.86"></trkpt>
+            <trkpt lat="45.84" lon="6.87"></trkpt>
+        </trkseg></trk>
+    </gpx>
+    XML;
+    file_put_contents(base_path('tests/Fixtures/gpx/xxe_attempt.gpx'), $gpx);
+
+    expect(fn () => $this->parser->parse(base_path('tests/Fixtures/gpx/xxe_attempt.gpx')))
+        ->toThrow(GpxParseException::class);
+});

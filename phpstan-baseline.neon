@@ -1,0 +1,73 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Constant App\\Http\\Controllers\\Api\\StatsController\:\:ACTIVITY_LEVEL_METRICS is unused\.$#'
+			identifier: classConstant.unused
+			count: 1
+			path: app/Http/Controllers/Api/StatsController.php
+
+		-
+			message: '#^Generic type Illuminate\\Database\\Eloquent\\Relations\\HasMany\<App\\Models\\Segment\> in PHPDoc tag @return does not specify all template types of class Illuminate\\Database\\Eloquent\\Relations\\HasMany\: TRelatedModel, TDeclaringModel$#'
+			identifier: generics.lessTypes
+			count: 1
+			path: app/Models/Activity.php
+
+		-
+			message: '#^Generic type Illuminate\\Database\\Eloquent\\Relations\\HasMany\<App\\Models\\TrackPoint\> in PHPDoc tag @return does not specify all template types of class Illuminate\\Database\\Eloquent\\Relations\\HasMany\: TRelatedModel, TDeclaringModel$#'
+			identifier: generics.lessTypes
+			count: 1
+			path: app/Models/Activity.php
+
+		-
+			message: '#^Method App\\Models\\Activity\:\:segments\(\) should return Illuminate\\Database\\Eloquent\\Relations\\HasMany\<App\\Models\\Segment\> but returns Illuminate\\Database\\Eloquent\\Relations\\HasMany\<App\\Models\\Segment, \$this\(App\\Models\\Activity\)\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Models/Activity.php
+
+		-
+			message: '#^Method App\\Models\\Activity\:\:trackPoints\(\) should return Illuminate\\Database\\Eloquent\\Relations\\HasMany\<App\\Models\\TrackPoint\> but returns Illuminate\\Database\\Eloquent\\Relations\\HasMany\<App\\Models\\TrackPoint, \$this\(App\\Models\\Activity\)\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Models/Activity.php
+
+		-
+			message: '#^Parameter \#1 \$string of function str_pad expects string, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Models/Activity.php
+
+		-
+			message: '#^Method App\\Models\\Segment\:\:activity\(\) should return Illuminate\\Database\\Eloquent\\Relations\\BelongsTo\<App\\Models\\Activity, App\\Models\\Segment\> but returns Illuminate\\Database\\Eloquent\\Relations\\BelongsTo\<App\\Models\\Activity, \$this\(App\\Models\\Segment\)\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Models/Segment.php
+
+		-
+			message: '#^Method App\\Models\\TrackPoint\:\:activity\(\) should return Illuminate\\Database\\Eloquent\\Relations\\BelongsTo\<App\\Models\\Activity, App\\Models\\TrackPoint\> but returns Illuminate\\Database\\Eloquent\\Relations\\BelongsTo\<App\\Models\\Activity, \$this\(App\\Models\\TrackPoint\)\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Models/TrackPoint.php
+
+		-
+			message: '#^Cannot call method toDateTimeString\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Services/ActivityService.php
+
+		-
+			message: '#^Parameter &\$bestDPlus by\-ref type of method App\\Services\\Gpx\\StatsAggregatorService\:\:evaluateTroncon\(\) expects float, \(float\|int\) given\.$#'
+			identifier: parameterByRef.type
+			count: 1
+			path: app/Services/Gpx/StatsAggregatorService.php
+
+		-
+			message: '#^Parameter &\$bestDistanceKm by\-ref type of method App\\Services\\Gpx\\StatsAggregatorService\:\:evaluateTroncon\(\) expects float, \(float\|int\) given\.$#'
+			identifier: parameterByRef.type
+			count: 1
+			path: app/Services/Gpx/StatsAggregatorService.php
+
+		-
+			message: '#^Parameter &\$bestDuration by\-ref type of method App\\Services\\Gpx\\StatsAggregatorService\:\:evaluateTroncon\(\) expects int, \(float\|int\) given\.$#'
+			identifier: parameterByRef.type
+			count: 1
+			path: app/Services/Gpx/StatsAggregatorService.php

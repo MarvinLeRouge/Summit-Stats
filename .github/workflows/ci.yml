@@ -61,6 +61,9 @@ jobs:
       - name: Lint PHP
         run: vendor/bin/pint --test
 
+      - name: Static analysis (PHPStan)
+        run: vendor/bin/phpstan analyse --error-format=github
+
       - name: Lint JS
         run: npm run lint
 

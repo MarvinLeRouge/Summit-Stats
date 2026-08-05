@@ -69,6 +69,13 @@ php artisan db:seed --class=UserSeeder
 The seeder prints your **Sanctum API token** — copy it immediately. It is shown only once.
 Store it securely (e.g. a local password manager or `docs/work-in-progress/Authentication_token.txt`, which is gitignored).
 
+### Secrets and key rotation
+
+- `.env.prod` must not be world-readable: `chmod 600 .env.prod` on the VPS after editing it.
+- `APP_KEY` encrypts session data and other Laravel-internal payloads. Rotating it invalidates all existing sessions and any data encrypted with the old key (Sanctum plaintext tokens are hashed, not encrypted with `APP_KEY`, so they are unaffected). Rotate only if the key is suspected to have leaked: generate a new one with `php artisan key:generate --force` and restart the app.
+- `DB_PASSWORD` should be generated with `openssl rand -base64 32` or similar, never a memorable password, since it is never typed by a human.
+- Dependabot is enabled (`.github/dependabot.yml`, weekly npm + Composer checks). Review and merge or dismiss each alert within a week of it opening; do not let alerts accumulate unreviewed.
+
 ### 4. File permissions
 
 ```bash
@@ -204,6 +211,13 @@ php artisan db:seed --class=UserSeeder
 
 Le seeder affiche le **token API Sanctum** — le copier immédiatement, il n'est affiché qu'une seule fois.
 Le stocker en lieu sûr (gestionnaire de mots de passe ou `docs/work-in-progress/Authentication_token.txt`, qui est gitignored).
+
+### Secrets et rotation des clés
+
+- `.env.prod` ne doit pas être lisible par tous : `chmod 600 .env.prod` sur le VPS après édition.
+- `APP_KEY` chiffre les données de session et d'autres payloads internes à Laravel. La faire tourner invalide toutes les sessions existantes et toute donnée chiffrée avec l'ancienne clé (les tokens Sanctum sont hashés, pas chiffrés avec `APP_KEY`, donc non affectés). Ne la faire tourner qu'en cas de suspicion de fuite : générer une nouvelle clé avec `php artisan key:generate --force` puis redémarrer l'app.
+- `DB_PASSWORD` doit être généré avec `openssl rand -base64 32` ou équivalent, jamais un mot de passe mémorisable puisqu'il n'est jamais saisi par un humain.
+- Dependabot est activé (`.github/dependabot.yml`, vérifications hebdomadaires npm + Composer). Traiter chaque alerte (merge ou dismiss) sous une semaine, ne pas les laisser s'accumuler sans revue.
 
 ### 4. Permissions
 

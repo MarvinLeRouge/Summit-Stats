@@ -50,3 +50,16 @@ it('throttles login after too many attempts', function () {
     $this->postJson('/api/login', ['password' => 'wrong'])
         ->assertStatus(429);
 });
+
+it('rejects a token older than the configured expiration', function () {
+    $user = User::factory()->create();
+    $token = $user->createToken('web')->plainTextToken;
+
+    $this->travel(31)->days();
+
+    $this->withToken($token)
+        ->getJson('/api/stats')
+        ->assertUnauthorized();
+
+    $this->travelBack();
+});

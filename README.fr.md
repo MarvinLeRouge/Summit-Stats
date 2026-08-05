@@ -6,7 +6,7 @@
 
 > *Une application full-stack Laravel 12 + Vue.js 3 construite en TDD strict, architecture en couches services et 100% de couverture de tests — du parsing algorithmique de traces GPX jusqu'au dashboard de progression.*
 
-![Status](https://img.shields.io/badge/Status-V2%20Livrée-brightgreen)
+![Status](https://img.shields.io/badge/Status-V3%20Livrée-brightgreen)
 [![CI](https://github.com/MarvinLeRouge/Summit-Stats/actions/workflows/ci.yml/badge.svg)](https://github.com/MarvinLeRouge/Summit-Stats/actions/workflows/ci.yml)
 [![E2E](https://github.com/MarvinLeRouge/Summit-Stats/actions/workflows/e2e.yml/badge.svg)](https://github.com/MarvinLeRouge/Summit-Stats/actions/workflows/e2e.yml)
 [![CD](https://github.com/MarvinLeRouge/Summit-Stats/actions/workflows/build-deploy.yml/badge.svg)](https://github.com/MarvinLeRouge/Summit-Stats/actions/workflows/build-deploy.yml)
@@ -23,9 +23,13 @@
 
 ## Versions
 
-**V2 (actuelle — [v2.0.0](https://github.com/MarvinLeRouge/Summit-Stats/releases/tag/v2.0.0))** — Visualisation géographique : profil altimétrique zoomable avec synchronisation carte, carte OSM interactive avec tracé GPX, enrichissement automatique des altitudes via OpenTopoData, progression SSE à l'upload.
+**V4 (en cours)** - Durcissement sécurité, partage en lecture seule avec invitation par email, déploiement portfolio sur un sous-domaine public, refonte visuelle complète avec dark mode. Voir la roadmap ci-dessous.
 
-**V1 ([v1.0.0](https://github.com/MarvinLeRouge/Summit-Stats/releases/tag/v1.0.0))** — Pipeline complet : parsing GPX, segmentation par pente, 22 métriques par activité, API REST, dashboard Vue.js 3, 99% de couverture de tests, CI GitHub Actions.
+**V3 (actuelle, [v3.0.0](https://github.com/MarvinLeRouge/Summit-Stats/releases/tag/v3.0.0))** - Stack Docker Compose (PostgreSQL, Redis), suite de tests E2E Playwright, déploiement en production derrière Traefik avec CI/CD automatisé.
+
+**V2 ([v2.0.0](https://github.com/MarvinLeRouge/Summit-Stats/releases/tag/v2.0.0))** - Visualisation géographique : profil altimétrique zoomable avec synchronisation carte, carte OSM interactive avec tracé GPX, enrichissement automatique des altitudes via OpenTopoData, progression SSE à l'upload.
+
+**V1 ([v1.0.0](https://github.com/MarvinLeRouge/Summit-Stats/releases/tag/v1.0.0))** - Pipeline complet : parsing GPX, segmentation par pente, 22 métriques par activité, API REST, dashboard Vue.js 3, 99% de couverture de tests, CI GitHub Actions.
 
 ---
 
@@ -362,12 +366,30 @@ Projet personnel à double vocation :
 - [x] Hooks pre-commit — Husky + lint-staged (auto-fix PHP et JS/Vue)
 - [x] Pipeline CI/CD optimisé — lint en premier, déploiement conditionné par l'E2E, workflow chaining
 
-### 🔜 V4 — Planifiée
+### 🔜 V4 - En cours
 
-- [ ] **Sauvegarde automatique de la base** — `pg_dump` planifié sur le VPS, rotation des fichiers, documentation du process de restore
-- [x] **Authentification par mot de passe** — remplace la gestion manuelle du token par un formulaire de login (Sanctum via identifiants)
-- [ ] **Export des activités** — téléchargement des données au format CSV ou JSON depuis l'interface
-- [ ] **Multi-utilisateurs** — comptes distincts avec données isolées, permettant le partage de l'app avec un petit groupe d'utilisateurs
+Plan complet : `docs/ai/work-in-progress/v4-action-plan.md` (fichier local, non versionné).
+
+**Phase 1 - Durcissement sécurité (cible v3.1.0)**
+- [x] Authentification par mot de passe - formulaire de login (Sanctum via identifiants)
+- [ ] Limitation de débit sur le login, politique d'expiration des tokens Sanctum
+- [ ] Configuration CORS explicite et security headers (CSP, HSTS, X-Frame-Options, ...)
+- [ ] Sauvegarde automatique de la base - `pg_dump` planifié sur le VPS, rotation, documentation du restore
+- [ ] Audit OWASP Top 10:2025 + ASVS
+
+**Phase 2 - Partage en lecture seule (cible v4.0.0)**
+- [ ] Comptes lecteurs en lecture seule avec contrôle de visibilité par activité
+- [ ] Flux d'invitation et d'activation par email (Brevo)
+- [ ] Compte démo public en lecture seule
+
+**Phase 3 - Déploiement portfolio (cible v4.1.0)**
+- [ ] Sous-domaine public en ligne derrière Traefik, parité dev/prod maintenue
+- [ ] Export des activités - téléchargement CSV ou JSON depuis l'interface
+
+**Phase 4 - Refonte design (cible v4.2.0)**
+- [ ] Refonte complète de l'identité visuelle
+- [ ] Dark mode
+- [ ] Audit accessibilité
 
 ---
 

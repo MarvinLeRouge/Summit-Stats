@@ -376,6 +376,8 @@ Plan complet : `docs/ai/work-in-progress/v4-action-plan.md` (fichier local, non 
 - [ ] Configuration CORS explicite et security headers (CSP, HSTS, X-Frame-Options, ...)
 - [ ] Sauvegarde automatique de la base - `pg_dump` planifié sur le VPS, rotation, documentation du restore
 - [ ] Audit OWASP Top 10:2025 + ASVS
+- [ ] Analyse statique (PHPStan/Larastan) dans le hook pre-commit et en CI
+- [ ] Audit et optimisation du pipeline CI
 
 **Phase 2 - Partage en lecture seule (cible v4.0.0)**
 - [ ] Comptes lecteurs en lecture seule avec contrôle de visibilité par activité

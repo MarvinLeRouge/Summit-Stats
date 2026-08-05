@@ -47,8 +47,10 @@ DB_CONNECTION=sqlite
 DB_DATABASE=/var/www/summit-stats/database/database.sqlite
 
 LOG_CHANNEL=single
-LOG_LEVEL=error
+LOG_LEVEL=warning
 ```
+
+> `LOG_LEVEL=warning` (not `error`): failed login attempts are logged at `warning` level so they remain visible in production logs. A stricter `error` level would silently drop this signal.
 
 Then generate the application key:
 
@@ -181,8 +183,10 @@ DB_CONNECTION=sqlite
 DB_DATABASE=/var/www/summit-stats/database/database.sqlite
 
 LOG_CHANNEL=single
-LOG_LEVEL=error
+LOG_LEVEL=warning
 ```
+
+> `LOG_LEVEL=warning` (pas `error`): les tentatives de connexion échouées sont enregistrées au niveau `warning` pour rester visibles dans les journaux de production. Un niveau `error` plus strict les éliminerait silencieusement.
 
 Puis générer la clé applicative :
 

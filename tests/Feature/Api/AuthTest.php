@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 
 it('returns a token on successful login', function () {
     User::factory()->create(['password' => bcrypt('secret123')]);
@@ -68,4 +69,14 @@ it('does not reflect an unexpected origin in CORS headers', function () {
     $response = $this->getJson('/api/stats', ['Origin' => 'https://evil.example.com']);
 
     expect($response->headers->get('Access-Control-Allow-Origin'))->not->toBe('*');
+});
+
+it('logs a warning on failed login attempts', function () {
+    Log::spy();
+
+    User::factory()->create(['password' => bcrypt('secret123')]);
+
+    $this->postJson('/api/login', ['password' => 'wrong']);
+
+    Log::shouldHaveReceived('warning')->once();
 });

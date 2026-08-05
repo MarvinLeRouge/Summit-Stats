@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class LoginController extends Controller
 {
@@ -23,6 +24,8 @@ class LoginController extends Controller
         $user = User::first();
 
         if (! $user || ! Hash::check($request->password, $user->password)) {
+            Log::warning('Failed login attempt', ['ip' => $request->ip()]);
+
             return $this->error('Mot de passe incorrect.', 401);
         }
 

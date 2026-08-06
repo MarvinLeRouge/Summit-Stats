@@ -132,6 +132,23 @@ php artisan view:cache
 
 Re-run these commands after each deployment.
 
+### Automated backups
+
+`docker/scripts/backup-postgres.sh` dumps the database and keeps the last 14 days of backups. Install it as a daily cron job on the VPS (commands below are for you to run over SSH, Claude never executes these):
+
+```bash
+crontab -e
+# Add this line (adjust the path to where docker-compose.prod.yml lives):
+0 3 * * * cd /home/mlr/marvinlerouge.dev/summit-stats/compose && BACKUP_DIR=/home/mlr/marvinlerouge.dev/summit-stats/backups ./docker/scripts/backup-postgres.sh >> /var/log/summit-stats-backup.log 2>&1
+```
+
+To restore from a backup:
+
+```bash
+gunzip -c /home/mlr/marvinlerouge.dev/summit-stats/backups/summit-stats-<timestamp>.sql.gz | \
+  docker compose -f docker-compose.prod.yml --env-file .env.prod exec -T postgres psql -U "$DB_USERNAME" "$DB_DATABASE"
+```
+
 ### Updating
 
 ```bash
@@ -274,6 +291,23 @@ php artisan view:cache
 ```
 
 À relancer après chaque déploiement.
+
+### Sauvegardes automatisées
+
+`docker/scripts/backup-postgres.sh` sauvegarde la base de données et conserve les 14 derniers jours de sauvegardes. L'installer en cron quotidien sur le VPS (commandes ci-dessous à exécuter vous-même en SSH, Claude ne les exécute jamais) :
+
+```bash
+crontab -e
+# Ajouter cette ligne (adapter le chemin vers docker-compose.prod.yml) :
+0 3 * * * cd /home/mlr/marvinlerouge.dev/summit-stats/compose && BACKUP_DIR=/home/mlr/marvinlerouge.dev/summit-stats/backups ./docker/scripts/backup-postgres.sh >> /var/log/summit-stats-backup.log 2>&1
+```
+
+Pour restaurer depuis une sauvegarde :
+
+```bash
+gunzip -c /home/mlr/marvinlerouge.dev/summit-stats/backups/summit-stats-<timestamp>.sql.gz | \
+  docker compose -f docker-compose.prod.yml --env-file .env.prod exec -T postgres psql -U "$DB_USERNAME" "$DB_DATABASE"
+```
 
 ### Mise à jour
 

@@ -73,8 +73,13 @@ it('rejects a GPX file containing a DOCTYPE declaration', function () {
         </trkseg></trk>
     </gpx>
     XML;
-    file_put_contents(base_path('tests/Fixtures/gpx/xxe_attempt.gpx'), $gpx);
+    $path = base_path('tests/Fixtures/gpx/xxe_attempt.gpx');
+    file_put_contents($path, $gpx);
 
-    expect(fn () => $this->parser->parse(base_path('tests/Fixtures/gpx/xxe_attempt.gpx')))
-        ->toThrow(GpxParseException::class);
+    try {
+        expect(fn () => $this->parser->parse($path))
+            ->toThrow(GpxParseException::class);
+    } finally {
+        unlink($path);
+    }
 });

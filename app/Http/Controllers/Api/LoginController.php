@@ -19,7 +19,7 @@ class LoginController extends Controller
      */
     public function login(Request $request): JsonResponse
     {
-        $request->validate(['password' => 'required|string']);
+        $request->validate(['password' => 'required|string|max:255']);
 
         $user = User::first();
 

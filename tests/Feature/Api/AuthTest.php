@@ -24,6 +24,11 @@ it('returns 422 when password is missing', function () {
         ->assertUnprocessable();
 });
 
+it('returns 422 when password exceeds the maximum length', function () {
+    $this->postJson('/api/login', ['password' => str_repeat('a', 256)])
+        ->assertUnprocessable();
+});
+
 it('revokes token on logout', function () {
     $user = User::factory()->create();
     $token = $user->createToken('web')->plainTextToken;

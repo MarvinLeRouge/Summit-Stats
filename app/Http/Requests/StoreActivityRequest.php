@@ -26,7 +26,7 @@ class StoreActivityRequest extends FormRequest
             'type' => ['required', 'in:randonnee,trail'],
             'environment' => ['required', 'in:urbain,campagne,montagne'],
             'date' => ['required', 'date'],
-            'comment' => ['nullable', 'string'],
+            'comment' => ['nullable', 'string', 'max:5000'],
             'gpx_file' => ['required', 'file', 'mimes:gpx,xml', 'max:20480'],
         ];
     }

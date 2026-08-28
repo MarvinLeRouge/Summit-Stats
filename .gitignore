@@ -39,6 +39,11 @@ playwright-report/
 test-results/
 .env.prod
 
+# Tooling output
+.serena
+graphify-out
+.husky
+
 docs/ai
 
 # Claude Code

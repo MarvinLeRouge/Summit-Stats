@@ -6,7 +6,7 @@
 
 > *A full-stack Laravel 12 + Vue.js 3 application built with strict TDD, layered service architecture and 100% test coverage — from geospatial GPX parsing algorithms to a dynamic progression dashboard.*
 
-![Status](https://img.shields.io/badge/Status-V3%20Delivered-brightgreen)
+![Status](https://img.shields.io/badge/Status-V4%20In%20Progress-blue)
 [![CI](https://github.com/MarvinLeRouge/Summit-Stats/actions/workflows/ci.yml/badge.svg)](https://github.com/MarvinLeRouge/Summit-Stats/actions/workflows/ci.yml)
 [![E2E](https://github.com/MarvinLeRouge/Summit-Stats/actions/workflows/e2e.yml/badge.svg)](https://github.com/MarvinLeRouge/Summit-Stats/actions/workflows/e2e.yml)
 [![CD](https://github.com/MarvinLeRouge/Summit-Stats/actions/workflows/build-deploy.yml/badge.svg)](https://github.com/MarvinLeRouge/Summit-Stats/actions/workflows/build-deploy.yml)
@@ -17,7 +17,7 @@
 
 [![codecov backend](https://img.shields.io/codecov/c/github/MarvinLeRouge/Summit-Stats?flag=backend&label=backend&logo=codecov)](https://codecov.io/gh/MarvinLeRouge/Summit-Stats)
 [![codecov frontend](https://img.shields.io/codecov/c/github/MarvinLeRouge/Summit-Stats?flag=frontend&label=frontend&logo=codecov)](https://codecov.io/gh/MarvinLeRouge/Summit-Stats)
-![Tests](https://img.shields.io/badge/Tests-212%20passing-brightgreen)
+![Tests](https://img.shields.io/badge/Tests-217%20passing-brightgreen)
 
 ---
 
@@ -35,13 +35,7 @@
 
 ## Concept
 
-Standard sports apps (Strava, Garmin Connect) provide global statistics but fall short for meaningful progression analysis:
-
-- *What is my ascent speed on slopes steeper than 25%?*
-- *How has my endurance evolved on long mountain outings over the last six months?*
-- *Am I faster in trail running than hiking on moderate gradients?*
-
-Summit Stats segments each GPX trace by terrain type and slope class, then lets you compose your own progression metrics through a dynamic filtering interface.
+Summit Stats segments each GPX trace by terrain type and slope class, then lets you compose your own progression metrics through a dynamic filtering interface — see [docs/product-context.md](docs/product-context.md) for the full rationale.
 
 ---
 
@@ -49,11 +43,11 @@ Summit Stats segments each GPX trace by terrain type and slope class, then lets 
 
 | Metric | Value |
 |---|---|
-| Test coverage | **100%** (backend + frontend) |
-| Automated tests | **118 backend · 62 frontend unit · 32 E2E = 212 tests** |
-| API endpoints | **9 REST routes** |
+| Test coverage | **91.5% backend · 100% frontend** |
+| Automated tests | **123 backend · 62 frontend unit · 32 E2E = 217 tests** |
+| API endpoints | **10 REST routes** |
 | Metrics per activity | **22 stats stored in database** |
-| GPX pipeline | **4 services, strict TDD** |
+| GPX pipeline | **6 services, strict TDD** |
 | PHP lines of code | ~2,000 (excluding migrations and config) |
 
 ---
@@ -83,6 +77,7 @@ app/
     ├── ActivityService.php              # Persistence: store, update, recalculate, destroy
     └── Gpx/                             # GPX analysis pipeline (strict TDD)
         ├── GpxParserService             # XML parsing → normalised point array
+        ├── ElevationEnrichmentService   # Optional altitude enrichment via OpenTopoData
         ├── ElevationCalculatorService   # Haversine distance, D+/D-, total & moving duration
         ├── SegmentationService          # Segmentation by terrain type and slope class
         ├── StatsAggregatorService       # Aggregation of 22 metrics
@@ -108,8 +103,8 @@ php artisan test --coverage             # with coverage report (requires pcov)
 php artisan test --coverage --min=80    # with minimum threshold
 ```
 
-- **Strict TDD** on all 4 GPX services — tests written before implementation
-- **Feature tests** on all 9 API endpoints + Artisan command
+- **Strict TDD** on all 6 GPX services — tests written before implementation
+- **Feature tests** on all 10 API endpoints + Artisan command
 - **Unit tests** on models and the `ApiResponse` trait
 - **Regression test** on a real GPX trace (11.8 km, ~470 m elevation gain)
 - In-memory SQLite (`:memory:`) — full isolation, entire suite runs in < 3s
@@ -188,55 +183,13 @@ workflow_dispatch ──────► build-deploy  (manual, bypasses E2E)
 
 ## Production
 
-The application runs on a VPS behind a shared Traefik reverse proxy with automatic TLS via Let's Encrypt. Images are built in CI and stored in GHCR — no source code on the server, no build step in production.
-
-### Stack
-
-| Service | Image | Role |
-|---|---|---|
-| `nginx` | custom (nginx:alpine) | Web server, static assets, OSM tile proxy cache |
-| `app` | custom (PHP 8.4-FPM) | Laravel application |
-| `postgres` | postgres:16-alpine | Production database |
-| `redis` | redis:7-alpine | Cache, sessions, queue |
-| `queue` | custom (PHP 8.4-FPM) | Laravel queue worker |
-
-Only `nginx` is exposed to Traefik via the shared `traefik-public` network. All other services run in a private Docker network.
-
-### OSM tile proxy cache
-
-Nginx proxies OpenStreetMap tile requests through `/tiles/{z}/{x}/{y}.png` and caches responses on a persistent Docker volume (capped at 1 GB, TTL 30 days). Reduces load on OSM's infrastructure and speeds up repeat visits to previously explored areas.
+The application runs on a VPS behind a shared Traefik reverse proxy, with images built in CI and stored in GHCR — no source code or build step on the server. See [docs/operations.md](docs/operations.md) for the full stack, the CI/CD pipeline, and the deployment procedure.
 
 ---
 
 ## API endpoints
 
-| Method | Route | Auth | Description |
-|---|---|---|---|
-| `POST` | `/api/login` | — | Authenticate with password, returns a Sanctum token |
-| `POST` | `/api/logout` | Bearer | Revoke the current token |
-| `POST` | `/api/activities` | Bearer | GPX import + automatic analysis |
-| `GET` | `/api/activities` | Bearer | Paginated list (filters available) |
-| `GET` | `/api/activities/{id}` | Bearer | Detail + segments |
-| `PUT` | `/api/activities/{id}` | Bearer | Update metadata |
-| `DELETE` | `/api/activities/{id}` | Bearer | Delete activity + GPX file |
-| `POST` | `/api/activities/{id}/recalculate` | Bearer | Recalculate stats from raw GPX |
-| `GET` | `/api/stats` | Bearer | Progression data for charts |
-
-**Example — `/api/stats`**
-
-```
-GET /api/stats?metric=avg_ascent_speed_mh&type=trail&slope_min=15&slope_max=35&date_from=2024-01-01
-```
-
-```json
-{
-  "data": [
-    { "date": "2024-03-15", "value": 423.5, "activity_title": "Aiguilles Rouges" },
-    { "date": "2024-04-02", "value": 512.0, "activity_title": "Col de Balme" }
-  ],
-  "meta": { "metric": "avg_ascent_speed_mh", "unit": "m/h", "count": 2 }
-}
-```
+10 REST routes under `/api`, all protected by Sanctum Bearer token except `/api/login`. Full reference, including the `/api/stats` filtering example, in [docs/api/api_endpoints.md](docs/api/api_endpoints.md).
 
 ---
 
@@ -338,60 +291,18 @@ Personal project with a dual purpose:
 
 ## 🗺️ Roadmap
 
-### ✅ V1 — Delivered
+V1, V2 and V3 are delivered; V4 (security hardening, read-only sharing, portfolio deployment, design overhaul) is in progress. Full detail in [docs/roadmap.md](docs/roadmap.md).
 
-- [x] Project scoping and architecture
-- [x] **P1** — Setup (Laravel 12, Pest, Sanctum, Vue.js 3)
-- [x] **P2** — Data model / Modèle de données (migrations, Eloquent)
-- [x] **P3** — GPX algorithm (parsing, segmentation, stats) — *strict TDD*
-- [x] **P4** — REST API (7 endpoints + feature tests)
-- [x] **P5** — Vue.js frontend (dashboard, charts, dynamic filters)
-- [x] **P6** — Quality (99% coverage, PHPDoc, Pint, ESLint)
-- [x] **P7** — DevOps (GitHub Actions CI, documentation)
+---
 
-### ✅ V2 — Delivered
+## 📚 Documentation
 
-- [x] **P1** — Track points storage + `/api/activities/{id}/track` endpoint
-- [x] **P2** — Elevation profile (Chart.js + zoom)
-- [x] **P3** — OSM map with GPX trace (Leaflet)
-- [x] **P4** — Quality (tests, coverage, linting)
-- [x] **P5** — DevOps (CI update, V2 documentation)
-
-### ✅ V3 — Delivered
-
-- [x] E2E test suite (Playwright — 32 scenarios, dedicated CI workflow)
-- [x] Docker Compose stack (Nginx, PHP-FPM, PostgreSQL, Redis, queue worker)
-- [x] Frontend coverage reporting on Codecov (per-flag badges)
-- [x] Production deployment — Traefik, HTTPS, GHCR, SSH CD pipeline
-- [x] Pre-commit hooks — Husky + lint-staged (auto-fix PHP and JS/Vue)
-- [x] Optimised CI/CD pipeline — lint-first, E2E-gated deploy, workflow chaining
-
-### 🔜 V4 - In progress
-
-Full plan: `docs/ai/work-in-progress/v4-action-plan.md` (local file, not tracked in git).
-
-**Phase 1 - Security hardening (target v3.1.0)**
-- [x] Password authentication - password-based login form (Sanctum via credentials)
-- [ ] Rate limiting on login, Sanctum token expiration policy
-- [ ] Explicit CORS configuration and security headers (CSP, HSTS, X-Frame-Options, ...)
-- [ ] Automated database backup - scheduled `pg_dump` on the VPS, rotation, restore documentation
-- [ ] OWASP Top 10:2025 + ASVS audit pass
-- [ ] Static analysis (PHPStan/Larastan) in the pre-commit hook and CI
-- [ ] CI pipeline audit and optimization
-
-**Phase 2 - Read-only sharing (target v4.0.0)**
-- [ ] Read-only viewer accounts with per-activity visibility control
-- [ ] Email invite and activation flow (Brevo)
-- [ ] Public read-only demo account
-
-**Phase 3 - Portfolio deployment (target v4.1.0)**
-- [ ] Public subdomain live behind Traefik, dev/prod parity maintained
-- [ ] Activity export - CSV or JSON download from the interface
-
-**Phase 4 - Design overhaul (target v4.2.0)**
-- [ ] Full visual identity refresh
-- [ ] Dark mode
-- [ ] Accessibility pass
+- [docs/product-context.md](docs/product-context.md) — why this project exists
+- [docs/operations.md](docs/operations.md) — production stack, CI/CD pipeline, deployment
+- [docs/design-system.md](docs/design-system.md) — Tailwind, Chart.js and Leaflet conventions
+- [docs/api/api_endpoints.md](docs/api/api_endpoints.md) — full API reference
+- [docs/adr/](docs/adr/) — architecture decision records
+- [CONTRIBUTING.md](CONTRIBUTING.md), [SECURITY.md](SECURITY.md), [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
 
 ---
 

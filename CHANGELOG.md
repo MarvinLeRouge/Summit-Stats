@@ -6,6 +6,76 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [Unreleased]
+
+### Added
+
+- Harmonize Traefik configuration
+
+- Replace token input with password-based login
+
+
+### Changed
+
+- Add V4 roadmap section to README files
+
+- Update Docker section and CHANGELOG for Traefik harmonization
+
+- Fix NavBar test mock to include axios.post
+
+- Add CI compose override to fix missing traefik-public network
+
+- Update auth tests for password-based login
+
+- Fix logout test to avoid revoking shared TEST_TOKEN
+
+- Export TEST_PASSWORD to GITHUB_ENV instead of step env block
+
+- Use fixed CI password to avoid missing-secret issue
+
+- Make curl health-check resilient to connection errors
+
+- Update README and CHANGELOG for password-based login
+
+- Remove paths-ignore from pull_request trigger
+
+- Add hierarchized V4 roadmap for security, sharing, deployment and design
+
+- Add static analysis and CI optimization to Phase 1 of the V4 roadmap
+
+- Add Code of Conduct
+
+- Split CONTRIBUTING.md into a bilingual file pair
+
+- Split SECURITY.md into a bilingual file pair
+
+- Automate CHANGELOG.md updates with git-cliff
+
+- Extract roadmap into a dedicated bilingual document
+
+- Extract product concept into a dedicated bilingual document
+
+- Replace the obsolete bare-metal DEPLOY.md with an accurate operations guide
+
+- Document Tailwind, Chart.js, and Leaflet conventions
+
+- Extract API endpoints reference into a dedicated bilingual document
+
+- Add architecture decision records generated from git history
+
+- Add a pull request template
+
+- Replace extracted sections with links, refresh stale figures
+
+
+### Fixed
+
+- Add explicit project name to avoid docker compose collision
+
+- Add CORS support to Vite for Traefik local routing
+
+- Remove /api/ prefix from login and logout calls
+
 
 ## [Unreleased]
 

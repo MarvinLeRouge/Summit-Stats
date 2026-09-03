@@ -67,6 +67,98 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Replace extracted sections with links, refresh stale figures
 
+- Update CHANGELOG.md
+
+- Bump laravel/tinker from 3.0.0 to 3.0.2
+
+- Bump nunomaduro/collision from 8.9.1 to 8.9.4
+
+- Bump laravel/pint from 1.29.0 to 1.29.1
+
+- Bump laravel/sail from 1.54.0 to 1.67.0
+
+- Bump laravel/sanctum from 4.3.1 to 4.3.3
+
+- Bump @playwright/test from 1.58.2 to 1.62.1
+
+- Bump dotenv from 17.3.1 to 17.4.2
+
+- Bump vue from 3.5.30 to 3.5.42
+
+- Upgrade vitest to 4.1.2 and jsdom to 30.0.1 together
+
+
+### Fixed
+
+- Add explicit project name to avoid docker compose collision
+
+- Add CORS support to Vite for Traefik local routing
+
+- Remove /api/ prefix from login and logout calls
+
+- Downgrade jsdom to 29.0.1 to keep Node 20 CI compatibility
+
+## [Unreleased]
+
+### Added
+
+- Harmonize Traefik configuration
+
+- Replace token input with password-based login
+
+
+### Changed
+
+- Add V4 roadmap section to README files
+
+- Update Docker section and CHANGELOG for Traefik harmonization
+
+- Fix NavBar test mock to include axios.post
+
+- Add CI compose override to fix missing traefik-public network
+
+- Update auth tests for password-based login
+
+- Fix logout test to avoid revoking shared TEST_TOKEN
+
+- Export TEST_PASSWORD to GITHUB_ENV instead of step env block
+
+- Use fixed CI password to avoid missing-secret issue
+
+- Make curl health-check resilient to connection errors
+
+- Update README and CHANGELOG for password-based login
+
+- Remove paths-ignore from pull_request trigger
+
+- Add hierarchized V4 roadmap for security, sharing, deployment and design
+
+- Add static analysis and CI optimization to Phase 1 of the V4 roadmap
+
+- Add Code of Conduct
+
+- Split CONTRIBUTING.md into a bilingual file pair
+
+- Split SECURITY.md into a bilingual file pair
+
+- Automate CHANGELOG.md updates with git-cliff
+
+- Extract roadmap into a dedicated bilingual document
+
+- Extract product concept into a dedicated bilingual document
+
+- Replace the obsolete bare-metal DEPLOY.md with an accurate operations guide
+
+- Document Tailwind, Chart.js, and Leaflet conventions
+
+- Extract API endpoints reference into a dedicated bilingual document
+
+- Add architecture decision records generated from git history
+
+- Add a pull request template
+
+- Replace extracted sections with links, refresh stale figures
+
 
 ### Fixed
 

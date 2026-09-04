@@ -34,7 +34,7 @@
 
 ### 🔜 V4 - En cours
 
-Plan complet : `docs/ai/work-in-progress/v4-action-plan.md` (fichier local, non versionné).
+Plan complet : `docs/work-in-progress/v4-action-plan.md` (fichier local, non versionné).
 
 **Phase 1 - Durcissement sécurité (cible v3.1.0)**
 - [x] Authentification par mot de passe - formulaire de login (Sanctum via identifiants)

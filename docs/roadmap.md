@@ -34,7 +34,7 @@
 
 ### 🔜 V4 - In progress
 
-Full plan: `docs/ai/work-in-progress/v4-action-plan.md` (local file, not tracked in git).
+Full plan: `docs/work-in-progress/v4-action-plan.md` (local file, not tracked in git).
 
 **Phase 1 - Security hardening (target v3.1.0)**
 - [x] Password authentication - password-based login form (Sanctum via credentials)

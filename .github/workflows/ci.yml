@@ -69,6 +69,7 @@ jobs:
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
+        continue-on-error: true
         with:
           files: ./coverage.xml
           flags: backend
@@ -100,6 +101,7 @@ jobs:
 
       - name: Upload frontend coverage to Codecov
         uses: codecov/codecov-action@v5
+        continue-on-error: true
         with:
           files: ./coverage-frontend/lcov.info
           flags: frontend

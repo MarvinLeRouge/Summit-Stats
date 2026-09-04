@@ -93,6 +93,10 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Homogenize changelog workflow
 
+- Update CHANGELOG.md
+
+- Bump the composer-minor-patch group with 3 updates
+
 
 ### Fixed
 

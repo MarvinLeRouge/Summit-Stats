@@ -97,6 +97,22 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Bump the composer-minor-patch group with 3 updates
 
+- Update CHANGELOG.md
+
+- Bump pinia from 3.0.4 to 4.0.3
+
+- Bump concurrently from 9.2.4 to 10.0.5
+
+- Bump vue-router from 4.6.4 to 5.3.0
+
+- Bump Node from 20 to 22 across workflows
+
+- Bump jsdom from 29.1.1 to 30.0.1
+
+- Make Codecov upload steps non-blocking
+
+- Bump vite to 8.2.2 and laravel-vite-plugin to 3.2.0
+
 
 ### Fixed
 
@@ -107,6 +123,8 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Remove /api/ prefix from login and logout calls
 
 - Downgrade jsdom to 29.0.1 to keep Node 20 CI compatibility
+
+- Regenerate lockfile with Node 22
 
 ## [3.0.0] — 2026-04-02
 

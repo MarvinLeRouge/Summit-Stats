@@ -119,6 +119,10 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Update hardcoded docs/ai references to docs/work-in-progress
 
+- Update CHANGELOG.md
+
+- Homogenize contributing guide with cross-project template
+
 
 ### Fixed
 

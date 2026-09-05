@@ -113,6 +113,12 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Bump vite to 8.2.2 and laravel-vite-plugin to 3.2.0
 
+- Update CHANGELOG.md
+
+- Standardize AI working notes folder to docs/work-in-progress
+
+- Update hardcoded docs/ai references to docs/work-in-progress
+
 
 ### Fixed
 

@@ -2,12 +2,17 @@
 
 ---
 
-# Contribuer
+# Contribuer à Summit Stats
 
-Merci de l'intérêt pour Summit Stats.
-Ce projet est avant tout un projet portfolio personnel. Les contributions externes sont bienvenues mais limitées en périmètre.
+Il s'agit avant tout d'un projet portfolio personnel. Les contributions externes sont bienvenues mais dans une portée limitée.
 
-## Démarrage
+## Prérequis
+
+- PHP 8.2+ avec Composer
+- Node.js 20+
+- SQLite (fourni avec PHP)
+
+## Installation locale
 
 ```bash
 git clone https://github.com/MarvinLeRouge/Summit-Stats.git
@@ -23,6 +28,20 @@ php artisan db:seed --class=UserSeeder
 
 Créer `.env.testing` avec `DB_DATABASE=:memory:` pour des tests isolés.
 
+## Lancer les tests
+
+```bash
+php artisan test --coverage --min=80   # tests + couverture
+```
+
+## Workflow
+
+1. Forker le dépôt et créer une branche à partir de `main`.
+2. Faire la modification, avec des tests qui la couvrent.
+3. Commiter en suivant la convention ci-dessous.
+4. Pousser et ouvrir une pull request vers `main`.
+5. La CI doit passer avant la revue.
+
 ## Nommage des branches
 
 | Type | Format |
@@ -34,33 +53,43 @@ Créer `.env.testing` avec `DB_DATABASE=:memory:` pour des tests isolés.
 | Documentation | `docs/description-courte` |
 | Maintenance | `chore/description-courte` |
 
-## Messages de commit
+Minuscules, kebab-case, sans caractères spéciaux.
 
-Suivre [Conventional Commits](https://www.conventionalcommits.org/) :
+## Convention de commit
+
+Suivre [Conventional Commits](https://www.conventionalcommits.org/), impératif, minuscules, sans point final, avec une section `Modified files:` obligatoire :
 
 ```
-type(scope): résumé court à l'impératif
+<type>(<scope optionnel>): <résumé court>
 
 Modified files:
-- chemin/vers/fichier.ext — ce qui a été modifié
+- chemin/vers/fichier-a.ext - ce qui a été modifié
+- chemin/vers/fichier-b.ext - ce qui a été modifié
 ```
 
-Types : `feat`, `fix`, `refactor`, `test`, `docs`, `style`, `perf`, `ci`, `chore`.
+Types : `feat`, `fix`, `chore`, `docs`, `refactor`, `test`, `style`, `perf`, `ci`.
 
-## Qualité du code
-
-Avant de soumettre une pull request, s'assurer que tous les checks passent :
+## Style de code
 
 ```bash
-php artisan test --coverage --min=80   # Tests + couverture
-vendor/bin/pint --test                 # Style PHP (PSR-12)
-npm run lint                           # ESLint
-npm run format                         # Prettier
+vendor/bin/pint --test   # Style PHP (PSR-12)
+npm run lint             # ESLint
+npm run format           # Prettier
 ```
+
+La CI rejettera toute pull request qui ne passe pas ces vérifications. PHPDoc obligatoire sur toutes les méthodes PHP publiques, JSDoc sur les composants Vue et les fonctions JS exportées.
+
+## Code de conduite
+
+Ce projet suit un [Code de conduite](CODE_OF_CONDUCT.fr.md). En participant, vous vous engagez à le respecter.
+
+## Licence
+
+En contribuant, vous acceptez que vos contributions soient distribuées sous la licence du projet (voir [LICENSE](LICENSE)).
+
+---
 
 ## Pull requests
 
 - Une fonctionnalité ou correction par PR
 - Tout nouveau code doit être testé
-- PHPDoc obligatoire sur toutes les méthodes PHP publiques
-- JSDoc obligatoire sur les composants Vue et les fonctions JS exportées

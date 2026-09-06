@@ -145,6 +145,10 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Bump vue-router in the npm-minor-patch group
 
+- Update CHANGELOG.md
+
+- Bump vitest and @vitest/coverage-v8 to 5.0.0
+
 
 ### Fixed
 
@@ -157,6 +161,8 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Downgrade jsdom to 29.0.1 to keep Node 20 CI compatibility
 
 - Regenerate lockfile with Node 22
+
+- Regenerate package-lock.json to include missing optional deps
 
 ## [3.0.0] — 2026-04-02
 

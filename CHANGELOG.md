@@ -135,6 +135,10 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Add architecture reference document
 
+- Update CHANGELOG.md
+
+- Add missing French translations for operations and design system
+
 
 ### Fixed
 

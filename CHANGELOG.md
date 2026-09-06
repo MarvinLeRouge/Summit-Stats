@@ -127,6 +127,10 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Add backend, frontend and user developer guides
 
+- Update CHANGELOG.md
+
+- Add ADR index
+
 
 ### Fixed
 

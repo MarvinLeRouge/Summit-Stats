@@ -298,6 +298,7 @@ V1, V2 et V3 sont livrées ; la V4 (durcissement sécurité, partage en lecture 
 
 ## 📚 Documentation
 
+- [docs/architecture.fr.md](docs/architecture.fr.md) — structure du dépôt, couches backend, structure frontend
 - [docs/product-context.fr.md](docs/product-context.fr.md) — pourquoi ce projet existe
 - [docs/operations.md](docs/operations.md) — stack de production, pipeline CI/CD, déploiement (anglais)
 - [docs/design-system.md](docs/design-system.md) — conventions Tailwind, Chart.js et Leaflet (anglais)

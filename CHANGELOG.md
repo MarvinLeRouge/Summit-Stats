@@ -139,6 +139,12 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Add missing French translations for operations and design system
 
+- Update CHANGELOG.md
+
+- Bump lint-staged from 16.4.0 to 17.4.1
+
+- Bump vue-router in the npm-minor-patch group
+
 
 ### Fixed
 

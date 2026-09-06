@@ -297,6 +297,7 @@ V1, V2 and V3 are delivered; V4 (security hardening, read-only sharing, portfoli
 
 ## 📚 Documentation
 
+- [docs/architecture.md](docs/architecture.md) — repository layout, backend layers, frontend structure
 - [docs/product-context.md](docs/product-context.md) — why this project exists
 - [docs/operations.md](docs/operations.md) — production stack, CI/CD pipeline, deployment
 - [docs/design-system.md](docs/design-system.md) — Tailwind, Chart.js and Leaflet conventions

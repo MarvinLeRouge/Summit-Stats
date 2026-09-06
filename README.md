@@ -301,6 +301,9 @@ V1, V2 and V3 are delivered; V4 (security hardening, read-only sharing, portfoli
 - [docs/operations.md](docs/operations.md) — production stack, CI/CD pipeline, deployment
 - [docs/design-system.md](docs/design-system.md) — Tailwind, Chart.js and Leaflet conventions
 - [docs/api/api_endpoints.md](docs/api/api_endpoints.md) — full API reference
+- [docs/guides/backend_developer_guide.md](docs/guides/backend_developer_guide.md) — day-to-day backend conventions
+- [docs/guides/frontend_developer_guide.md](docs/guides/frontend_developer_guide.md) — day-to-day frontend conventions
+- [docs/guides/user_guide.md](docs/guides/user_guide.md) — using Summit Stats: import, stats, progression
 - [docs/adr/](docs/adr/) — architecture decision records
 - [CONTRIBUTING.md](CONTRIBUTING.md), [SECURITY.md](SECURITY.md), [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
 

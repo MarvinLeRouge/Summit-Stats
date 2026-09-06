@@ -131,6 +131,10 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Add ADR index
 
+- Update CHANGELOG.md
+
+- Add architecture reference document
+
 
 ### Fixed
 

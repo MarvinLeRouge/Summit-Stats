@@ -1,3 +1,7 @@
+[🇫🇷 Version française](operations.fr.md) | 🇬🇧 English version
+
+---
+
 # Operations
 
 ## Production environment

@@ -302,6 +302,9 @@ V1, V2 et V3 sont livrées ; la V4 (durcissement sécurité, partage en lecture 
 - [docs/operations.md](docs/operations.md) — stack de production, pipeline CI/CD, déploiement (anglais)
 - [docs/design-system.md](docs/design-system.md) — conventions Tailwind, Chart.js et Leaflet (anglais)
 - [docs/api/api_endpoints.fr.md](docs/api/api_endpoints.fr.md) — référence API complète
+- [docs/guides/backend_developer_guide.fr.md](docs/guides/backend_developer_guide.fr.md) — conventions backend au quotidien
+- [docs/guides/frontend_developer_guide.fr.md](docs/guides/frontend_developer_guide.fr.md) — conventions frontend au quotidien
+- [docs/guides/user_guide.fr.md](docs/guides/user_guide.fr.md) — utiliser Summit Stats : import, statistiques, progression
 - [docs/adr/](docs/adr/) — architecture decision records (anglais)
 - [CONTRIBUTING.fr.md](CONTRIBUTING.fr.md), [SECURITY.fr.md](SECURITY.fr.md), [CODE_OF_CONDUCT.fr.md](CODE_OF_CONDUCT.fr.md)
 

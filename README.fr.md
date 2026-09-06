@@ -183,7 +183,7 @@ workflow_dispatch ──────► build-deploy  (manuel, bypass E2E)
 
 ## Production
 
-L'application tourne sur un VPS derrière un reverse proxy Traefik partagé, avec des images buildées en CI et stockées dans GHCR — pas de code source ni d'étape de build sur le serveur. Voir [docs/operations.md](docs/operations.md) (anglais) pour le stack complet, le pipeline CI/CD et la procédure de déploiement.
+L'application tourne sur un VPS derrière un reverse proxy Traefik partagé, avec des images buildées en CI et stockées dans GHCR — pas de code source ni d'étape de build sur le serveur. Voir [docs/operations.fr.md](docs/operations.fr.md) pour le stack complet, le pipeline CI/CD et la procédure de déploiement.
 
 ---
 
@@ -300,8 +300,8 @@ V1, V2 et V3 sont livrées ; la V4 (durcissement sécurité, partage en lecture 
 
 - [docs/architecture.fr.md](docs/architecture.fr.md) — structure du dépôt, couches backend, structure frontend
 - [docs/product-context.fr.md](docs/product-context.fr.md) — pourquoi ce projet existe
-- [docs/operations.md](docs/operations.md) — stack de production, pipeline CI/CD, déploiement (anglais)
-- [docs/design-system.md](docs/design-system.md) — conventions Tailwind, Chart.js et Leaflet (anglais)
+- [docs/operations.fr.md](docs/operations.fr.md) — stack de production, pipeline CI/CD, déploiement
+- [docs/design-system.fr.md](docs/design-system.fr.md) — conventions Tailwind, Chart.js et Leaflet
 - [docs/api/api_endpoints.fr.md](docs/api/api_endpoints.fr.md) — référence API complète
 - [docs/guides/backend_developer_guide.fr.md](docs/guides/backend_developer_guide.fr.md) — conventions backend au quotidien
 - [docs/guides/frontend_developer_guide.fr.md](docs/guides/frontend_developer_guide.fr.md) — conventions frontend au quotidien

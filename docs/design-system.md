@@ -1,3 +1,7 @@
+[🇫🇷 Version française](design-system.fr.md) | 🇬🇧 English version
+
+---
+
 # Design system
 
 ## Styling — Tailwind CSS v4

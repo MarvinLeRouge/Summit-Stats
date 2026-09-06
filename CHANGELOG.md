@@ -123,6 +123,10 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Homogenize contributing guide with cross-project template
 
+- Update CHANGELOG.md
+
+- Add backend, frontend and user developer guides
+
 
 ### Fixed
 

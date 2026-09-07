@@ -39,3 +39,15 @@ it('returns 401 on logout without token', function () {
     $this->postJson('/api/logout')
         ->assertUnauthorized();
 });
+
+it('throttles login after 5 attempts per minute', function () {
+    User::factory()->create(['password' => bcrypt('secret123')]);
+
+    for ($i = 0; $i < 5; $i++) {
+        $this->postJson('/api/login', ['password' => 'wrong'])
+            ->assertUnauthorized();
+    }
+
+    $this->postJson('/api/login', ['password' => 'secret123'])
+        ->assertStatus(429);
+});

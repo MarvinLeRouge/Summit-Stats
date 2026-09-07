@@ -10,6 +10,9 @@ use App\Services\Gpx\GpxAnalysisOrchestrator;
 use App\Services\Gpx\GpxParserService;
 use App\Services\Gpx\SegmentationService;
 use App\Services\Gpx\StatsAggregatorService;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -63,6 +66,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        RateLimiter::for('login', function (Request $request) {
+            return Limit::perMinute(5)->by($request->ip());
+        });
     }
 }

@@ -173,6 +173,10 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Update CHANGELOG.md
 
+- Update CHANGELOG.md
+
+- Stop tracking AI planning working files
+
 
 ### Fixed
 

@@ -49,3 +49,19 @@ it('returns 422 if type is invalid', function () {
         'gpx_file' => $gpxFile,
     ])->assertUnprocessable();
 });
+
+it('returns 422 if comment exceeds the maximum length', function () {
+    $gpxFile = UploadedFile::fake()->createWithContent(
+        'trace.gpx',
+        file_get_contents(base_path('tests/Fixtures/gpx/simple_track.gpx'))
+    );
+
+    $this->postJson('/api/activities', [
+        'title' => 'Commentaire trop long',
+        'type' => 'randonnee',
+        'environment' => 'montagne',
+        'date' => '2024-06-15',
+        'comment' => str_repeat('a', 5001),
+        'gpx_file' => $gpxFile,
+    ])->assertUnprocessable();
+});

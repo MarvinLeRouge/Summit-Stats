@@ -56,6 +56,39 @@ Prérequis sur le serveur :
 2. Copier `.env.prod.example` vers `.env.prod` dans ce répertoire et renseigner les valeurs réelles (`APP_KEY`, identifiants de base de données, `DOMAIN`, etc.) ; `.env.prod` n'est jamais commité
 3. Déclencher le workflow (push sur `main` une fois l'E2E réussi, ou exécution manuelle) pour builder les images et effectuer le premier déploiement
 
+## Secrets et rotation des clés
+
+- `.env.prod` ne doit pas être lisible par tous : `chmod 600 .env.prod` sur le VPS après édition.
+- `APP_KEY` chiffre les données de session et d'autres payloads internes à Laravel. La faire tourner invalide toutes les sessions existantes et toute donnée chiffrée avec l'ancienne clé (les tokens Sanctum sont hashés, pas chiffrés avec `APP_KEY`, donc non affectés). Ne la faire tourner qu'en cas de suspicion de fuite : générer une nouvelle clé avec `docker compose -f docker-compose.prod.yml --env-file .env.prod run --rm app php artisan key:generate --show`, mettre à jour `.env.prod`, puis `docker compose -f docker-compose.prod.yml --env-file .env.prod up -d` pour redémarrer avec.
+- `DB_PASSWORD` doit être généré avec `openssl rand -base64 32` ou équivalent, jamais un mot de passe mémorisable puisqu'il n'est jamais saisi par un humain.
+- `LOG_LEVEL=warning` (pas `error`) : les tentatives de connexion échouées sont enregistrées au niveau `warning` pour rester visibles dans les journaux de production. Un niveau `error` plus strict les éliminerait silencieusement.
+- Dependabot est activé (`.github/dependabot.yml`, vérifications hebdomadaires npm + Composer). Traiter chaque alerte (merge ou dismiss) sous une semaine, ne pas les laisser s'accumuler sans revue.
+
+## Sauvegardes automatisées
+
+`docker/scripts/backup-postgres.sh` sauvegarde la base de données et conserve les 14 derniers jours de sauvegardes. Il doit être présent sur le serveur, à côté du fichier compose :
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/MarvinLeRouge/Summit-Stats/main/docker/scripts/backup-postgres.sh -o backup-postgres.sh
+chmod +x backup-postgres.sh
+```
+
+L'installer en cron quotidien (commandes ci-dessous à exécuter vous-même en SSH, Claude ne les exécute jamais) :
+
+```bash
+crontab -e
+# Ajouter cette ligne (adapter le chemin vers docker-compose.prod.yml) :
+0 3 * * * cd /opt/summit-stats/compose && BACKUP_DIR=/opt/summit-stats/backups ./backup-postgres.sh >> /var/log/summit-stats-backup.log 2>&1
+```
+
+Pour restaurer depuis une sauvegarde :
+
+```bash
+set -a; source .env.prod; set +a
+gunzip -c /opt/summit-stats/backups/summit-stats-<timestamp>.sql.gz | \
+  docker compose -f docker-compose.prod.yml --env-file .env.prod exec -T postgres psql -U "$DB_USERNAME" "$DB_DATABASE"
+```
+
 ## Mise à jour
 
 Les déploiements sont automatiques : dès qu'un changement arrive sur `main` et que la suite E2E réussit, `build-deploy.yml` build de nouvelles images et redéploie la stack, migrations en attente incluses.

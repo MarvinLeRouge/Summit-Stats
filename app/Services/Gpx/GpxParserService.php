@@ -21,8 +21,13 @@ class GpxParserService
             throw new GpxParseException("Fichier GPX introuvable : {$filePath}");
         }
 
+        $rawContent = file_get_contents($filePath);
+        if ($rawContent !== false && (str_contains($rawContent, '<!DOCTYPE') || str_contains($rawContent, '<!ENTITY'))) {
+            throw new GpxParseException('Fichier GPX invalide ou mal formé.');
+        }
+
         libxml_use_internal_errors(true);
-        $xml = simplexml_load_file($filePath);
+        $xml = simplexml_load_file($filePath, 'SimpleXMLElement', LIBXML_NONET);
 
         if ($xml === false) {
             throw new GpxParseException('Fichier GPX invalide ou mal formé.');

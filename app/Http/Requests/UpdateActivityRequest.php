@@ -26,7 +26,7 @@ class UpdateActivityRequest extends FormRequest
             'type' => ['sometimes', 'in:randonnee,trail'],
             'environment' => ['sometimes', 'in:urbain,campagne,montagne'],
             'date' => ['sometimes', 'date'],
-            'comment' => ['nullable', 'string'],
+            'comment' => ['nullable', 'string', 'max:5000'],
             'gpx_file' => ['sometimes', 'file', 'mimes:gpx,xml', 'max:20480'],
         ];
     }

@@ -43,6 +43,16 @@ it('re-analyses GPX when a new file is provided', function () {
     $this->assertDatabaseMissing('activities', ['gpx_path' => 'gpx/old_trace.gpx']);
 });
 
+it('returns 422 if comment exceeds the maximum length', function () {
+    $activity = Activity::factory()->create();
+
+    $this->withToken($this->token)
+        ->putJson("/api/activities/{$activity->id}", [
+            'comment' => str_repeat('a', 5001),
+        ])
+        ->assertUnprocessable();
+});
+
 it('returns 404 for unknown activity', function () {
     $this->withToken($this->token)
         ->putJson('/api/activities/999', ['title' => 'Test'])

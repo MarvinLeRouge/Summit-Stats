@@ -37,18 +37,6 @@ jobs:
       - name: Install PHP dependencies
         run: composer install --no-interaction --prefer-dist --optimize-autoloader
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-          cache: 'npm'
-
-      - name: Install JS dependencies
-        run: npm ci
-
-      - name: Build assets
-        run: npm run build
-
       - name: Copy .env
         run: cp .env.example .env
 
@@ -60,6 +48,18 @@ jobs:
 
       - name: Lint PHP
         run: vendor/bin/pint --test
+
+      - name: Static analysis (PHPStan)
+        run: vendor/bin/phpstan analyse --error-format=github
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install JS dependencies
+        run: npm ci
 
       - name: Lint JS
         run: npm run lint

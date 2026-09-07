@@ -19,6 +19,7 @@
 /public/storage
 /storage/*.key
 /storage/pail
+/storage/phpstan
 /vendor
 Homestead.json
 Homestead.yaml
@@ -48,3 +49,4 @@ docs/work-in-progress/
 
 # Claude Code
 CLAUDE.md
+.superpowers/

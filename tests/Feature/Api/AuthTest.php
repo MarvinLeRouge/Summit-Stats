@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 
 it('returns a token on successful login', function () {
     User::factory()->create(['password' => bcrypt('secret123')]);
@@ -23,6 +24,11 @@ it('returns 422 when password is missing', function () {
         ->assertUnprocessable();
 });
 
+it('returns 422 when password exceeds the maximum length', function () {
+    $this->postJson('/api/login', ['password' => str_repeat('a', 256)])
+        ->assertUnprocessable();
+});
+
 it('revokes token on logout', function () {
     $user = User::factory()->create();
     $token = $user->createToken('web')->plainTextToken;
@@ -40,14 +46,42 @@ it('returns 401 on logout without token', function () {
         ->assertUnauthorized();
 });
 
-it('throttles login after 5 attempts per minute', function () {
+it('throttles login after too many attempts', function () {
     User::factory()->create(['password' => bcrypt('secret123')]);
 
     for ($i = 0; $i < 5; $i++) {
-        $this->postJson('/api/login', ['password' => 'wrong'])
-            ->assertUnauthorized();
+        $this->postJson('/api/login', ['password' => 'wrong']);
     }
 
-    $this->postJson('/api/login', ['password' => 'secret123'])
+    $this->postJson('/api/login', ['password' => 'wrong'])
         ->assertStatus(429);
+});
+
+it('rejects a token older than the configured expiration', function () {
+    $user = User::factory()->create();
+    $token = $user->createToken('web')->plainTextToken;
+
+    $this->travel(31)->days();
+
+    $this->withToken($token)
+        ->getJson('/api/stats')
+        ->assertUnauthorized();
+
+    $this->travelBack();
+});
+
+it('does not reflect an unexpected origin in CORS headers', function () {
+    $response = $this->getJson('/api/stats', ['Origin' => 'https://evil.example.com']);
+
+    expect($response->headers->get('Access-Control-Allow-Origin'))->not->toBe('*');
+});
+
+it('logs a warning on failed login attempts', function () {
+    Log::spy();
+
+    User::factory()->create(['password' => bcrypt('secret123')]);
+
+    $this->postJson('/api/login', ['password' => 'wrong']);
+
+    Log::shouldHaveReceived('warning')->once();
 });

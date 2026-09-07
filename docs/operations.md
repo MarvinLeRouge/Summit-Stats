@@ -56,6 +56,39 @@ Steps:
 2. Copy `.env.prod.example` to `.env.prod` in that directory and fill in real values (`APP_KEY`, database credentials, `DOMAIN`, etc.) — `.env.prod` is never committed
 3. Trigger the workflow (push to `main` once E2E passes, or run it manually) to build the images and perform the first deployment
 
+## Secrets and key rotation
+
+- `.env.prod` must not be world-readable: `chmod 600 .env.prod` on the VPS after editing it.
+- `APP_KEY` encrypts session data and other Laravel-internal payloads. Rotating it invalidates all existing sessions and any data encrypted with the old key (Sanctum plaintext tokens are hashed, not encrypted with `APP_KEY`, so they are unaffected). Rotate only if the key is suspected to have leaked: generate a new one with `docker compose -f docker-compose.prod.yml --env-file .env.prod run --rm app php artisan key:generate --show`, update `.env.prod`, then `docker compose -f docker-compose.prod.yml --env-file .env.prod up -d` to restart with it.
+- `DB_PASSWORD` should be generated with `openssl rand -base64 32` or similar, never a memorable password, since it is never typed by a human.
+- `LOG_LEVEL=warning` (not `error`): failed login attempts are logged at `warning` level so they remain visible in production logs. A stricter `error` level would silently drop this signal.
+- Dependabot is enabled (`.github/dependabot.yml`, weekly npm + Composer checks). Review and merge or dismiss each alert within a week of it opening; do not let alerts accumulate unreviewed.
+
+## Automated backups
+
+`docker/scripts/backup-postgres.sh` dumps the database and keeps the last 14 days of backups. It needs to live on the server alongside the compose file:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/MarvinLeRouge/Summit-Stats/main/docker/scripts/backup-postgres.sh -o backup-postgres.sh
+chmod +x backup-postgres.sh
+```
+
+Install it as a daily cron job (commands below are for you to run over SSH, Claude never executes these):
+
+```bash
+crontab -e
+# Add this line (adjust the path to where docker-compose.prod.yml lives):
+0 3 * * * cd /opt/summit-stats/compose && BACKUP_DIR=/opt/summit-stats/backups ./backup-postgres.sh >> /var/log/summit-stats-backup.log 2>&1
+```
+
+To restore from a backup:
+
+```bash
+set -a; source .env.prod; set +a
+gunzip -c /opt/summit-stats/backups/summit-stats-<timestamp>.sql.gz | \
+  docker compose -f docker-compose.prod.yml --env-file .env.prod exec -T postgres psql -U "$DB_USERNAME" "$DB_DATABASE"
+```
+
 ## Updating
 
 Deployments are automatic: once a change lands on `main` and the E2E suite passes, `build-deploy.yml` builds fresh images and redeploys the stack, including any pending migrations.

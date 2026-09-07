@@ -14,6 +14,8 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Replace token input with password-based login
 
+- Add automated PostgreSQL backup script
+
 - Add login rate limiting and Sanctum token expiration
 
 
@@ -44,6 +46,22 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Add hierarchized V4 roadmap for security, sharing, deployment and design
 
 - Add static analysis and CI optimization to Phase 1 of the V4 roadmap
+
+- Add Phase 1 security hardening implementation plan
+
+- Ignore .superpowers scratch workspace
+
+- Document secrets handling and Dependabot triage
+
+- Add PHPStan (Larastan) static analysis
+
+- Remove unnecessary asset build from the backend test job
+
+- Rewrite for the actual Docker Compose production setup
+
+- Update vulnerable transitive dependencies
+
+- Clean up the XXE fixture file after the test runs
 
 - Add Code of Conduct
 
@@ -153,6 +171,8 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Update CHANGELOG.md
 
+- Update CHANGELOG.md
+
 
 ### Fixed
 
@@ -162,11 +182,27 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Remove /api/ prefix from login and logout calls
 
+- Rate limit the login endpoint
+
+- Expire Sanctum tokens after 30 days by default
+
+- Restrict CORS to the app's own origin
+
+- Add baseline security headers to every response
+
+- Log failed login attempts and keep them visible in production
+
+- Harden XML parsing against XXE
+
+- Bound unbounded string inputs on login and activity comment
+
 - Downgrade jsdom to 29.0.1 to keep Node 20 CI compatibility
 
 - Regenerate lockfile with Node 22
 
 - Regenerate package-lock.json to include missing optional deps
+
+- Restore npm ci before the Lint JS step
 
 ## [3.0.0] — 2026-04-02
 

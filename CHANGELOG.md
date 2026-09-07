@@ -179,6 +179,10 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Update CHANGELOG.md
 
+- Update CHANGELOG.md
+
+- Mark OWASP Top 10:2025 + ASVS audit pass as done
+
 
 ### Fixed
 

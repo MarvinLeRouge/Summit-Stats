@@ -14,6 +14,8 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Replace token input with password-based login
 
+- Add login rate limiting and Sanctum token expiration
+
 
 ### Changed
 
@@ -148,6 +150,8 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Update CHANGELOG.md
 
 - Bump vitest and @vitest/coverage-v8 to 5.0.0
+
+- Update CHANGELOG.md
 
 
 ### Fixed

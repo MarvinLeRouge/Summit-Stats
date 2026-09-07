@@ -289,6 +289,16 @@ Personal project with a dual purpose:
 
 ---
 
+## 🔐 Multi-user considerations
+
+Summit Stats is currently a single-user private tool by design (see [SECURITY.md](SECURITY.md)). A security audit (OWASP Top 10:2025 + ASVS 5.0) identified three points that are acceptable under this single-user model but **must** be addressed before Phase 2 of the roadmap (read-only sharing) introduces a second identity:
+
+- **Sanctum token storage** — the API token is kept in `localStorage` (`resources/js/bootstrap.js`), which is readable by any script running on the page. The strict CSP (`script-src 'self'`) and Vue's default output escaping keep the residual XSS risk low, but this is not a hard guarantee. Before opening the app to more than one identity, move to an httpOnly/secure Sanctum SPA cookie.
+- **Object-level authorization (IDOR)** — `ActivityController` binds `{activity}` by route-model-binding without checking ownership; any valid token can read, update or delete any activity. An ownership check (`user_id` on `Activity`, or a policy) must be introduced before a second account can authenticate.
+- **Token lifetime** — `SANCTUM_TOKEN_EXPIRATION` defaults to 30 days with no refresh/rotation mechanism, acceptable for a single trusted user. Shared or viewer accounts should use a shorter-lived token paired with a refresh flow.
+
+---
+
 ## 🗺️ Roadmap
 
 V1, V2 and V3 are delivered; V4 (security hardening, read-only sharing, portfolio deployment, design overhaul) is in progress. Full detail in [docs/roadmap.md](docs/roadmap.md).

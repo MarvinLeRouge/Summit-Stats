@@ -52,6 +52,15 @@ jobs:
       - name: Static analysis (PHPStan)
         run: vendor/bin/phpstan analyse --error-format=github
 
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install JS dependencies
+        run: npm ci
+
       - name: Lint JS
         run: npm run lint
 

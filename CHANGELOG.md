@@ -177,6 +177,8 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Stop tracking AI planning working files
 
+- Update CHANGELOG.md
+
 
 ### Fixed
 
@@ -207,6 +209,8 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Regenerate package-lock.json to include missing optional deps
 
 - Restore npm ci before the Lint JS step
+
+- Enforce user password policy and document multi-user gaps
 
 ## [3.0.0] — 2026-04-02
 

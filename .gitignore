@@ -40,7 +40,12 @@ playwright-report/
 test-results/
 .env.prod
 
-docs/ai
+# Tooling output
+.serena
+graphify-out
+.husky
+
+docs/work-in-progress/
 
 # Claude Code
 CLAUDE.md

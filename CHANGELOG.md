@@ -183,6 +183,10 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Mark OWASP Top 10:2025 + ASVS audit pass as done
 
+- Update CHANGELOG.md
+
+- Add path-filter and split JS lint out of the PHP job
+
 
 ### Fixed
 

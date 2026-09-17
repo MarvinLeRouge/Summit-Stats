@@ -203,6 +203,10 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Add ci-status aggregator job
 
+- Update CHANGELOG.md
+
+- Document codecov coverage thresholds
+
 
 ### Fixed
 

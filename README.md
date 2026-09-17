@@ -149,6 +149,8 @@ Style issues are auto-fixed before the commit is recorded — they never reach C
 2. PHP backend tests with coverage (Pest + pcov) — report uploaded to Codecov (`backend` flag)
 3. Frontend unit tests (Vitest) — report uploaded to Codecov (`frontend` flag)
 
+Coverage thresholds (`codecov.yml`, blocking): project 80% (±2%), patch 90% (±5%).
+
 ### E2E workflow
 
 [`E2E`](.github/workflows/e2e.yml) — triggers on push to `main`:

@@ -7,3 +7,10 @@ services:
   nginx:
     ports:
       - "8081:80"
+
+  # Disabled in CI: the E2E workflow runs `npm run build` beforehand and
+  # nginx serves those static assets. Leaving the dev server running here
+  # would create public/hot, forcing Laravel's @vite() directive to emit
+  # dev-server script tags instead of the built manifest.
+  vite:
+    command: "true"

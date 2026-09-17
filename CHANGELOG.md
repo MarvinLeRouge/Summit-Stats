@@ -195,6 +195,10 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Bump codecov-action to v7
 
+- Update CHANGELOG.md
+
+- Raise patch coverage target to 90%
+
 
 ### Fixed
 

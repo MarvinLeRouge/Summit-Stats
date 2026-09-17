@@ -207,6 +207,8 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Document codecov coverage thresholds
 
+- Update CHANGELOG.md
+
 
 ### Fixed
 
@@ -239,6 +241,10 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Restore npm ci before the Lint JS step
 
 - Enforce user password policy and document multi-user gaps
+
+- Disable vite dev server in CI stack to fix E2E blank-page failures
+
+- Trigger workflow on all pull requests, not just non-doc changes
 
 ## [3.0.0] — 2026-04-02
 

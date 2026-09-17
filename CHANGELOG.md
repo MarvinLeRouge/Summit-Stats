@@ -199,6 +199,10 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Raise patch coverage target to 90%
 
+- Update CHANGELOG.md
+
+- Add ci-status aggregator job
+
 
 ### Fixed
 

@@ -187,6 +187,14 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Add path-filter and split JS lint out of the PHP job
 
+- Update CHANGELOG.md
+
+- Skip CI on doc-only changes for pull requests
+
+- Drop redundant continue-on-error on Codecov upload
+
+- Bump codecov-action to v7
+
 
 ### Fixed
 

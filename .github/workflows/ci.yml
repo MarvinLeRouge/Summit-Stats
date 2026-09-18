@@ -46,14 +46,11 @@ jobs:
               - 'vitest.config.js'
               - '.github/workflows/ci.yml'
 
-  backend:
-    name: Backend — lint, static analysis, test
+  backend-lint:
+    name: "Backend: lint"
     needs: changes
     if: ${{ needs.changes.outputs.backend == 'true' }}
     runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: read
 
     steps:
       - name: Checkout
@@ -90,6 +87,44 @@ jobs:
       - name: Static analysis (PHPStan)
         run: vendor/bin/phpstan analyse --error-format=github
 
+  backend-test:
+    name: "Backend: test"
+    needs: changes
+    if: ${{ needs.changes.outputs.backend == 'true' }}
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: dom, mbstring, sqlite3, pgsql, pdo_pgsql, redis, pcov
+          coverage: pcov
+
+      - name: Cache Composer
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: composer-${{ hashFiles('composer.lock') }}
+
+      - name: Install PHP dependencies
+        run: composer install --no-interaction --prefer-dist --optimize-autoloader
+
+      - name: Copy .env
+        run: cp .env.example .env
+
+      - name: Disable elevation enrichment for CI
+        run: echo "ELEVATION_ENABLED=false" >> .env
+
+      - name: Generate app key
+        run: php artisan key:generate
+
       - name: Run tests with coverage
         run: php artisan test --coverage --min=80
 
@@ -101,8 +136,58 @@ jobs:
           fail_ci_if_error: false
           use_oidc: true
 
-  frontend:
-    name: Frontend — lint, test
+  backend-security:
+    name: "Backend: security"
+    needs: changes
+    if: ${{ needs.changes.outputs.backend == 'true' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          coverage: none
+
+      - name: Cache Composer
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: composer-${{ hashFiles('composer.lock') }}
+
+      - name: Install PHP dependencies
+        run: composer install --no-interaction --prefer-dist --optimize-autoloader
+
+      - name: composer audit (dependency vulnerability scan)
+        run: composer audit
+
+  frontend-lint:
+    name: "Frontend: lint"
+    needs: changes
+    if: ${{ needs.changes.outputs.frontend == 'true' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install JS dependencies
+        run: npm ci
+
+      - name: Lint JS
+        run: npm run lint
+
+  frontend-test:
+    name: "Frontend: test"
     needs: changes
     if: ${{ needs.changes.outputs.frontend == 'true' }}
     runs-on: ubuntu-latest
@@ -123,9 +208,6 @@ jobs:
       - name: Install JS dependencies
         run: npm ci
 
-      - name: Lint JS
-        run: npm run lint
-
       - name: Run frontend unit tests
         run: npm run test:coverage
 
@@ -137,10 +219,32 @@ jobs:
           fail_ci_if_error: false
           use_oidc: true
 
+  frontend-security:
+    name: "Frontend: security"
+    needs: changes
+    if: ${{ needs.changes.outputs.frontend == 'true' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install JS dependencies
+        run: npm ci
+
+      - name: npm audit (dependency vulnerability scan)
+        run: npm audit --audit-level=critical
+
   ci-status:
     name: CI status
     if: always()
-    needs: [changes, backend, frontend]
+    needs: [changes, backend-lint, backend-test, backend-security, frontend-lint, frontend-test, frontend-security]
     runs-on: ubuntu-latest
     steps:
       - name: Fail if any required job failed or was cancelled

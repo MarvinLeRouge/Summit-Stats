@@ -209,6 +209,12 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Update CHANGELOG.md
 
+- Update CHANGELOG.md
+
+- Mark static analysis task as done
+
+- Homogenize job naming and split lint/test/security stages
+
 
 ### Fixed
 

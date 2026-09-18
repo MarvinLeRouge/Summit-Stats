@@ -215,6 +215,10 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Homogenize job naming and split lint/test/security stages
 
+- Update CHANGELOG.md
+
+- Correct backend test count and fix license link
+
 
 ### Fixed
 

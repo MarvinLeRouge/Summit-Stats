@@ -42,7 +42,7 @@ Plan complet : `docs/work-in-progress/v4-action-plan.md` (fichier local, non ver
 - [ ] Configuration CORS explicite et security headers (CSP, HSTS, X-Frame-Options, ...)
 - [ ] Sauvegarde automatique de la base - `pg_dump` planifié sur le VPS, rotation, documentation du restore
 - [x] Audit OWASP Top 10:2025 + ASVS
-- [ ] Analyse statique (PHPStan/Larastan) dans le hook pre-commit et en CI
+- [x] Analyse statique (PHPStan/Larastan) dans le hook pre-commit et en CI
 - [ ] Audit et optimisation du pipeline CI
 
 **Phase 2 - Partage en lecture seule (cible v4.0.0)**

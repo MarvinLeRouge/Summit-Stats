@@ -13,11 +13,11 @@
 ![PHP](https://img.shields.io/badge/PHP-8.4-777BB4?logo=php&logoColor=white)
 ![Laravel](https://img.shields.io/badge/Laravel-12-FF2D20?logo=laravel&logoColor=white)
 ![Vue.js](https://img.shields.io/badge/Vue.js-3-4FC08D?logo=vuedotjs&logoColor=white)
-![License](https://img.shields.io/github/license/MarvinLeRouge/Summit-Stats?cacheSeconds=3600)
 
 [![codecov backend](https://img.shields.io/codecov/c/github/MarvinLeRouge/Summit-Stats?flag=backend&label=backend&logo=codecov)](https://codecov.io/gh/MarvinLeRouge/Summit-Stats)
 [![codecov frontend](https://img.shields.io/codecov/c/github/MarvinLeRouge/Summit-Stats?flag=frontend&label=frontend&logo=codecov)](https://codecov.io/gh/MarvinLeRouge/Summit-Stats)
-![Tests](https://img.shields.io/badge/Tests-217%20passing-brightgreen)
+![Tests](https://img.shields.io/badge/Tests-226%20passing-brightgreen)
+[![License](https://img.shields.io/github/license/MarvinLeRouge/Summit-Stats?cacheSeconds=3600)](LICENSE)
 
 ---
 
@@ -44,7 +44,7 @@ Summit Stats segmente chaque trace GPX par type de terrain et classe de pente, p
 | Métrique | Valeur |
 |---|---|
 | Couverture de tests | **91,5% backend · 100% frontend** |
-| Tests automatisés | **123 backend · 62 unit frontend · 32 E2E = 217 tests** |
+| Tests automatisés | **132 backend · 62 unit frontend · 32 E2E = 226 tests** |
 | Endpoints API | **10 routes REST** |
 | Métriques par activité | **22 stats stockées en base** |
 | Pipeline GPX | **6 services en TDD strict** |

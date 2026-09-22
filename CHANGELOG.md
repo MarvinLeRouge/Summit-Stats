@@ -223,6 +223,10 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Add local post-commit hook for changelog generation
 
+- Bump the npm-minor-patch group across 1 directory with 9 updates (#146)
+
+- Bump the composer-minor-patch group across 1 directory with 3 updates (#124)
+
 
 ### Fixed
 

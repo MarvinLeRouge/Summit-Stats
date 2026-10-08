@@ -294,7 +294,7 @@ Projet personnel à double vocation :
 
 ## 🔐 Considérations multi-utilisateurs
 
-Summit Stats est actuellement un outil privé mono-utilisateur, par conception (voir [SECURITY.fr.md](SECURITY.fr.md)). Un audit de sécurité (OWASP Top 10:2025 + ASVS 5.0) a identifié trois points acceptables dans ce modèle mono-utilisateur mais qui **devront** être traités avant que la Phase 2 de la roadmap (partage en lecture seule) n'introduise une seconde identité :
+Summit Stats est actuellement un outil privé mono-utilisateur, par conception (voir [SECURITY.fr.md](docs/i18n/fr/SECURITY.fr.md)). Un audit de sécurité (OWASP Top 10:2025 + ASVS 5.0) a identifié trois points acceptables dans ce modèle mono-utilisateur mais qui **devront** être traités avant que la Phase 2 de la roadmap (partage en lecture seule) n'introduise une seconde identité :
 
 - **Stockage du token Sanctum** — le token API est conservé dans `localStorage` (`resources/js/bootstrap.js`), lisible par tout script exécuté sur la page. La CSP stricte (`script-src 'self'`) et l'échappement par défaut de Vue limitent le risque résiduel de XSS, mais ce n'est pas une garantie absolue. Avant d'ouvrir l'app à plusieurs identités, migrer vers un cookie SPA Sanctum httpOnly/secure.
 - **Autorisation au niveau objet (IDOR)** — `ActivityController` fait du route-model-binding sur `{activity}` sans vérification de propriétaire ; n'importe quel token valide peut lire, modifier ou supprimer n'importe quelle activité. Une vérification de propriétaire (`user_id` sur `Activity`, ou une policy) doit être introduite avant qu'un second compte puisse s'authentifier.
@@ -319,7 +319,7 @@ V1, V2 et V3 sont livrées ; la V4 (durcissement sécurité, partage en lecture 
 - [docs/guides/frontend_developer_guide.fr.md](docs/guides/frontend_developer_guide.fr.md) — conventions frontend au quotidien
 - [docs/guides/user_guide.fr.md](docs/guides/user_guide.fr.md) — utiliser Summit Stats : import, statistiques, progression
 - [docs/adr/](docs/adr/) — architecture decision records (anglais)
-- [CONTRIBUTING.fr.md](CONTRIBUTING.fr.md), [SECURITY.fr.md](SECURITY.fr.md), [CODE_OF_CONDUCT.fr.md](CODE_OF_CONDUCT.fr.md)
+- [CONTRIBUTING.fr.md](docs/i18n/fr/CONTRIBUTING.fr.md), [SECURITY.fr.md](docs/i18n/fr/SECURITY.fr.md), [CODE_OF_CONDUCT.fr.md](docs/i18n/fr/CODE_OF_CONDUCT.fr.md)
 
 ---
 

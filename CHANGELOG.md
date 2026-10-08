@@ -227,7 +227,7 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Bump the composer-minor-patch group across 1 directory with 3 updates (#124)
 
-- Move French community-health docs into docs/i18n/fr
+- Move French community-health docs into docs/i18n/fr (#152)
 
 
 ### Fixed

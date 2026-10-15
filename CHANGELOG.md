@@ -229,7 +229,7 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Move French community-health docs into docs/i18n/fr (#152)
 
-- Align readme tagline with repository description
+- Align readme tagline with repository description (#154)
 
 
 ### Fixed

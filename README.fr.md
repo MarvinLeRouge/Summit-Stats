@@ -4,7 +4,7 @@
 
 # 🏔️ Summit Stats
 
-> *Une application full-stack Laravel 12 + Vue.js 3 construite en TDD strict, architecture en couches services et 100% de couverture de tests — du parsing algorithmique de traces GPX jusqu'au dashboard de progression.*
+> *Pipeline d'analyse de traces GPX pour la randonnée et le trail : parsing, enrichissement altimétrique, segmentation par classe de pente et agrégation de métriques par activité, avec un dashboard de progression. Laravel et Vue.js, développé en TDD strict et déployé en CI/CD.*
 
 ![Status](https://img.shields.io/badge/Status-V4%20En%20cours-blue)
 [![CI](https://github.com/MarvinLeRouge/Summit-Stats/actions/workflows/ci.yml/badge.svg)](https://github.com/MarvinLeRouge/Summit-Stats/actions/workflows/ci.yml)

@@ -6,7 +6,7 @@
 
 ## Production environment
 
-The application runs on a VPS behind a shared Traefik reverse proxy with automatic TLS via Let's Encrypt. Docker images are built in CI and stored in GHCR — no source code and no build step on the server.
+The application runs on a VPS behind a shared Traefik reverse proxy with automatic TLS via Let's Encrypt. Docker images are built in CI and stored in GHCR: no source code and no build step on the server.
 
 ### Stack
 
@@ -30,7 +30,7 @@ Nginx proxies OpenStreetMap tile requests through `/tiles/{z}/{x}/{y}.png` and c
 
 **Trigger**
 - Automatically, when the `E2E` workflow succeeds on `main`
-- Manually, via `workflow_dispatch` (bypasses the E2E gate — used for hotfixes, rollbacks, or redeploys)
+- Manually, via `workflow_dispatch` (bypasses the E2E gate; used for hotfixes, rollbacks, or redeploys)
 
 **Build job**
 - Builds the `production` and `nginx-prod` targets of the multi-stage `Dockerfile` with Docker Buildx
@@ -53,7 +53,7 @@ Prerequisites on the server:
 
 Steps:
 1. Create the deploy directory on the server (matches `DEPLOY_PATH` in the workflow)
-2. Copy `.env.prod.example` to `.env.prod` in that directory and fill in real values (`APP_KEY`, database credentials, `DOMAIN`, etc.) — `.env.prod` is never committed
+2. Copy `.env.prod.example` to `.env.prod` in that directory and fill in real values (`APP_KEY`, database credentials, `DOMAIN`, etc.). `.env.prod` is never committed
 3. Trigger the workflow (push to `main` once E2E passes, or run it manually) to build the images and perform the first deployment
 
 ## Secrets and key rotation

@@ -4,7 +4,7 @@
 
 # Design system
 
-## Styles — Tailwind CSS v4
+## Styles : Tailwind CSS v4
 
 Tailwind est configuré via CSS, pas via un fichier `tailwind.config.js` (plugin `@tailwindcss/vite`, style v4).
 
@@ -24,7 +24,7 @@ Aucun autre token de design (couleurs, espacements, arrondis) n'est personnalis�
 - Données liées à la descente : accents bleus (ex. `bg-blue-300`)
 - États interactifs/hover : `transition-all duration-500` sur les barres animées (voir `PctBar.vue`)
 
-## Graphiques — Chart.js
+## Graphiques : Chart.js
 
 Tous les graphiques passent par un wrapper unique, `resources/js/components/BaseChart.vue` :
 - Enregistre `Chart.register(...registerables)` une seule fois, puis instancie un `Chart` sur un `<canvas>` dans `onMounted`
@@ -33,7 +33,7 @@ Tous les graphiques passent par un wrapper unique, `resources/js/components/Base
 
 Les graphiques spécifiques (`ProgressionChart.vue`, `ElevationProfile.vue`) construisent leurs objets `type`/`data`/`options` et les transmettent à `BaseChart`, gardant la configuration Chart.js hors du wrapper générique.
 
-## Cartes — Leaflet
+## Cartes : Leaflet
 
 `TrackMap.vue` affiche les traces GPS via `@vue-leaflet/vue-leaflet` :
 - Les tuiles sont servies via le proxy/cache de tuiles OSM propre à l'application (`/tiles/{z}/{x}/{y}.png`, voir [operations.fr.md](operations.fr.md)) via `tileLayerOffline` de `leaflet.offline`, et non un appel direct à un serveur de tuiles OSM public

@@ -16,7 +16,6 @@
 
 [![codecov backend](https://img.shields.io/codecov/c/github/MarvinLeRouge/Summit-Stats?flag=backend&label=backend&logo=codecov)](https://codecov.io/gh/MarvinLeRouge/Summit-Stats)
 [![codecov frontend](https://img.shields.io/codecov/c/github/MarvinLeRouge/Summit-Stats?flag=frontend&label=frontend&logo=codecov)](https://codecov.io/gh/MarvinLeRouge/Summit-Stats)
-![Tests](https://img.shields.io/badge/Tests-226%20passing-brightgreen)
 [![License](https://img.shields.io/github/license/MarvinLeRouge/Summit-Stats?cacheSeconds=3600)](LICENSE)
 
 ---
@@ -29,38 +28,25 @@
 
 **V2 ([v2.0.0](https://github.com/MarvinLeRouge/Summit-Stats/releases/tag/v2.0.0))** - Geographic visualization: zoomable elevation profile with map synchronization, interactive OSM map with GPX trace, automatic altitude enrichment via OpenTopoData, SSE upload progress.
 
-**V1 ([v1.0.0](https://github.com/MarvinLeRouge/Summit-Stats/releases/tag/v1.0.0))** - Full pipeline: GPX parsing, slope segmentation, 22 metrics per activity, REST API, Vue.js 3 dashboard, 99% test coverage, GitHub Actions CI.
+**V1 ([v1.0.0](https://github.com/MarvinLeRouge/Summit-Stats/releases/tag/v1.0.0))** - Full pipeline: GPX parsing, slope segmentation, 22 metrics per activity, REST API, Vue.js 3 dashboard, GitHub Actions CI.
 
 ---
 
 ## Concept
 
-Summit Stats segments each GPX trace by terrain type and slope class, then lets you compose your own progression metrics through a dynamic filtering interface — see [docs/product-context.md](docs/product-context.md) for the full rationale.
-
----
-
-## Key figures
-
-| Metric | Value |
-|---|---|
-| Test coverage | **91.5% backend · 100% frontend** |
-| Automated tests | **132 backend · 62 frontend unit · 32 E2E = 226 tests** |
-| API endpoints | **10 REST routes** |
-| Metrics per activity | **22 stats stored in database** |
-| GPX pipeline | **6 services, strict TDD** |
-| PHP lines of code | ~2,000 (excluding migrations and config) |
+Summit Stats segments each GPX trace by terrain type and slope class, then lets you compose your own progression metrics through a dynamic filtering interface. Each activity stores 22 aggregated metrics, computed by a GPX pipeline of 6 services built with strict TDD. See [docs/product-context.md](docs/product-context.md) for the full rationale.
 
 ---
 
 ## Features
 
-- **GPX import** — drag & drop upload, automatic analysis on import
-- **GPX analysis pipeline** — segmentation by type (ascent / descent / flat) and slope class, Haversine formula, elevation smoothing via sliding average window
-- **22 stats per activity** — total and moving speed (pauses > 30s excluded), ascent speed (average / to summit / longest non-descending segment), descent rate, % breakdown by slope class for both ascent and descent
-- **On-demand recalculation** — per-activity button + `php artisan stats:recalculate` command
-- **Progression dashboard** — time-series charts recalculated on the fly by metric, type, environment, period and slope range
-- **Advanced filters** — combinable: activity type, environment, period, specific activity, slope range (from / to)
-- **Activity history** — paginated list with filters and summary stats
+- **GPX import**: drag & drop upload, automatic analysis on import
+- **GPX analysis pipeline**: segmentation by type (ascent / descent / flat) and slope class, Haversine formula, elevation smoothing via sliding average window
+- **22 stats per activity**: total and moving speed (pauses > 30s excluded), ascent speed (average / to summit / longest non-descending segment), descent rate, % breakdown by slope class for both ascent and descent
+- **On-demand recalculation**: per-activity button + `php artisan stats:recalculate` command
+- **Progression dashboard**: time-series charts recalculated on the fly by metric, type, environment, period and slope range
+- **Advanced filters**, combinable: activity type, environment, period, specific activity, slope range (from / to)
+- **Activity history**: paginated list with filters and summary stats
 
 ---
 
@@ -69,9 +55,9 @@ Summit Stats segments each GPX trace by terrain type and slope class, then lets 
 ```
 app/
 ├── Http/
-│   ├── Controllers/Api/     # Thin controllers — delegate all logic to services
+│   ├── Controllers/Api/     # Thin controllers, delegate all logic to services
 │   ├── Requests/            # Form Requests (input validation)
-│   └── Traits/              # ApiResponse — standardised JSON responses
+│   └── Traits/              # ApiResponse: standardised JSON responses
 ├── Models/                  # Activity, Segment
 └── Services/
     ├── ActivityService.php              # Persistence: store, update, recalculate, destroy
@@ -95,7 +81,7 @@ resources/js/
 
 ## Testing
 
-### Backend — Pest
+### Backend: Pest
 
 ```bash
 php artisan test                        # run all tests
@@ -103,28 +89,28 @@ php artisan test --coverage             # with coverage report (requires pcov)
 php artisan test --coverage --min=80    # with minimum threshold
 ```
 
-- **Strict TDD** on all 6 GPX services — tests written before implementation
-- **Feature tests** on all 10 API endpoints + Artisan command
+- **Strict TDD** on all 6 GPX services: tests written before implementation
+- **Feature tests** on every API endpoint + Artisan command
 - **Unit tests** on models and the `ApiResponse` trait
 - **Regression test** on a real GPX trace (11.8 km, ~470 m elevation gain)
-- In-memory SQLite (`:memory:`) — full isolation, entire suite runs in < 3s
+- In-memory SQLite (`:memory:`) for full test isolation
 
-### Frontend — Vitest
+### Frontend: Vitest
 
 ```bash
 npm run test:coverage    # run unit tests with coverage report
 ```
 
-- 62 tests, 100% coverage on components, helpers and Pinia store
+- Unit tests on components, helpers and the Pinia store
 - JSDOM environment, Vue Test Utils
 
-### E2E — Playwright
+### E2E: Playwright
 
 ```bash
 npm run test:e2e    # requires the Docker stack to be running (see Docker section)
 ```
 
-- 5 spec files, 32 scenarios covering auth, upload, dashboard, activity list and detail
+- Spec files covering auth, upload, dashboard, activity list and detail
 - Runs against the full Docker stack (Nginx + PHP-FPM + PostgreSQL)
 - Chromium only
 
@@ -136,39 +122,39 @@ npm run test:e2e    # requires the Docker stack to be running (see Docker sectio
 
 Husky + lint-staged run automatically on every `git commit`:
 
-- **JS/Vue** staged files — `eslint --fix` then `prettier --write`
-- **PHP** staged files — `vendor/bin/pint`
+- **JS/Vue** staged files: `eslint --fix` then `prettier --write`
+- **PHP** staged files: `vendor/bin/pint`
 
-Style issues are auto-fixed before the commit is recorded — they never reach CI.
+Style issues are auto-fixed before the commit is recorded, so they never reach CI.
 
 ### CI workflow
 
-[`CI`](.github/workflows/ci.yml) — triggers on push and pull request to `main`:
+[`CI`](.github/workflows/ci.yml) triggers on push and pull request to `main`:
 
-1. PHP linting (Pint) + JS linting (ESLint) — runs **before** tests for fast failure on style issues
-2. PHP backend tests with coverage (Pest + pcov) — report uploaded to Codecov (`backend` flag)
-3. Frontend unit tests (Vitest) — report uploaded to Codecov (`frontend` flag)
+1. PHP linting (Pint) + JS linting (ESLint), run **before** tests for fast failure on style issues
+2. PHP backend tests with coverage (Pest + pcov), report uploaded to Codecov (`backend` flag)
+3. Frontend unit tests (Vitest), report uploaded to Codecov (`frontend` flag)
 
 Coverage thresholds (`codecov.yml`, blocking): project 80% (±2%), patch 90% (±5%).
 
 ### E2E workflow
 
-[`E2E`](.github/workflows/e2e.yml) — triggers on push to `main`:
+[`E2E`](.github/workflows/e2e.yml) triggers on push to `main`:
 
 - Builds and starts the full Docker stack
 - Runs migrations and seeds test data (user + sample activity)
 - Runs the Playwright suite (Chromium)
 - Uploads Playwright HTML report as artifact on failure (7-day retention)
-- **Gates production deployment** — the CD workflow only triggers if E2E passes
+- **Gates production deployment**: the CD workflow only triggers if E2E passes
 
 ### CD workflow
 
-[`build-deploy`](.github/workflows/build-deploy.yml) — triggered by E2E success via `workflow_run`:
+[`build-deploy`](.github/workflows/build-deploy.yml) is triggered by E2E success via `workflow_run`:
 
 - Builds and pushes two Docker images to GHCR: `app` (PHP-FPM) and `nginx` (assets baked in)
 - Images tagged with short SHA (`sha-xxxxxxx`) and `latest`
 - Deploys to the production server via SSH: pulls new images, `docker compose up -d`, applies pending migrations
-- `workflow_dispatch` available for manual redeploys (hotfixes, rollbacks) — bypasses E2E gate
+- `workflow_dispatch` available for manual redeploys (hotfixes, rollbacks), bypassing the E2E gate
 
 ```
 push main
@@ -185,19 +171,19 @@ workflow_dispatch ──────► build-deploy  (manual, bypasses E2E)
 
 ## Production
 
-The application runs on a VPS behind a shared Traefik reverse proxy, with images built in CI and stored in GHCR — no source code or build step on the server. See [docs/operations.md](docs/operations.md) for the full stack, the CI/CD pipeline, and the deployment procedure.
+The application runs on a VPS behind a shared Traefik reverse proxy, with images built in CI and stored in GHCR: no source code or build step on the server. See [docs/operations.md](docs/operations.md) for the full stack, the CI/CD pipeline, and the deployment procedure.
 
 ---
 
 ## API endpoints
 
-10 REST routes under `/api`, all protected by Sanctum Bearer token except `/api/login`. Full reference, including the `/api/stats` filtering example, in [docs/api/api_endpoints.md](docs/api/api_endpoints.md).
+REST routes under `/api`, all protected by Sanctum Bearer token except `/api/login`. Full reference, including the `/api/stats` filtering example, in [docs/api/api_endpoints.md](docs/api/api_endpoints.md).
 
 ---
 
 ## Installation
 
-**Prerequisites** — PHP >= 8.3 (`pdo_sqlite`, `sqlite3`, `xml`, `mbstring`, `fileinfo`, `pcov`), Composer >= 2, Node.js >= 18
+**Prerequisites**: PHP >= 8.3 (`pdo_sqlite`, `sqlite3`, `xml`, `mbstring`, `fileinfo`, `pcov`), Composer >= 2, Node.js >= 18
 
 ```bash
 git clone https://github.com/MarvinLeRouge/Summit-Stats.git && cd Summit-Stats
@@ -220,10 +206,10 @@ A full development stack is provided via Docker Compose:
 | Service | Description | Host port |
 |---|---|---|
 | `nginx` | Web server | via Traefik |
-| `app` | PHP-FPM (Laravel) | — |
+| `app` | PHP-FPM (Laravel) | not exposed |
 | `postgres` | PostgreSQL 16 | `127.0.0.1:5433` |
 | `redis` | Redis 7 | `127.0.0.1:6379` |
-| `queue` | Laravel queue worker | — |
+| `queue` | Laravel queue worker | not exposed |
 | `vite` | Vite dev server (HMR) | `127.0.0.1:5174` |
 
 **Prerequisites:** a local Traefik instance must be running and attached to the `traefik-public` Docker network. Add the following entry to `/etc/hosts`:
@@ -250,8 +236,8 @@ The app is then available at `http://summit-stats.marvinlerouge.local`.
 
 Personal project with a dual purpose:
 
-- **Learning** — layered service architecture (TDD, single responsibility, dependency injection), geospatial algorithms (Haversine, sliding average smoothing, GPS trace segmentation), and modern tooling (Laravel 12, Vue.js 3 Composition API, Pinia, Chart.js, Pest, GitHub Actions)
-- **Portfolio** — demonstrates a structured, tested and documented approach, from scoping to CI
+- **Learning**: layered service architecture (TDD, single responsibility, dependency injection), geospatial algorithms (Haversine, sliding average smoothing, GPS trace segmentation), and modern tooling (Laravel 12, Vue.js 3 Composition API, Pinia, Chart.js, Pest, GitHub Actions)
+- **Portfolio**: demonstrates a structured, tested and documented approach, from scoping to CI
 
 ---
 
@@ -260,9 +246,9 @@ Personal project with a dual purpose:
 | Class | Label | Range |
 |---|---|---|
 | `lt5`   | Flat     |  < 5 %      |
-| `5_15`  | Moderate | 5 % – 15 %  |
-| `15_25` | Steep    | 15 % – 25 % |
-| `25_35` | Hard     | 25 % – 35 % |
+| `5_15`  | Moderate | 5 % to 15 %  |
+| `15_25` | Steep    | 15 % to 25 % |
+| `25_35` | Hard     | 25 % to 35 % |
 | `gt35`  | Extreme  | > 35 %      |
 
 ---
@@ -278,8 +264,8 @@ Personal project with a dual purpose:
 | Charts | ![Chart.js](https://img.shields.io/badge/Chart.js-FF6384?logo=chartdotjs&logoColor=white&style=flat-square) |
 | Map | ![Leaflet](https://img.shields.io/badge/Leaflet-199900?logo=leaflet&logoColor=white&style=flat-square) |
 | State | ![Pinia](https://img.shields.io/badge/Pinia-FFD859?logo=pinia&logoColor=black&style=flat-square) |
-| Backend testing | ![Pest](https://img.shields.io/badge/Pest-8A2BE2?style=flat-square) — strict TDD, 100% coverage |
-| Frontend testing | ![Vitest](https://img.shields.io/badge/Vitest-6E9F18?logo=vitest&logoColor=white&style=flat-square) + Vue Test Utils — 100% coverage |
+| Backend testing | ![Pest](https://img.shields.io/badge/Pest-8A2BE2?style=flat-square), strict TDD on the GPX pipeline |
+| Frontend testing | ![Vitest](https://img.shields.io/badge/Vitest-6E9F18?logo=vitest&logoColor=white&style=flat-square) + Vue Test Utils |
 | E2E testing | ![Playwright](https://img.shields.io/badge/Playwright-2EAD33?logo=playwright&logoColor=white&style=flat-square) (Chromium) |
 | PHP linting | ![Pint](https://img.shields.io/badge/Laravel_Pint-FF2D20?logo=laravel&logoColor=white&style=flat-square) (PSR-12) |
 | JS linting | ![ESLint](https://img.shields.io/badge/ESLint-4B32C3?logo=eslint&logoColor=white&style=flat-square) ![Prettier](https://img.shields.io/badge/Prettier-F7B93E?logo=prettier&logoColor=black&style=flat-square) |
@@ -295,9 +281,9 @@ Personal project with a dual purpose:
 
 Summit Stats is currently a single-user private tool by design (see [SECURITY.md](SECURITY.md)). A security audit (OWASP Top 10:2025 + ASVS 5.0) identified three points that are acceptable under this single-user model but **must** be addressed before Phase 2 of the roadmap (read-only sharing) introduces a second identity:
 
-- **Sanctum token storage** — the API token is kept in `localStorage` (`resources/js/bootstrap.js`), which is readable by any script running on the page. The strict CSP (`script-src 'self'`) and Vue's default output escaping keep the residual XSS risk low, but this is not a hard guarantee. Before opening the app to more than one identity, move to an httpOnly/secure Sanctum SPA cookie.
-- **Object-level authorization (IDOR)** — `ActivityController` binds `{activity}` by route-model-binding without checking ownership; any valid token can read, update or delete any activity. An ownership check (`user_id` on `Activity`, or a policy) must be introduced before a second account can authenticate.
-- **Token lifetime** — `SANCTUM_TOKEN_EXPIRATION` defaults to 30 days with no refresh/rotation mechanism, acceptable for a single trusted user. Shared or viewer accounts should use a shorter-lived token paired with a refresh flow.
+- **Sanctum token storage**: the API token is kept in `localStorage` (`resources/js/bootstrap.js`), which is readable by any script running on the page. The strict CSP (`script-src 'self'`) and Vue's default output escaping keep the residual XSS risk low, but this is not a hard guarantee. Before opening the app to more than one identity, move to an httpOnly/secure Sanctum SPA cookie.
+- **Object-level authorization (IDOR)**: `ActivityController` binds `{activity}` by route-model-binding without checking ownership; any valid token can read, update or delete any activity. An ownership check (`user_id` on `Activity`, or a policy) must be introduced before a second account can authenticate.
+- **Token lifetime**: `SANCTUM_TOKEN_EXPIRATION` defaults to 30 days with no refresh/rotation mechanism, acceptable for a single trusted user. Shared or viewer accounts should use a shorter-lived token paired with a refresh flow.
 
 ---
 
@@ -309,15 +295,15 @@ V1, V2 and V3 are delivered; V4 (security hardening, read-only sharing, portfoli
 
 ## 📚 Documentation
 
-- [docs/architecture.md](docs/architecture.md) — repository layout, backend layers, frontend structure
-- [docs/product-context.md](docs/product-context.md) — why this project exists
-- [docs/operations.md](docs/operations.md) — production stack, CI/CD pipeline, deployment
-- [docs/design-system.md](docs/design-system.md) — Tailwind, Chart.js and Leaflet conventions
-- [docs/api/api_endpoints.md](docs/api/api_endpoints.md) — full API reference
-- [docs/guides/backend_developer_guide.md](docs/guides/backend_developer_guide.md) — day-to-day backend conventions
-- [docs/guides/frontend_developer_guide.md](docs/guides/frontend_developer_guide.md) — day-to-day frontend conventions
-- [docs/guides/user_guide.md](docs/guides/user_guide.md) — using Summit Stats: import, stats, progression
-- [docs/adr/](docs/adr/) — architecture decision records
+- [docs/architecture.md](docs/architecture.md): repository layout, backend layers, frontend structure
+- [docs/product-context.md](docs/product-context.md): why this project exists
+- [docs/operations.md](docs/operations.md): production stack, CI/CD pipeline, deployment
+- [docs/design-system.md](docs/design-system.md): Tailwind, Chart.js and Leaflet conventions
+- [docs/api/api_endpoints.md](docs/api/api_endpoints.md): full API reference
+- [docs/guides/backend_developer_guide.md](docs/guides/backend_developer_guide.md): day-to-day backend conventions
+- [docs/guides/frontend_developer_guide.md](docs/guides/frontend_developer_guide.md): day-to-day frontend conventions
+- [docs/guides/user_guide.md](docs/guides/user_guide.md): using Summit Stats: import, stats, progression
+- [docs/adr/](docs/adr/): architecture decision records
 - [CONTRIBUTING.md](CONTRIBUTING.md), [SECURITY.md](SECURITY.md), [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
 
 ---

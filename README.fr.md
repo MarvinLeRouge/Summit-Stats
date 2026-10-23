@@ -16,7 +16,6 @@
 
 [![codecov backend](https://img.shields.io/codecov/c/github/MarvinLeRouge/Summit-Stats?flag=backend&label=backend&logo=codecov)](https://codecov.io/gh/MarvinLeRouge/Summit-Stats)
 [![codecov frontend](https://img.shields.io/codecov/c/github/MarvinLeRouge/Summit-Stats?flag=frontend&label=frontend&logo=codecov)](https://codecov.io/gh/MarvinLeRouge/Summit-Stats)
-![Tests](https://img.shields.io/badge/Tests-226%20passing-brightgreen)
 [![License](https://img.shields.io/github/license/MarvinLeRouge/Summit-Stats?cacheSeconds=3600)](LICENSE)
 
 ---
@@ -29,38 +28,25 @@
 
 **V2 ([v2.0.0](https://github.com/MarvinLeRouge/Summit-Stats/releases/tag/v2.0.0))** - Visualisation géographique : profil altimétrique zoomable avec synchronisation carte, carte OSM interactive avec tracé GPX, enrichissement automatique des altitudes via OpenTopoData, progression SSE à l'upload.
 
-**V1 ([v1.0.0](https://github.com/MarvinLeRouge/Summit-Stats/releases/tag/v1.0.0))** - Pipeline complet : parsing GPX, segmentation par pente, 22 métriques par activité, API REST, dashboard Vue.js 3, 99% de couverture de tests, CI GitHub Actions.
+**V1 ([v1.0.0](https://github.com/MarvinLeRouge/Summit-Stats/releases/tag/v1.0.0))** - Pipeline complet : parsing GPX, segmentation par pente, 22 métriques par activité, API REST, dashboard Vue.js 3, CI GitHub Actions.
 
 ---
 
 ## Concept
 
-Summit Stats segmente chaque trace GPX par type de terrain et classe de pente, puis vous laisse composer vos propres métriques de progression via une interface de filtrage dynamique — voir [docs/product-context.fr.md](docs/product-context.fr.md) pour le détail.
-
----
-
-## Chiffres clés
-
-| Métrique | Valeur |
-|---|---|
-| Couverture de tests | **91,5% backend · 100% frontend** |
-| Tests automatisés | **132 backend · 62 unit frontend · 32 E2E = 226 tests** |
-| Endpoints API | **10 routes REST** |
-| Métriques par activité | **22 stats stockées en base** |
-| Pipeline GPX | **6 services en TDD strict** |
-| Lignes de code PHP | ~2 000 (hors migrations et config) |
+Summit Stats segmente chaque trace GPX par type de terrain et classe de pente, puis vous laisse composer vos propres métriques de progression via une interface de filtrage dynamique. Chaque activité stocke 22 métriques agrégées, calculées par un pipeline GPX de 6 services développés en TDD strict. Voir [docs/product-context.fr.md](docs/product-context.fr.md) pour le détail.
 
 ---
 
 ## Fonctionnalités
 
-- **Import GPX** — upload avec drag & drop, analyse automatique à l'import
-- **Pipeline d'analyse GPX** — segmentation par type (montée / descente / plat) et classe de pente, formule de Haversine, lissage du dénivelé par moyenne glissante
-- **22 statistiques par activité** — vitesse totale et en mouvement (pauses > 30s exclues), vitesse ascensionnelle (moyenne / → sommet / long tronçon non descendant), vitesse descensionnelle, répartition % par classe de pente en montée et en descente
-- **Recalcul à la demande** — bouton par activité + commande `php artisan stats:recalculate`
-- **Dashboard de progression** — graphes temporels recalculés à la volée par métrique, type, milieu, période et plage de pente
-- **Filtres avancés** — combinables : type d'activité, milieu, période, activité spécifique, plage de pente (de / à)
-- **Historique des sorties** — liste paginée avec filtres et stats résumées
+- **Import GPX** : upload avec drag & drop, analyse automatique à l'import
+- **Pipeline d'analyse GPX** : segmentation par type (montée / descente / plat) et classe de pente, formule de Haversine, lissage du dénivelé par moyenne glissante
+- **22 statistiques par activité** : vitesse totale et en mouvement (pauses > 30s exclues), vitesse ascensionnelle (moyenne / → sommet / long tronçon non descendant), vitesse descensionnelle, répartition % par classe de pente en montée et en descente
+- **Recalcul à la demande** : bouton par activité + commande `php artisan stats:recalculate`
+- **Dashboard de progression** : graphes temporels recalculés à la volée par métrique, type, milieu, période et plage de pente
+- **Filtres avancés**, combinables : type d'activité, milieu, période, activité spécifique, plage de pente (de / à)
+- **Historique des sorties** : liste paginée avec filtres et stats résumées
 
 ---
 
@@ -69,9 +55,9 @@ Summit Stats segmente chaque trace GPX par type de terrain et classe de pente, p
 ```
 app/
 ├── Http/
-│   ├── Controllers/Api/     # Controllers minces — délèguent aux services
+│   ├── Controllers/Api/     # Controllers minces, délèguent aux services
 │   ├── Requests/            # Form Requests (validation)
-│   └── Traits/              # ApiResponse — réponses JSON standardisées
+│   └── Traits/              # ApiResponse : réponses JSON standardisées
 ├── Models/                  # Activity, Segment
 └── Services/
     ├── ActivityService.php              # Persistance : store, update, recalculate, destroy
@@ -95,7 +81,7 @@ resources/js/
 
 ## Tests
 
-### Backend — Pest
+### Backend : Pest
 
 ```bash
 php artisan test                        # lancer tous les tests
@@ -103,28 +89,28 @@ php artisan test --coverage             # avec rapport de couverture (nécessite
 php artisan test --coverage --min=80    # avec seuil minimum
 ```
 
-- **TDD strict** sur les 6 services GPX — tests écrits avant le code
-- **Feature tests** sur les 10 endpoints API + commande Artisan
+- **TDD strict** sur les 6 services GPX : tests écrits avant le code
+- **Feature tests** sur chaque endpoint API + commande Artisan
 - **Tests unitaires** sur les modèles et le trait `ApiResponse`
 - **Test de régression** sur une vraie trace GPX (11.8 km, ~470 m D+)
-- Base de test SQLite en mémoire (`:memory:`) — isolation totale, suite complète en < 3s
+- Base de test SQLite en mémoire (`:memory:`) pour une isolation totale des tests
 
-### Frontend — Vitest
+### Frontend : Vitest
 
 ```bash
 npm run test:coverage    # tests unitaires avec rapport de couverture
 ```
 
-- 62 tests, 100% de couverture sur les composants, les helpers et le store Pinia
+- Tests unitaires sur les composants, les helpers et le store Pinia
 - Environnement JSDOM, Vue Test Utils
 
-### E2E — Playwright
+### E2E : Playwright
 
 ```bash
 npm run test:e2e    # nécessite le stack Docker en cours d'exécution (voir section Docker)
 ```
 
-- 5 fichiers de spec, 32 scénarios couvrant l'auth, l'upload, le dashboard, la liste et le détail des activités
+- Fichiers de spec couvrant l'auth, l'upload, le dashboard, la liste et le détail des activités
 - S'exécute sur le stack Docker complet (Nginx + PHP-FPM + PostgreSQL)
 - Chromium uniquement
 
@@ -136,39 +122,39 @@ npm run test:e2e    # nécessite le stack Docker en cours d'exécution (voir sec
 
 Husky + lint-staged s'exécutent automatiquement à chaque `git commit` :
 
-- **Fichiers JS/Vue** stagés — `eslint --fix` puis `prettier --write`
-- **Fichiers PHP** stagés — `vendor/bin/pint`
+- **Fichiers JS/Vue** stagés : `eslint --fix` puis `prettier --write`
+- **Fichiers PHP** stagés : `vendor/bin/pint`
 
-Les problèmes de style sont corrigés avant l'enregistrement du commit — ils n'atteignent jamais la CI.
+Les problèmes de style sont corrigés avant l'enregistrement du commit, ils n'atteignent donc jamais la CI.
 
 ### Workflow CI
 
-[`CI`](.github/workflows/ci.yml) — déclenché sur push et pull request vers `main` :
+[`CI`](.github/workflows/ci.yml) est déclenché sur push et pull request vers `main` :
 
-1. Lint PHP (Pint) + lint JS (ESLint) — exécuté **avant** les tests pour échouer rapidement sur les problèmes de style
-2. Tests backend PHP avec couverture (Pest + pcov) — rapport envoyé à Codecov (flag `backend`)
-3. Tests unitaires frontend (Vitest) — rapport envoyé à Codecov (flag `frontend`)
+1. Lint PHP (Pint) + lint JS (ESLint), exécuté **avant** les tests pour échouer rapidement sur les problèmes de style
+2. Tests backend PHP avec couverture (Pest + pcov), rapport envoyé à Codecov (flag `backend`)
+3. Tests unitaires frontend (Vitest), rapport envoyé à Codecov (flag `frontend`)
 
 Seuils de couverture (`codecov.yml`, bloquants) : projet 80 % (±2 %), patch 90 % (±5 %).
 
 ### Workflow E2E
 
-[`E2E`](.github/workflows/e2e.yml) — déclenché sur push vers `main` :
+[`E2E`](.github/workflows/e2e.yml) est déclenché sur push vers `main` :
 
 - Build et démarrage du stack Docker complet
 - Migrations et seed des données de test (utilisateur + activité exemple)
 - Exécution de la suite Playwright (Chromium)
 - Upload du rapport HTML Playwright en artifact en cas d'échec (rétention 7 jours)
-- **Conditionne le déploiement** — le workflow CD ne se déclenche que si l'E2E passe
+- **Conditionne le déploiement** : le workflow CD ne se déclenche que si l'E2E passe
 
 ### Workflow CD
 
-[`build-deploy`](.github/workflows/build-deploy.yml) — déclenché par le succès de l'E2E via `workflow_run` :
+[`build-deploy`](.github/workflows/build-deploy.yml) est déclenché par le succès de l'E2E via `workflow_run` :
 
 - Build et push de deux images Docker vers GHCR : `app` (PHP-FPM) et `nginx` (assets intégrés)
 - Images taguées avec le SHA court (`sha-xxxxxxx`) et `latest`
 - Déploiement sur le serveur de production via SSH : pull des nouvelles images, `docker compose up -d`, application des migrations en attente
-- `workflow_dispatch` disponible pour les redéploiements manuels (hotfixes, rollbacks) — bypass du gate E2E
+- `workflow_dispatch` disponible pour les redéploiements manuels (hotfixes, rollbacks), en contournant le gate E2E
 
 ```
 push main
@@ -185,19 +171,19 @@ workflow_dispatch ──────► build-deploy  (manuel, bypass E2E)
 
 ## Production
 
-L'application tourne sur un VPS derrière un reverse proxy Traefik partagé, avec des images buildées en CI et stockées dans GHCR — pas de code source ni d'étape de build sur le serveur. Voir [docs/operations.fr.md](docs/operations.fr.md) pour le stack complet, le pipeline CI/CD et la procédure de déploiement.
+L'application tourne sur un VPS derrière un reverse proxy Traefik partagé, avec des images buildées en CI et stockées dans GHCR : pas de code source ni d'étape de build sur le serveur. Voir [docs/operations.fr.md](docs/operations.fr.md) pour le stack complet, le pipeline CI/CD et la procédure de déploiement.
 
 ---
 
 ## Endpoints API
 
-10 routes REST sous `/api`, toutes protégées par token Bearer Sanctum sauf `/api/login`. Référence complète, avec l'exemple de filtrage `/api/stats`, dans [docs/api/api_endpoints.fr.md](docs/api/api_endpoints.fr.md).
+Routes REST sous `/api`, toutes protégées par token Bearer Sanctum sauf `/api/login`. Référence complète, avec l'exemple de filtrage `/api/stats`, dans [docs/api/api_endpoints.fr.md](docs/api/api_endpoints.fr.md).
 
 ---
 
 ## Installation
 
-**Prérequis** — PHP >= 8.3 (`pdo_sqlite`, `sqlite3`, `xml`, `mbstring`, `fileinfo`, `pcov`), Composer >= 2, Node.js >= 18
+**Prérequis** : PHP >= 8.3 (`pdo_sqlite`, `sqlite3`, `xml`, `mbstring`, `fileinfo`, `pcov`), Composer >= 2, Node.js >= 18
 
 ```bash
 git clone https://github.com/MarvinLeRouge/Summit-Stats.git && cd Summit-Stats
@@ -221,10 +207,10 @@ Un stack de développement complet est fourni via Docker Compose :
 | Service | Description | Port hôte |
 |---|---|---|
 | `nginx` | Serveur web | via Traefik |
-| `app` | PHP-FPM (Laravel) | — |
+| `app` | PHP-FPM (Laravel) | non exposé |
 | `postgres` | PostgreSQL 16 | `127.0.0.1:5433` |
 | `redis` | Redis 7 | `127.0.0.1:6379` |
-| `queue` | Worker de file Laravel | — |
+| `queue` | Worker de file Laravel | non exposé |
 | `vite` | Serveur Vite (HMR) | `127.0.0.1:5174` |
 
 **Prérequis :** une instance Traefik locale doit être en cours d'exécution et attachée au réseau Docker `traefik-public`. Ajouter l'entrée suivante dans `/etc/hosts` :
@@ -251,8 +237,8 @@ L'application est alors disponible sur `http://summit-stats.marvinlerouge.local`
 
 Projet personnel à double vocation :
 
-- **Autoformation** — architecture en couches services (TDD, responsabilité unique, injection de dépendances), algorithmes géospatiaux (Haversine, lissage par moyenne glissante, segmentation de traces GPS), et outillage moderne (Laravel 12, Vue.js 3 Composition API, Pinia, Chart.js, Pest, GitHub Actions)
-- **Portfolio** — démonstration d'une approche structurée, testée et documentée, du cadrage jusqu'à la CI
+- **Autoformation** : architecture en couches services (TDD, responsabilité unique, injection de dépendances), algorithmes géospatiaux (Haversine, lissage par moyenne glissante, segmentation de traces GPS), et outillage moderne (Laravel 12, Vue.js 3 Composition API, Pinia, Chart.js, Pest, GitHub Actions)
+- **Portfolio** : démonstration d'une approche structurée, testée et documentée, du cadrage jusqu'à la CI
 
 ---
 
@@ -261,9 +247,9 @@ Projet personnel à double vocation :
 | Class | Label | Intervalle |
 |---|---|---|
 | `lt5`   | Plat     | < 5 %       |
-| `5_15`  | Modéré   | 5 % – 15 %  |
-| `15_25` | Pentu    | 15 % – 25 % |
-| `25_35` | Raide    | 25 % – 35 % |
+| `5_15`  | Modéré   | 5 % à 15 %  |
+| `15_25` | Pentu    | 15 % à 25 % |
+| `25_35` | Raide    | 25 % à 35 % |
 | `gt35`  | Extrême  | > 35 %      |
 
 ---
@@ -279,8 +265,8 @@ Projet personnel à double vocation :
 | Charts | ![Chart.js](https://img.shields.io/badge/Chart.js-FF6384?logo=chartdotjs&logoColor=white&style=flat-square) |
 | Map | ![Leaflet](https://img.shields.io/badge/Leaflet-199900?logo=leaflet&logoColor=white&style=flat-square) |
 | State | ![Pinia](https://img.shields.io/badge/Pinia-FFD859?logo=pinia&logoColor=black&style=flat-square) |
-| Tests backend | ![Pest](https://img.shields.io/badge/Pest-8A2BE2?style=flat-square) — strict TDD, 100% coverage |
-| Tests frontend | ![Vitest](https://img.shields.io/badge/Vitest-6E9F18?logo=vitest&logoColor=white&style=flat-square) + Vue Test Utils — 100% coverage |
+| Tests backend | ![Pest](https://img.shields.io/badge/Pest-8A2BE2?style=flat-square), TDD strict sur le pipeline GPX |
+| Tests frontend | ![Vitest](https://img.shields.io/badge/Vitest-6E9F18?logo=vitest&logoColor=white&style=flat-square) + Vue Test Utils |
 | Tests E2E | ![Playwright](https://img.shields.io/badge/Playwright-2EAD33?logo=playwright&logoColor=white&style=flat-square) (Chromium) |
 | PHP linting | ![Pint](https://img.shields.io/badge/Laravel_Pint-FF2D20?logo=laravel&logoColor=white&style=flat-square) (PSR-12) |
 | JS linting | ![ESLint](https://img.shields.io/badge/ESLint-4B32C3?logo=eslint&logoColor=white&style=flat-square) ![Prettier](https://img.shields.io/badge/Prettier-F7B93E?logo=prettier&logoColor=black&style=flat-square) |
@@ -296,9 +282,9 @@ Projet personnel à double vocation :
 
 Summit Stats est actuellement un outil privé mono-utilisateur, par conception (voir [SECURITY.fr.md](docs/i18n/fr/SECURITY.fr.md)). Un audit de sécurité (OWASP Top 10:2025 + ASVS 5.0) a identifié trois points acceptables dans ce modèle mono-utilisateur mais qui **devront** être traités avant que la Phase 2 de la roadmap (partage en lecture seule) n'introduise une seconde identité :
 
-- **Stockage du token Sanctum** — le token API est conservé dans `localStorage` (`resources/js/bootstrap.js`), lisible par tout script exécuté sur la page. La CSP stricte (`script-src 'self'`) et l'échappement par défaut de Vue limitent le risque résiduel de XSS, mais ce n'est pas une garantie absolue. Avant d'ouvrir l'app à plusieurs identités, migrer vers un cookie SPA Sanctum httpOnly/secure.
-- **Autorisation au niveau objet (IDOR)** — `ActivityController` fait du route-model-binding sur `{activity}` sans vérification de propriétaire ; n'importe quel token valide peut lire, modifier ou supprimer n'importe quelle activité. Une vérification de propriétaire (`user_id` sur `Activity`, ou une policy) doit être introduite avant qu'un second compte puisse s'authentifier.
-- **Durée de vie du token** — `SANCTUM_TOKEN_EXPIRATION` vaut 30 jours par défaut, sans mécanisme de rotation/refresh, ce qui est acceptable pour un unique utilisateur de confiance. Les comptes partagés ou en lecture seule devront utiliser un token à durée de vie plus courte, associé à un flux de refresh.
+- **Stockage du token Sanctum** : le token API est conservé dans `localStorage` (`resources/js/bootstrap.js`), lisible par tout script exécuté sur la page. La CSP stricte (`script-src 'self'`) et l'échappement par défaut de Vue limitent le risque résiduel de XSS, mais ce n'est pas une garantie absolue. Avant d'ouvrir l'app à plusieurs identités, migrer vers un cookie SPA Sanctum httpOnly/secure.
+- **Autorisation au niveau objet (IDOR)** : `ActivityController` fait du route-model-binding sur `{activity}` sans vérification de propriétaire ; n'importe quel token valide peut lire, modifier ou supprimer n'importe quelle activité. Une vérification de propriétaire (`user_id` sur `Activity`, ou une policy) doit être introduite avant qu'un second compte puisse s'authentifier.
+- **Durée de vie du token** : `SANCTUM_TOKEN_EXPIRATION` vaut 30 jours par défaut, sans mécanisme de rotation/refresh, ce qui est acceptable pour un unique utilisateur de confiance. Les comptes partagés ou en lecture seule devront utiliser un token à durée de vie plus courte, associé à un flux de refresh.
 
 ---
 
@@ -310,15 +296,15 @@ V1, V2 et V3 sont livrées ; la V4 (durcissement sécurité, partage en lecture 
 
 ## 📚 Documentation
 
-- [docs/architecture.fr.md](docs/architecture.fr.md) — structure du dépôt, couches backend, structure frontend
-- [docs/product-context.fr.md](docs/product-context.fr.md) — pourquoi ce projet existe
-- [docs/operations.fr.md](docs/operations.fr.md) — stack de production, pipeline CI/CD, déploiement
-- [docs/design-system.fr.md](docs/design-system.fr.md) — conventions Tailwind, Chart.js et Leaflet
-- [docs/api/api_endpoints.fr.md](docs/api/api_endpoints.fr.md) — référence API complète
-- [docs/guides/backend_developer_guide.fr.md](docs/guides/backend_developer_guide.fr.md) — conventions backend au quotidien
-- [docs/guides/frontend_developer_guide.fr.md](docs/guides/frontend_developer_guide.fr.md) — conventions frontend au quotidien
-- [docs/guides/user_guide.fr.md](docs/guides/user_guide.fr.md) — utiliser Summit Stats : import, statistiques, progression
-- [docs/adr/](docs/adr/) — architecture decision records (anglais)
+- [docs/architecture.fr.md](docs/architecture.fr.md) : structure du dépôt, couches backend, structure frontend
+- [docs/product-context.fr.md](docs/product-context.fr.md) : pourquoi ce projet existe
+- [docs/operations.fr.md](docs/operations.fr.md) : stack de production, pipeline CI/CD, déploiement
+- [docs/design-system.fr.md](docs/design-system.fr.md) : conventions Tailwind, Chart.js et Leaflet
+- [docs/api/api_endpoints.fr.md](docs/api/api_endpoints.fr.md) : référence API complète
+- [docs/guides/backend_developer_guide.fr.md](docs/guides/backend_developer_guide.fr.md) : conventions backend au quotidien
+- [docs/guides/frontend_developer_guide.fr.md](docs/guides/frontend_developer_guide.fr.md) : conventions frontend au quotidien
+- [docs/guides/user_guide.fr.md](docs/guides/user_guide.fr.md) : utiliser Summit Stats : import, statistiques, progression
+- [docs/adr/](docs/adr/) : architecture decision records (anglais)
 - [CONTRIBUTING.fr.md](docs/i18n/fr/CONTRIBUTING.fr.md), [SECURITY.fr.md](docs/i18n/fr/SECURITY.fr.md), [CODE_OF_CONDUCT.fr.md](docs/i18n/fr/CODE_OF_CONDUCT.fr.md)
 
 ---

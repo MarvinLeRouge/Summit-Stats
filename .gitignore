@@ -44,6 +44,7 @@ test-results/
 .serena
 graphify-out
 .husky
+.codegraph
 
 docs/work-in-progress/
 

@@ -233,6 +233,8 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Remove hand-written figures and sync roadmap with git
 
+- Ignore codegraph folder
+
 
 ### Fixed
 

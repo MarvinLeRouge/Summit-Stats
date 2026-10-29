@@ -274,6 +274,8 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Trigger workflow on all pull requests, not just non-doc changes
 
+- Bump league/commonmark and symfony/mime for security advisories
+
 ## [3.0.0] — 2026-04-02
 
 ### Added

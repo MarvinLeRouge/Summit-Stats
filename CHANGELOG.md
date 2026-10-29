@@ -235,6 +235,8 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Ignore codegraph folder
 
+- Remove laravel example unit test
+
 
 ### Fixed
 

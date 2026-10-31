@@ -237,6 +237,8 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Remove laravel example unit test
 
+- Auto-merge the catch-up CHANGELOG.md PR
+
 
 ### Fixed
 

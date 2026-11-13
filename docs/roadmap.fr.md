@@ -58,3 +58,7 @@ Plan complet : `docs/work-in-progress/v4-action-plan.md` (fichier local, non ver
 - [ ] Refonte complète de l'identité visuelle
 - [ ] Dark mode
 - [ ] Audit accessibilité
+
+## Section 5 - Maintenance
+
+- [x] CI-001 - Lancer la CI sur la PR du bot changelog pour que son auto-merge aboutisse

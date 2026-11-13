@@ -239,6 +239,8 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Auto-merge the catch-up CHANGELOG.md PR
 
+- Run CI on the changelog bot PR so its auto-merge can complete
+
 
 ### Fixed
 

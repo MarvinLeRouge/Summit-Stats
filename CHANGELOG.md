@@ -278,6 +278,8 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Bump league/commonmark and symfony/mime for security advisories
 
+- Patch advisories blocking the ci security gates
+
 ## [3.0.0] — 2026-04-02
 
 ### Added

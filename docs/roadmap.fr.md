@@ -58,3 +58,7 @@ Plan complet : `docs/work-in-progress/v4-action-plan.md` (fichier local, non ver
 - [ ] Refonte complète de l'identité visuelle
 - [ ] Dark mode
 - [ ] Audit accessibilité
+
+## Section 5 - Maintenance
+
+- [x] FIX-001 - Corriger les failles de dépendances qui bloquent les contrôles de sécurité de la CI (shell-quote, vite, undici, follow-redirects, vitest, symfony, laravel)

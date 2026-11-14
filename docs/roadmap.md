@@ -58,3 +58,7 @@ Full plan: `docs/work-in-progress/v4-action-plan.md` (local file, not tracked in
 - [ ] Full visual identity refresh
 - [ ] Dark mode
 - [ ] Accessibility pass
+
+## Section 5 - Maintenance
+
+- [x] FIX-001 - Patch dependency advisories blocking the CI security gates (shell-quote, vite, undici, follow-redirects, vitest, symfony, laravel)

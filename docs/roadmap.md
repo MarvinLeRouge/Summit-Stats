@@ -62,3 +62,4 @@ Full plan: `docs/work-in-progress/v4-action-plan.md` (local file, not tracked in
 ## Section 5 - Maintenance
 
 - [x] FIX-001 - Patch dependency advisories blocking the CI security gates (shell-quote, vite, undici, follow-redirects, vitest, symfony, laravel)
+- [x] CI-001 - Run CI on the changelog bot PR so its auto-merge can complete

@@ -241,6 +241,12 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Run CI on the changelog bot PR so its auto-merge can complete
 
+- Bump the composer-minor-patch group across 1 directory with 7 updates
+
+- Bump the npm-minor-patch group across 1 directory with 13 updates
+
+- Bump dotenv from 17.4.2 to 18.0.3
+
 
 ### Fixed
 

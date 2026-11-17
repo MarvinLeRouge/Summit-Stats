@@ -68,3 +68,5 @@ Full plan: `docs/work-in-progress/v4-action-plan.md` (local file, not tracked in
 - [x] FIX-002 - Pin the pecl redis extension and cache the E2E Docker build (transient pecl.php.net outage broke the merge E2E)
 - [x] FIX-003 - Set DB_PORT=5433 in .env.example to match the host port of the dev postgres container
 - [x] FIX-004 - Run npm ci in the vite dev container so it stops rewriting package-lock.json
+- [ ] CHORE-001 - Move to Node 24: `node:20-alpine` in the Dockerfile and the vite dev service, and the GitHub Actions still on Node 20 (`checkout`, `setup-node`, `cache`, `upload-artifact` v4)
+- [ ] DOCS-002 - Update the README CI section: it describes sequential lint-then-tests, `ci.yml` now runs path-filtered parallel jobs behind the `ci-status` aggregator

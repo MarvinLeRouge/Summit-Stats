@@ -253,6 +253,10 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Describe postgresql as the development database
 
+- Bump the npm-minor-patch group with 3 updates
+
+- Bump jsdom from 30.1.0 to 31.0.0
+
 
 ### Fixed
 

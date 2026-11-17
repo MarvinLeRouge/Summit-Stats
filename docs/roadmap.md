@@ -66,3 +66,4 @@ Full plan: `docs/work-in-progress/v4-action-plan.md` (local file, not tracked in
 - [x] TEST-001 - Close per-file coverage gaps: remove the one-shot `MigrateFromSqlite` command (data already migrated)
 - [x] DOCS-001 - Describe PostgreSQL as the development database (README, CONTRIBUTING, architecture, ADR 0004 update)
 - [x] FIX-002 - Pin the pecl redis extension and cache the E2E Docker build (transient pecl.php.net outage broke the merge E2E)
+- [x] FIX-003 - Set DB_PORT=5433 in .env.example to match the host port of the dev postgres container

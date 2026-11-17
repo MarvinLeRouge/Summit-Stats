@@ -259,6 +259,8 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Update CHANGELOG.md (#179)
 
+- Add node 24 and readme ci follow-up tasks
+
 
 ### Fixed
 

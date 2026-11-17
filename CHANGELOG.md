@@ -247,6 +247,10 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Bump dotenv from 17.4.2 to 18.0.3
 
+- Update CHANGELOG.md (#172)
+
+- Remove the one-shot sqlite migration command
+
 
 ### Fixed
 

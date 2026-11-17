@@ -63,3 +63,4 @@ Full plan: `docs/work-in-progress/v4-action-plan.md` (local file, not tracked in
 
 - [x] FIX-001 - Patch dependency advisories blocking the CI security gates (shell-quote, vite, undici, follow-redirects, vitest, symfony, laravel)
 - [x] CI-001 - Run CI on the changelog bot PR so its auto-merge can complete
+- [x] TEST-001 - Close per-file coverage gaps: remove the one-shot `MigrateFromSqlite` command (data already migrated)

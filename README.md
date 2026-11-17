@@ -183,16 +183,17 @@ REST routes under `/api`, all protected by Sanctum Bearer token except `/api/log
 
 ## Installation
 
-**Prerequisites**: PHP >= 8.3 (`pdo_sqlite`, `sqlite3`, `xml`, `mbstring`, `fileinfo`, `pcov`), Composer >= 2, Node.js >= 18
+**Prerequisites**: PHP >= 8.3 (`pdo_pgsql`, `pdo_sqlite` for tests, `xml`, `mbstring`, `fileinfo`, `pcov`), Composer >= 2, Node.js >= 18, Docker (for PostgreSQL)
 
 ```bash
 git clone https://github.com/MarvinLeRouge/Summit-Stats.git && cd Summit-Stats
 composer install && npm install
 cp .env.example .env
-# Fill in APP_USER_NAME, APP_USER_EMAIL, APP_USER_PASSWORD
+# Fill in APP_USER_NAME, APP_USER_EMAIL, APP_USER_PASSWORD, DB_PASSWORD, and set DB_PORT=5433
 php artisan key:generate
 # ⚠️ Manually create .env.testing with DB_DATABASE=:memory: (not committed)
-touch database/database.sqlite && php artisan migrate
+docker compose up -d postgres            # PostgreSQL 16 on 127.0.0.1:5433
+php artisan migrate
 php artisan db:seed --class=UserSeeder   # creates the user defined in .env
 php artisan serve                         # → http://localhost:8000
 npm run dev                               # → http://localhost:5173 (HMR)

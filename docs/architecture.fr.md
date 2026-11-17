@@ -75,7 +75,7 @@ Axios est configuré dans `bootstrap.js` avec un intercepteur de token Bearer. L
 
 ## Base de données
 
-SQLite (fichier en dev, `:memory:` en tests). Trois tables principales :
+PostgreSQL 16 en développement et en production (conteneur Docker), SQLite `:memory:` en tests. Trois tables principales :
 
 - `activities` - métadonnées + les 22 statistiques agrégées
 - `segments` - une ligne par section montée/plat/descente, référençant les indices des points de trace

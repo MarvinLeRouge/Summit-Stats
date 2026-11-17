@@ -4,6 +4,12 @@ networks:
     driver: bridge
 
 services:
+  # Prebuilt and cached by the E2E workflow, so compose does not rebuild it.
+  app:
+    image: summit-stats-dev:ci
+  queue:
+    image: summit-stats-dev:ci
+
   nginx:
     ports:
       - "8081:80"

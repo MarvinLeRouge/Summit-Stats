@@ -43,8 +43,23 @@ jobs:
           echo "APP_USER_PASSWORD=ci-e2e-password" >> .env
           echo "TEST_PASSWORD=ci-e2e-password" >> $GITHUB_ENV
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # Cached build: without it, every run recompiled the PHP extensions
+      # and depended on pecl.php.net being reachable.
+      - name: Build app image (cached)
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          target: development
+          load: true
+          tags: summit-stats-dev:ci
+          cache-from: type=gha,scope=e2e
+          cache-to: type=gha,mode=max,scope=e2e
+
       - name: Start Docker stack
-        run: docker compose -f docker-compose.yml -f docker-compose.ci.yml up -d --build
+        run: docker compose -f docker-compose.yml -f docker-compose.ci.yml up -d
 
       - name: Wait for the app to be ready
         run: |

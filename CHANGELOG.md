@@ -294,6 +294,8 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Patch advisories blocking the ci security gates
 
+- Pin pecl redis and cache the e2e image build
+
 ## [3.0.0] — 2026-04-02
 
 ### Added

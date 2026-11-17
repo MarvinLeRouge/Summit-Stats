@@ -65,7 +65,7 @@ RUN apk add --no-cache \
         autoconf g++ make $PHPIZE_DEPS \
     && docker-php-ext-install \
         pdo pdo_pgsql pgsql zip opcache pcntl intl \
-    && pecl install redis \
+    && pecl install redis-6.3.0 \
     && docker-php-ext-enable redis \
     && apk del .build-deps
 

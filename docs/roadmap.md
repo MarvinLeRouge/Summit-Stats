@@ -65,3 +65,4 @@ Full plan: `docs/work-in-progress/v4-action-plan.md` (local file, not tracked in
 - [x] CI-001 - Run CI on the changelog bot PR so its auto-merge can complete
 - [x] TEST-001 - Close per-file coverage gaps: remove the one-shot `MigrateFromSqlite` command (data already migrated)
 - [x] DOCS-001 - Describe PostgreSQL as the development database (README, CONTRIBUTING, architecture, ADR 0004 update)
+- [x] FIX-002 - Pin the pecl redis extension and cache the E2E Docker build (transient pecl.php.net outage broke the merge E2E)

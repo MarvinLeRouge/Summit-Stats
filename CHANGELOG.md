@@ -251,6 +251,8 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Remove the one-shot sqlite migration command
 
+- Describe postgresql as the development database
+
 
 ### Fixed
 

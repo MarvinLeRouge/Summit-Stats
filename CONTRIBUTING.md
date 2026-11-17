@@ -10,7 +10,8 @@ This is primarily a personal portfolio project. External contributions are welco
 
 - PHP 8.2+ with Composer
 - Node.js 20+
-- SQLite (bundled with PHP)
+- Docker (runs PostgreSQL 16 for development)
+- PHP extensions `pdo_pgsql`, and `pdo_sqlite` for the in-memory test database
 
 ## Local setup
 
@@ -19,9 +20,9 @@ git clone https://github.com/MarvinLeRouge/Summit-Stats.git
 cd Summit-Stats
 composer setup
 cp .env.example .env
-# Fill in APP_USER_NAME, APP_USER_EMAIL, APP_USER_PASSWORD, DB_DATABASE
+# Fill in APP_USER_NAME, APP_USER_EMAIL, APP_USER_PASSWORD, DB_PASSWORD, and set DB_PORT=5433
 php artisan key:generate
-touch database/database.sqlite
+docker compose up -d postgres   # PostgreSQL 16 on 127.0.0.1:5433
 php artisan migrate
 php artisan db:seed --class=UserSeeder
 ```

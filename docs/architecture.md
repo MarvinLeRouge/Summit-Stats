@@ -75,7 +75,7 @@ Axios is configured in `bootstrap.js` with a Bearer token interceptor. Upload pr
 
 ## Database
 
-SQLite (file-based in dev, `:memory:` in tests). Three core tables:
+PostgreSQL 16 in development and production (Docker container), SQLite `:memory:` in tests. Three core tables:
 
 - `activities` - metadata + all 22 aggregated stats
 - `segments` - one row per ascent/flat/descent section, referencing track point indices

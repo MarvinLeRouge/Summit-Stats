@@ -1,6 +1,6 @@
 # 0004 - SQLite for dev/test, PostgreSQL for production
 
-- Status: Accepted
+- Status: Accepted, amended 2026-11-17 (see Update)
 - Date: 2026-03-30
 
 ## Context
@@ -17,3 +17,7 @@ Keep SQLite for local development and the automated test suite (zero setup, fast
 - Production gets a database engine designed for concurrent access and long-running uptime.
 - Any SQL that is not portable between SQLite and PostgreSQL is a risk; the codebase relies on Eloquent/query builder rather than raw dialect-specific SQL to avoid this.
 - Migrations are exercised against SQLite in CI and PostgreSQL in production, so a migration that only works on one engine could, in principle, slip through - this has not been a problem in practice given the migrations used so far.
+
+## Update (2026-11-17)
+
+Local development moved to PostgreSQL 16 as well, through the Docker Compose stack (environment parity with production). The legacy SQLite data was migrated and the one-shot migration command was removed (TEST-001). SQLite is now used only for the in-memory test suite.

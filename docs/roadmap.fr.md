@@ -64,3 +64,4 @@ Plan complet : `docs/work-in-progress/v4-action-plan.md` (fichier local, non ver
 - [x] FIX-001 - Corriger les failles de dépendances qui bloquent les contrôles de sécurité de la CI (shell-quote, vite, undici, follow-redirects, vitest, symfony, laravel)
 - [x] CI-001 - Lancer la CI sur la PR du bot changelog pour que son auto-merge aboutisse
 - [x] TEST-001 - Combler les trous de coverage par fichier : suppression de la commande ponctuelle `MigrateFromSqlite` (données déjà migrées)
+- [x] DOCS-001 - Décrire PostgreSQL comme base de développement (README, CONTRIBUTING, architecture, mise à jour de l'ADR 0004)

@@ -1,8 +1,6 @@
 flag_management:
   default_rules:
     ignore:
-      # One-shot utility commands — not unit-testable by design
-      - "app/Console/Commands/MigrateFromSqlite.php"
       # DDL and fixture data — no business logic
       - "database/migrations/**"
       - "database/seeders/**"

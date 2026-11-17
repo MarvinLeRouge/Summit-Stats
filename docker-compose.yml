@@ -45,7 +45,8 @@ services:
   vite:
     image: node:20-alpine
     working_dir: /app
-    command: sh -c "npm install --prefer-offline && npm run dev"
+    # npm ci installs the lockfile as-is: npm install rewrote it from this container
+    command: sh -c "npm ci --prefer-offline && npm run dev"
     volumes:
       - .:/app
       - node_modules_data:/app/node_modules

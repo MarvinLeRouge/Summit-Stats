@@ -296,6 +296,8 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Pin pecl redis and cache the e2e image build
 
+- Set db_port to the dev postgres host port in env example
+
 ## [3.0.0] — 2026-04-02
 
 ### Added

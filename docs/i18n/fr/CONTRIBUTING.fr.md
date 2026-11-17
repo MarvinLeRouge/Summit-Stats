@@ -20,7 +20,7 @@ git clone https://github.com/MarvinLeRouge/Summit-Stats.git
 cd Summit-Stats
 composer setup
 cp .env.example .env
-# Renseigner APP_USER_NAME, APP_USER_EMAIL, APP_USER_PASSWORD, DB_PASSWORD, et mettre DB_PORT=5433
+# Renseigner APP_USER_NAME, APP_USER_EMAIL, APP_USER_PASSWORD, DB_PASSWORD
 php artisan key:generate
 docker compose up -d postgres   # PostgreSQL 16 sur 127.0.0.1:5433
 php artisan migrate

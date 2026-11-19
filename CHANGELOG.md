@@ -18,6 +18,8 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Add login rate limiting and Sanctum token expiration
 
+- Emit production logs as json (FEAT-001)
+
 
 ### Changed
 

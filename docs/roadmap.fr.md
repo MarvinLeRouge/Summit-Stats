@@ -71,3 +71,9 @@ Plan complet : `docs/work-in-progress/v4-action-plan.md` (fichier local, non ver
 - [ ] CHORE-001 - Passer à Node 24 : `node:20-alpine` dans le Dockerfile et le service vite de dev, et les GitHub Actions encore sur Node 20 (`checkout`, `setup-node`, `cache`, `upload-artifact` v4)
 - [ ] DOCS-002 - Mettre à jour la section CI du README : elle décrit un enchaînement lint puis tests, alors que `ci.yml` lance des jobs parallèles filtrés par chemin derrière l'agrégateur `ci-status`
 - [x] CHORE-002 - Charger la config prod depuis shared/env (app.env + secrets.env) au lieu de compose/.env.prod, une seule copie du mot de passe de la base
+
+## Section 6 - Observabilité
+
+- [x] FEAT-001 - Écrire les journaux de production en JSON (un objet par ligne sur stderr), messages de log constants avec contexte
+- [ ] FEAT-002 - Remonter à Sentry les erreurs Laravel et frontend non gérées, événements frontend relayés par le backend
+- [ ] FEAT-003 - Endpoint de santé `/health` qui vérifie la base de données et Redis

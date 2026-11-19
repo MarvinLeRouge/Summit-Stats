@@ -104,7 +104,7 @@ class ElevationEnrichmentService
                 }
             }
         } catch (\Exception $e) {
-            Log::warning("ElevationEnrichmentService : échec de l'appel API — {$e->getMessage()}");
+            Log::warning('Elevation API call failed', ['error' => $e->getMessage()]);
         }
 
         return $results;

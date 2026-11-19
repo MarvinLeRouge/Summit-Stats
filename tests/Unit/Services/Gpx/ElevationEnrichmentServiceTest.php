@@ -2,6 +2,7 @@
 
 use App\Services\Gpx\ElevationEnrichmentService;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 beforeEach(function () {
     $this->service = new ElevationEnrichmentService;
@@ -148,6 +149,7 @@ it('gère gracieusement une exception réseau', function () {
     Http::fake([
         '*' => fn () => throw new Exception('Connection refused'),
     ]);
+    Log::spy();
 
     $points = [
         ['lat' => 45.8326, 'lon' => 6.8652, 'ele' => null, 'time' => null],
@@ -158,6 +160,7 @@ it('gère gracieusement une exception réseau', function () {
 
     expect($result[0]['ele'])->toBeNull();
     expect($result[1]['ele'])->toBeNull();
+    Log::shouldHaveReceived('warning')->once()->with('Elevation API call failed', ['error' => 'Connection refused']);
 });
 
 it('ignore les résultats API en surplus par rapport aux points envoyés', function () {

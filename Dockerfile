@@ -12,6 +12,10 @@ COPY vite.config.js ./
 COPY resources/ ./resources/
 COPY public/ ./public/
 
+# Vite bakes VITE_* into the bundle: no .env exists at build time (empty disables Sentry)
+ARG VITE_SENTRY_DSN=
+ARG VITE_SENTRY_ENVIRONMENT=
+
 RUN npm run build
 
 # =============================================================================

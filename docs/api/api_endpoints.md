@@ -16,6 +16,7 @@
 | `POST` | `/api/activities/{id}/recalculate` | Bearer | Recalculate stats from raw GPX |
 | `GET` | `/api/activities/{id}/track` | Bearer | Raw track points (map + elevation profile) |
 | `GET` | `/api/stats` | Bearer | Progression data for charts |
+| `POST` | `/api/{tunnelPath}` | None | Sentry relay for browser error events, see [operations](../operations.md#error-tracking-sentry) |
 
 **Example: `/api/stats`**
 

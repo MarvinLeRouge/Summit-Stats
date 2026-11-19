@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+    // Browser DSN relayed by SentryTunnelController, must equal VITE_SENTRY_DSN
+    'sentry_tunnel' => [
+        'frontend_dsn' => env('SENTRY_FRONTEND_DSN'),
+    ],
+
 ];

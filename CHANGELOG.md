@@ -20,6 +20,8 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Emit production logs as json (FEAT-001)
 
+- Report unhandled errors to sentry (FEAT-002)
+
 
 ### Changed
 

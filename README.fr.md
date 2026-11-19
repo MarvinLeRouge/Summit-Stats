@@ -177,7 +177,7 @@ L'application tourne sur un VPS derrière un reverse proxy Traefik partagé, ave
 
 ## Endpoints API
 
-Routes REST sous `/api`, toutes protégées par token Bearer Sanctum sauf `/api/login`. Référence complète, avec l'exemple de filtrage `/api/stats`, dans [docs/api/api_endpoints.fr.md](docs/api/api_endpoints.fr.md).
+Routes REST sous `/api`, toutes protégées par token Bearer Sanctum sauf `/api/login` et le relais d'erreurs Sentry. Référence complète, avec l'exemple de filtrage `/api/stats`, dans [docs/api/api_endpoints.fr.md](docs/api/api_endpoints.fr.md).
 
 ---
 

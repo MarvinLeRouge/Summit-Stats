@@ -16,6 +16,7 @@
 | `POST` | `/api/activities/{id}/recalculate` | Bearer | Recalcul des stats depuis le GPX brut |
 | `GET` | `/api/activities/{id}/track` | Bearer | Points GPS bruts (carte + profil altimétrique) |
 | `GET` | `/api/stats` | Bearer | Données de progression pour graphes |
+| `POST` | `/api/{tunnelPath}` | Aucune | Relais Sentry des erreurs du navigateur, voir [opérations](../operations.fr.md#suivi-des-erreurs-sentry) |
 
 **Exemple : `/api/stats`**
 

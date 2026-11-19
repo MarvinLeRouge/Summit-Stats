@@ -19,7 +19,8 @@ services:
       redis:
         condition: service_healthy
     env_file:
-      - .env.prod
+      - ../shared/env/app.env
+      - ../shared/env/secrets.env
     networks:
       - internal
 
@@ -37,7 +38,7 @@ services:
       - "traefik.enable=true"
       - "traefik.docker.network=traefik-public"
 
-      - "traefik.http.routers.summit-stats.rule=Host(`${DOMAIN}`)"
+      - "traefik.http.routers.summit-stats.rule=Host(`summit-stats.marvinlerouge.dev`)"
       - "traefik.http.routers.summit-stats.entrypoints=websecure"
       - "traefik.http.routers.summit-stats.tls=true"
       - "traefik.http.routers.summit-stats.tls.certresolver=letsencrypt"
@@ -48,14 +49,14 @@ services:
     restart: unless-stopped
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    environment:
-      POSTGRES_DB: ${DB_DATABASE}
-      POSTGRES_USER: ${DB_USERNAME}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    # POSTGRES_DB / POSTGRES_USER / POSTGRES_PASSWORD come from secrets.env (Laravel reads them too)
+    env_file:
+      - ../shared/env/secrets.env
     networks:
       - internal
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d ${DB_DATABASE}"]
+      # $$ defers expansion to the container shell, which has the env_file values
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -87,7 +88,8 @@ services:
       redis:
         condition: service_healthy
     env_file:
-      - .env.prod
+      - ../shared/env/app.env
+      - ../shared/env/secrets.env
     networks:
       - internal
 

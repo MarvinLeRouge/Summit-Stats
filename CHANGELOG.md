@@ -261,6 +261,8 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Add node 24 and readme ci follow-up tasks
 
+- Load prod config from shared/env (CHORE-002)
+
 
 ### Fixed
 

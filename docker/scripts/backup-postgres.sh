@@ -4,21 +4,16 @@
 set -euo pipefail
 
 COMPOSE_FILE="${COMPOSE_FILE:-docker-compose.prod.yml}"
-ENV_FILE="${ENV_FILE:-.env.prod}"
 BACKUP_DIR="${BACKUP_DIR:-./backups}"
 RETENTION_DAYS="${RETENTION_DAYS:-14}"
-
-set -a
-# shellcheck disable=SC1090
-source "$ENV_FILE"
-set +a
 
 mkdir -p "$BACKUP_DIR"
 TIMESTAMP=$(date +%Y%m%d-%H%M%S)
 DUMP_FILE="$BACKUP_DIR/summit-stats-${TIMESTAMP}.sql.gz"
 
-docker compose -f "$COMPOSE_FILE" --env-file "$ENV_FILE" exec -T postgres \
-    pg_dump -U "$DB_USERNAME" "$DB_DATABASE" | gzip > "$DUMP_FILE"
+# Credentials are read inside the postgres container, which already has them (env_file in prod, .env in dev)
+docker compose -f "$COMPOSE_FILE" exec -T postgres \
+    sh -c 'pg_dump -U "$POSTGRES_USER" "$POSTGRES_DB"' | gzip > "$DUMP_FILE"
 
 echo "Backup written to $DUMP_FILE"
 

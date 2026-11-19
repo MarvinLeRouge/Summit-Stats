@@ -110,6 +110,32 @@ gunzip -c ../shared/backups/summit-stats-<timestamp>.sql.gz | \
   docker compose -f docker-compose.prod.yml exec -T postgres sh -c 'psql -U "$POSTGRES_USER" "$POSTGRES_DB"'
 ```
 
+## Error tracking (Sentry)
+
+Unhandled backend exceptions (5xx, failed queue jobs, upload pipeline errors) and uncaught frontend errors are reported to Sentry. Expected errors are not: validation and invalid GPX files (422), authentication (401), missing resources (404), throttling (429). Without DSNs nothing is sent, so local development and CI report nothing.
+
+Only stack traces are sent: no user, IP, cookies, headers, request bodies (GPX uploads carry home locations), query strings, SQL bindings, breadcrumbs, function arguments or source lines, and no tracing. Backend: `data_collection`, `before_send` and `before_breadcrumb` in `config/sentry.php` (`App\Services\Observability\SentryScrubber`). Frontend: `resources/js/observability.js`.
+
+Browser events go to `POST /api/<hash of the DSN>` on the app's own origin, then `SentryTunnelController` forwards them to Sentry, so ad-blockers and browser tracking protection cannot drop them. The relay only accepts the frontend DSN (403 otherwise), caps envelopes at 1 MB and is throttled to 30 requests per minute per IP.
+
+| Variable | Read by | Local | Production |
+|---|---|---|---|
+| `SENTRY_LARAVEL_DSN` | backend, runtime | `.env` | `shared/env/secrets.env` |
+| `SENTRY_FRONTEND_DSN` | backend, runtime (relay allow-list) | `.env` | `shared/env/secrets.env` |
+| `SENTRY_ENVIRONMENT` | backend, runtime (empty: `APP_ENV`) | `.env` | `shared/env/app.env` (`production`) |
+| `VITE_SENTRY_DSN` | frontend, build time | `.env` | GitHub secret `VITE_SENTRY_DSN`, Docker build argument |
+| `VITE_SENTRY_ENVIRONMENT` | frontend, build time (empty: `development`) | `.env` | `production`, set in `build-deploy.yml` |
+
+`SENTRY_FRONTEND_DSN` must equal `VITE_SENTRY_DSN` character for character: the browser derives its tunnel path from the DSN baked into the bundle, so a mismatch makes every frontend event end in 404. The backend then logs `Sentry tunnel path matches no configured DSN`.
+
+Setup, once:
+
+1. In Sentry (EU region), one project per side: `summit-stats-backend` (Laravel) and `summit-stats-frontend` (Vue). In each, *Settings*, *Security & Privacy*: enable *Data Scrubber*, *Use Default Scrubbers* and *Prevent Storing of IP Addresses*.
+2. GitHub repository secret `VITE_SENTRY_DSN`: the frontend DSN.
+3. On the VPS: both DSNs in `shared/env/secrets.env`, `SENTRY_ENVIRONMENT=production` in `shared/env/app.env`, then redeploy.
+
+Check after a deploy: `docker compose -f docker-compose.prod.yml exec app php artisan sentry:test` for the backend. For the frontend, run `setTimeout(() => { throw new Error('sentry check') }, 0)` in the browser console, first without browser extensions, then with an ad-blocker on to check the relay. The issue must appear under `environment: production`, with a `POST /api/<hash>` answering 200 and no request to `sentry.io`.
+
 ## Updating
 
 Deployments are automatic: once a change lands on `main` and the E2E suite passes, `build-deploy.yml` builds fresh images and redeploys the stack, including any pending migrations.

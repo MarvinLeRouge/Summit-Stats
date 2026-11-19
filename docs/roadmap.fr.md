@@ -75,5 +75,5 @@ Plan complet : `docs/work-in-progress/v4-action-plan.md` (fichier local, non ver
 ## Section 6 - Observabilité
 
 - [x] FEAT-001 - Écrire les journaux de production en JSON (un objet par ligne sur stderr), messages de log constants avec contexte
-- [ ] FEAT-002 - Remonter à Sentry les erreurs Laravel et frontend non gérées, événements frontend relayés par le backend
+- [x] FEAT-002 - Remonter à Sentry les erreurs Laravel et frontend non gérées, événements frontend relayés par le backend
 - [ ] FEAT-003 - Endpoint de santé `/health` qui vérifie la base de données et Redis

@@ -59,6 +59,10 @@ jobs:
           context: .
           target: production
           push: true
+          # both images copy the frontend bundle from the node-builder stage
+          build-args: |
+            VITE_SENTRY_DSN=${{ secrets.VITE_SENTRY_DSN }}
+            VITE_SENTRY_ENVIRONMENT=production
           tags: |
             ghcr.io/marvinlerouge/summit-stats/app:${{ steps.meta.outputs.tag }}
             ghcr.io/marvinlerouge/summit-stats/app:latest
@@ -71,6 +75,10 @@ jobs:
           context: .
           target: nginx-prod
           push: true
+          # both images copy the frontend bundle from the node-builder stage
+          build-args: |
+            VITE_SENTRY_DSN=${{ secrets.VITE_SENTRY_DSN }}
+            VITE_SENTRY_ENVIRONMENT=production
           tags: |
             ghcr.io/marvinlerouge/summit-stats/nginx:${{ steps.meta.outputs.tag }}
             ghcr.io/marvinlerouge/summit-stats/nginx:latest

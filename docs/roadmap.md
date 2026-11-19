@@ -75,5 +75,5 @@ Full plan: `docs/work-in-progress/v4-action-plan.md` (local file, not tracked in
 ## Section 6 - Observability
 
 - [x] FEAT-001 - Emit production logs as JSON (one object per line on stderr), constant log messages with context
-- [ ] FEAT-002 - Report unhandled Laravel and frontend errors to Sentry, frontend events relayed through the backend
+- [x] FEAT-002 - Report unhandled Laravel and frontend errors to Sentry, frontend events relayed through the backend
 - [ ] FEAT-003 - Health check endpoint `/health` verifying the database and Redis

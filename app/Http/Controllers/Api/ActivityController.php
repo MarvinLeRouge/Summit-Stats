@@ -93,6 +93,8 @@ class ActivityController extends Controller
                 }
                 flush();
             } catch (\Exception $e) {
+                // The stream already answered 200: report explicitly, GpxParseException is filtered by dontReport
+                report($e);
                 $sendEvent('error', ['message' => $e->getMessage()]);
             }
         }, 200, [

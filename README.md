@@ -177,7 +177,7 @@ The application runs on a VPS behind a shared Traefik reverse proxy, with images
 
 ## API endpoints
 
-REST routes under `/api`, all protected by Sanctum Bearer token except `/api/login`. Full reference, including the `/api/stats` filtering example, in [docs/api/api_endpoints.md](docs/api/api_endpoints.md).
+REST routes under `/api`, all protected by Sanctum Bearer token except `/api/login` and the Sentry error relay. Full reference, including the `/api/stats` filtering example, in [docs/api/api_endpoints.md](docs/api/api_endpoints.md).
 
 ---
 

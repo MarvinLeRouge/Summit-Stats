@@ -7,6 +7,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Validation\ValidationException;
+use Sentry\Laravel\Integration;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -19,6 +20,11 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->append(SecurityHeaders::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
+        Integration::handles($exceptions);
+
+        // Rendered as 422: a user error, not an application error
+        $exceptions->dontReport(GpxParseException::class);
+
         $exceptions->render(function (GpxParseException $e) {
             return response()->json([
                 'success' => false,

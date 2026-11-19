@@ -82,6 +82,7 @@ Steps:
 - `APP_KEY` encrypts session data and other Laravel-internal payloads. Rotating it invalidates all existing sessions and any data encrypted with the old key (Sanctum plaintext tokens are hashed, not encrypted with `APP_KEY`, so they are unaffected). Rotate only if the key is suspected to have leaked: from `compose/`, generate a new one with `docker compose -f docker-compose.prod.yml run --rm app php artisan key:generate --show`, update `shared/env/secrets.env`, then `docker compose -f docker-compose.prod.yml up -d` to restart with it.
 - `POSTGRES_PASSWORD` should be generated with `openssl rand -base64 32` or similar, never a memorable password, since it is never typed by a human.
 - `LOG_LEVEL=warning` (not `error`): failed login attempts are logged at `warning` level so they remain visible in production logs. A stricter `error` level would silently drop this signal.
+- `LOG_STDERR_FORMATTER=Monolog\Formatter\JsonFormatter`: production logs are written to stderr as one JSON object per line (`message`, `context`, `level_name`, `datetime`, ...), so `docker logs` output can be filtered with `jq` or shipped to a log collector as is. Log calls keep a constant message and put variable data in the context array. Local development keeps the readable text format.
 - Dependabot is enabled (`.github/dependabot.yml`, weekly npm + Composer checks). Review and merge or dismiss each alert within a week of it opening; do not let alerts accumulate unreviewed.
 
 ## Automated backups

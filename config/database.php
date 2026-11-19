@@ -89,9 +89,10 @@ return [
             'url' => env('DB_URL'),
             'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '5432'),
-            'database' => env('DB_DATABASE', 'laravel'),
-            'username' => env('DB_USERNAME', 'root'),
-            'password' => env('DB_PASSWORD', ''),
+            // prod env files hold the postgres image's names only, so the password has a single copy
+            'database' => env('DB_DATABASE', env('POSTGRES_DB', 'laravel')),
+            'username' => env('DB_USERNAME', env('POSTGRES_USER', 'root')),
+            'password' => env('DB_PASSWORD', env('POSTGRES_PASSWORD', '')),
             'charset' => env('DB_CHARSET', 'utf8'),
             'prefix' => '',
             'prefix_indexes' => true,

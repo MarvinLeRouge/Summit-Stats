@@ -51,24 +51,45 @@ Prerequisites on the server:
 - A Traefik instance already running, exposing a `web` (port 80) and `websecure` (port 443) entrypoint, with a `letsencrypt` certificate resolver and an external `traefik-public` Docker network
 - SSH access configured, with `DEPLOY_SSH_HOST`, `DEPLOY_SSH_USER`, and `DEPLOY_SSH_PRIVATE_KEY` set as GitHub repository secrets
 
+Server layout, under `/home/mlr/marvinlerouge.dev/summit-stats/`:
+
+```
+compose/
+└── docker-compose.prod.yml   ← fetched by the deploy workflow on every deploy
+shared/
+├── env/
+│   ├── app.env               ← non-secret settings (chmod 600, never committed)
+│   └── secrets.env           ← secrets (chmod 600, never committed)
+└── backups/                  ← daily database dumps
+```
+
+Containers get their configuration only through `env_file`: the compose file interpolates nothing from a file (the domain is written in the Traefik rule, `IMAGE_TAG` is set by the deploy workflow).
+
+| File | Loaded by | Holds | Template |
+|---|---|---|---|
+| `shared/env/app.env` | app, queue | non-secret settings: app identity and URL, logging, session, cache and queue drivers, Redis, elevation, Sanctum | [`docker/env/app.env.example`](../docker/env/app.env.example) |
+| `shared/env/secrets.env` | app, queue (last, so it wins), postgres | every topic holding a secret, kept whole: `APP_KEY`, database (`DB_CONNECTION/HOST/PORT`, `POSTGRES_*`), `APP_USER_*` | [`docker/env/secrets.env.example`](../docker/env/secrets.env.example) |
+
+The database credentials exist once, under the postgres image's names (`POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD`): `config/database.php` falls back to them when `DB_DATABASE` / `DB_USERNAME` / `DB_PASSWORD` are unset. Local development keeps `DB_*` in the root `.env`.
+
 Steps:
-1. Create the deploy directory on the server (matches `DEPLOY_PATH` in the workflow)
-2. Copy `.env.prod.example` to `.env.prod` in that directory and fill in real values (`APP_KEY`, database credentials, `DOMAIN`, etc.). `.env.prod` is never committed
-3. Trigger the workflow (push to `main` once E2E passes, or run it manually) to build the images and perform the first deployment
+1. Create `shared/env/` on the server and fill `app.env` and `secrets.env` from the templates, then `chmod 600 shared/env/*.env` (the deploy workflow creates the directories, never the files)
+2. Trigger the workflow (push to `main` once E2E passes, or run it manually) to build the images and perform the first deployment
 
 ## Secrets and key rotation
 
-- `.env.prod` must not be world-readable: `chmod 600 .env.prod` on the VPS after editing it.
-- `APP_KEY` encrypts session data and other Laravel-internal payloads. Rotating it invalidates all existing sessions and any data encrypted with the old key (Sanctum plaintext tokens are hashed, not encrypted with `APP_KEY`, so they are unaffected). Rotate only if the key is suspected to have leaked: generate a new one with `docker compose -f docker-compose.prod.yml --env-file .env.prod run --rm app php artisan key:generate --show`, update `.env.prod`, then `docker compose -f docker-compose.prod.yml --env-file .env.prod up -d` to restart with it.
-- `DB_PASSWORD` should be generated with `openssl rand -base64 32` or similar, never a memorable password, since it is never typed by a human.
+- Both env files must not be world-readable: `chmod 600 shared/env/*.env` on the VPS after editing them.
+- `APP_KEY` encrypts session data and other Laravel-internal payloads. Rotating it invalidates all existing sessions and any data encrypted with the old key (Sanctum plaintext tokens are hashed, not encrypted with `APP_KEY`, so they are unaffected). Rotate only if the key is suspected to have leaked: from `compose/`, generate a new one with `docker compose -f docker-compose.prod.yml run --rm app php artisan key:generate --show`, update `shared/env/secrets.env`, then `docker compose -f docker-compose.prod.yml up -d` to restart with it.
+- `POSTGRES_PASSWORD` should be generated with `openssl rand -base64 32` or similar, never a memorable password, since it is never typed by a human.
 - `LOG_LEVEL=warning` (not `error`): failed login attempts are logged at `warning` level so they remain visible in production logs. A stricter `error` level would silently drop this signal.
 - Dependabot is enabled (`.github/dependabot.yml`, weekly npm + Composer checks). Review and merge or dismiss each alert within a week of it opening; do not let alerts accumulate unreviewed.
 
 ## Automated backups
 
-`docker/scripts/backup-postgres.sh` dumps the database and keeps the last 14 days of backups. It needs to live on the server alongside the compose file:
+`docker/scripts/backup-postgres.sh` dumps the database and keeps the last 14 days of backups. It reads the credentials inside the postgres container, so it needs no env file. It needs to live on the server alongside the compose file:
 
 ```bash
+cd /home/mlr/marvinlerouge.dev/summit-stats/compose
 curl -fsSL https://raw.githubusercontent.com/MarvinLeRouge/Summit-Stats/main/docker/scripts/backup-postgres.sh -o backup-postgres.sh
 chmod +x backup-postgres.sh
 ```
@@ -77,16 +98,15 @@ Install it as a daily cron job (commands below are for you to run over SSH, Clau
 
 ```bash
 crontab -e
-# Add this line (adjust the path to where docker-compose.prod.yml lives):
-0 3 * * * cd /opt/summit-stats/compose && BACKUP_DIR=/opt/summit-stats/backups ./backup-postgres.sh >> /var/log/summit-stats-backup.log 2>&1
+# Add this line:
+0 3 * * * cd /home/mlr/marvinlerouge.dev/summit-stats/compose && BACKUP_DIR=../shared/backups ./backup-postgres.sh >> ../shared/backups/backup.log 2>&1
 ```
 
-To restore from a backup:
+To restore from a backup, from `compose/`:
 
 ```bash
-set -a; source .env.prod; set +a
-gunzip -c /opt/summit-stats/backups/summit-stats-<timestamp>.sql.gz | \
-  docker compose -f docker-compose.prod.yml --env-file .env.prod exec -T postgres psql -U "$DB_USERNAME" "$DB_DATABASE"
+gunzip -c ../shared/backups/summit-stats-<timestamp>.sql.gz | \
+  docker compose -f docker-compose.prod.yml exec -T postgres sh -c 'psql -U "$POSTGRES_USER" "$POSTGRES_DB"'
 ```
 
 ## Updating

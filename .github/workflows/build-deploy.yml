@@ -106,6 +106,9 @@ jobs:
             echo "==> Authenticate to GHCR"
             echo "${GHCR_TOKEN}" | docker login ghcr.io -u "${GHCR_USER}" --password-stdin
 
+            echo "==> Ensure deploy directories exist"
+            mkdir -p "${DEPLOY_PATH}" "${DEPLOY_PATH}/../shared/env" "${DEPLOY_PATH}/../shared/backups"
+
             echo "==> Fetch docker-compose.prod.yml (commit: ${GITHUB_SHA})"
             curl -fsSL \
               "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/${GITHUB_SHA}/docker-compose.prod.yml" \
@@ -114,13 +117,13 @@ jobs:
             cd "${DEPLOY_PATH}"
 
             echo "==> Pull images (tag: ${IMAGE_TAG})"
-            IMAGE_TAG="${IMAGE_TAG}" docker compose -f docker-compose.prod.yml --env-file .env.prod pull
+            IMAGE_TAG="${IMAGE_TAG}" docker compose -f docker-compose.prod.yml pull
 
             echo "==> Redeploy stack"
-            IMAGE_TAG="${IMAGE_TAG}" docker compose -f docker-compose.prod.yml --env-file .env.prod up -d --remove-orphans
+            IMAGE_TAG="${IMAGE_TAG}" docker compose -f docker-compose.prod.yml up -d --remove-orphans
 
             echo "==> Run migrations"
-            IMAGE_TAG="${IMAGE_TAG}" docker compose -f docker-compose.prod.yml --env-file .env.prod run --rm app php artisan migrate --force
+            IMAGE_TAG="${IMAGE_TAG}" docker compose -f docker-compose.prod.yml run --rm app php artisan migrate --force
 
             echo "==> Stack status"
             docker compose -f docker-compose.prod.yml ps

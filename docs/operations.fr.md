@@ -110,6 +110,12 @@ gunzip -c ../shared/backups/summit-stats-<timestamp>.sql.gz | \
   docker compose -f docker-compose.prod.yml exec -T postgres sh -c 'psql -U "$POSTGRES_USER" "$POSTGRES_DB"'
 ```
 
+## Vérification de santé
+
+`GET /health` exécute `select 1` sur la base de données et un `ping` Redis. Il répond 200 (« Application up ») quand les deux répondent, 500 sinon, sans détail d'erreur dans la réponse (l'exception est remontée à Sentry). Il ne demande pas d'authentification : un service de supervision externe peut interroger `https://summit-stats.marvinlerouge.dev/health`.
+
+Il n'y a volontairement pas de `healthcheck` Docker sur `app` ni sur `nginx` : Traefik cesse de router vers les conteneurs « unhealthy », donc une panne de base deviendrait un 404 de Traefik au lieu du 500 de l'app.
+
 ## Suivi des erreurs (Sentry)
 
 Les exceptions backend non gérées (5xx, jobs de queue en échec, erreurs du pipeline d'import) et les erreurs frontend non interceptées sont remontées à Sentry. Les erreurs attendues ne le sont pas : validation et fichiers GPX invalides (422), authentification (401), ressources introuvables (404), limitation de débit (429). Sans DSN, rien n'est envoyé : le développement local et la CI ne remontent rien.

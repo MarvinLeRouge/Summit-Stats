@@ -11,8 +11,12 @@ use App\Services\Gpx\GpxParserService;
 use App\Services\Gpx\SegmentationService;
 use App\Services\Gpx\StatsAggregatorService;
 use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Foundation\Events\DiagnosingHealth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -68,6 +72,12 @@ class AppServiceProvider extends ServiceProvider
     {
         RateLimiter::for('login', function (Request $request) {
             return Limit::perMinute(5)->by($request->ip());
+        });
+
+        // /health answers 500 (no details, the exception is reported) when either check throws
+        Event::listen(DiagnosingHealth::class, function () {
+            DB::select('select 1');
+            Redis::ping();
         });
 
         RateLimiter::for('sentry-tunnel', function (Request $request) {

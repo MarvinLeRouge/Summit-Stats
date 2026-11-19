@@ -22,6 +22,8 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Report unhandled errors to sentry (FEAT-002)
 
+- Check database and redis on /health (FEAT-003)
+
 
 ### Changed
 

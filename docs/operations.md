@@ -110,6 +110,12 @@ gunzip -c ../shared/backups/summit-stats-<timestamp>.sql.gz | \
   docker compose -f docker-compose.prod.yml exec -T postgres sh -c 'psql -U "$POSTGRES_USER" "$POSTGRES_DB"'
 ```
 
+## Health check
+
+`GET /health` runs `select 1` on the database and a Redis `ping`. It answers 200 ("Application up") when both respond, 500 otherwise, with no error detail in the response (the exception is reported to Sentry). It needs no authentication, so an external uptime monitor can poll `https://summit-stats.marvinlerouge.dev/health`.
+
+There is deliberately no Docker `healthcheck` on `app` or `nginx`: Traefik stops routing to unhealthy containers, so a database outage would turn into a Traefik 404 instead of the app's own 500.
+
 ## Error tracking (Sentry)
 
 Unhandled backend exceptions (5xx, failed queue jobs, upload pipeline errors) and uncaught frontend errors are reported to Sentry. Expected errors are not: validation and invalid GPX files (422), authentication (401), missing resources (404), throttling (429). Without DSNs nothing is sent, so local development and CI report nothing.

@@ -26,7 +26,7 @@ Nginx proxies OpenStreetMap tile requests through `/tiles/{z}/{x}/{y}.png` and c
 
 ## Continuous deployment
 
-`.github/workflows/build-deploy.yml` handles the full build-and-deploy pipeline.
+`.github/workflows/build-push-deploy.yml` handles the full build-and-deploy pipeline.
 
 **Trigger**
 - Automatically, when the `E2E` workflow succeeds on `main`
@@ -130,7 +130,7 @@ Browser events go to `POST /api/<hash of the DSN>` on the app's own origin, then
 | `SENTRY_FRONTEND_DSN` | backend, runtime (relay allow-list) | `.env` | `shared/env/secrets.env` |
 | `SENTRY_ENVIRONMENT` | backend, runtime (empty: `APP_ENV`) | `.env` | `shared/env/app.env` (`production`) |
 | `VITE_SENTRY_DSN` | frontend, build time | `.env` | GitHub secret `VITE_SENTRY_DSN`, Docker build argument |
-| `VITE_SENTRY_ENVIRONMENT` | frontend, build time (empty: `development`) | `.env` | `production`, set in `build-deploy.yml` |
+| `VITE_SENTRY_ENVIRONMENT` | frontend, build time (empty: `development`) | `.env` | `production`, set in `build-push-deploy.yml` |
 
 `SENTRY_FRONTEND_DSN` must equal `VITE_SENTRY_DSN` character for character: the browser derives its tunnel path from the DSN baked into the bundle, so a mismatch makes every frontend event end in 404. The backend then logs `Sentry tunnel path matches no configured DSN`.
 
@@ -144,6 +144,6 @@ Check after a deploy: `docker compose -f docker-compose.prod.yml exec app php ar
 
 ## Updating
 
-Deployments are automatic: once a change lands on `main` and the E2E suite passes, `build-deploy.yml` builds fresh images and redeploys the stack, including any pending migrations.
+Deployments are automatic: once a change lands on `main` and the E2E suite passes, `build-push-deploy.yml` builds fresh images and redeploys the stack, including any pending migrations.
 
 To redeploy without a new commit (e.g. a rollback to a previous image tag), trigger the workflow manually via `workflow_dispatch`.

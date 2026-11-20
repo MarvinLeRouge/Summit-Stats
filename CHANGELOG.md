@@ -273,6 +273,8 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Move actions to current majors pinned by sha (CI-002)
 
+- Rename deploy workflow to build-push-deploy (CI-003)
+
 
 ### Fixed
 

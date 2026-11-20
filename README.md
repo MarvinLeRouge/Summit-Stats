@@ -9,7 +9,7 @@
 ![Status](https://img.shields.io/badge/Status-V4%20In%20Progress-blue)
 [![CI](https://github.com/MarvinLeRouge/Summit-Stats/actions/workflows/ci.yml/badge.svg)](https://github.com/MarvinLeRouge/Summit-Stats/actions/workflows/ci.yml)
 [![E2E](https://github.com/MarvinLeRouge/Summit-Stats/actions/workflows/e2e.yml/badge.svg)](https://github.com/MarvinLeRouge/Summit-Stats/actions/workflows/e2e.yml)
-[![CD](https://github.com/MarvinLeRouge/Summit-Stats/actions/workflows/build-deploy.yml/badge.svg)](https://github.com/MarvinLeRouge/Summit-Stats/actions/workflows/build-deploy.yml)
+[![CD](https://github.com/MarvinLeRouge/Summit-Stats/actions/workflows/build-push-deploy.yml/badge.svg)](https://github.com/MarvinLeRouge/Summit-Stats/actions/workflows/build-push-deploy.yml)
 ![PHP](https://img.shields.io/badge/PHP-8.4-777BB4?logo=php&logoColor=white)
 ![Laravel](https://img.shields.io/badge/Laravel-12-FF2D20?logo=laravel&logoColor=white)
 ![Vue.js](https://img.shields.io/badge/Vue.js-3-4FC08D?logo=vuedotjs&logoColor=white)
@@ -149,7 +149,7 @@ Coverage thresholds (`codecov.yml`, blocking): project 80% (±2%), patch 90% (±
 
 ### CD workflow
 
-[`build-deploy`](.github/workflows/build-deploy.yml) is triggered by E2E success via `workflow_run`:
+[`build-push-deploy`](.github/workflows/build-push-deploy.yml) is triggered by E2E success via `workflow_run`:
 
 - Builds and pushes two Docker images to GHCR: `app` (PHP-FPM) and `nginx` (assets baked in)
 - Images tagged with short SHA (`sha-xxxxxxx`) and `latest`
@@ -162,9 +162,9 @@ push main
     └── E2E ─────────── Playwright (full Docker stack)
               │ workflow_run (success only)
               ▼
-         build-deploy ── build → GHCR → SSH deploy
+      build-push-deploy ── build → GHCR → SSH deploy
 
-workflow_dispatch ──────► build-deploy  (manual, bypasses E2E)
+workflow_dispatch ──────► build-push-deploy  (manual, bypasses E2E)
 ```
 
 ---

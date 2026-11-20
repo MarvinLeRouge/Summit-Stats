@@ -74,6 +74,7 @@ Plan complet : `docs/work-in-progress/v4-action-plan.md` (fichier local, non ver
 - [x] CHORE-002 - Charger la config prod depuis shared/env (app.env + secrets.env) au lieu de compose/.env.prod, une seule copie du mot de passe de la base
 - [x] CI-002 - Passer chaque GitHub Action sur sa majeure actuelle épinglée par SHA de commit, workflow changelog sur Node 26, entrées Dependabot docker et github-actions
 - [x] CI-003 - Renommer le workflow de déploiement en build-push-deploy.yml, deux jobs explicites (Build & push, Deploy), sans changement fonctionnel
+- [x] CHORE-003 - Mettre à jour eslint et @eslint/js en 10
 
 ## Section 6 - Observabilité
 

@@ -275,6 +275,10 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Rename deploy workflow to build-push-deploy (CI-003)
 
+- Update eslint and @eslint/js to 10 (CHORE-003)
+
+- Declare globals as a dev dependency (CHORE-003)
+
 
 ### Fixed
 

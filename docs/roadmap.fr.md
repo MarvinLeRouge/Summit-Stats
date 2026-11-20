@@ -71,6 +71,7 @@ Plan complet : `docs/work-in-progress/v4-action-plan.md` (fichier local, non ver
 - [x] CHORE-001 - Passer à Node 26 LTS : `node:20-alpine` dans le Dockerfile et le service vite de dev, CI en 22, ajout de `engines` (montées des actions traitées avec la tâche cross-project des actions)
 - [ ] DOCS-002 - Mettre à jour la section CI du README : elle décrit un enchaînement lint puis tests, alors que `ci.yml` lance des jobs parallèles filtrés par chemin derrière l'agrégateur `ci-status`
 - [x] CHORE-002 - Charger la config prod depuis shared/env (app.env + secrets.env) au lieu de compose/.env.prod, une seule copie du mot de passe de la base
+- [x] CI-002 - Passer chaque GitHub Action sur sa majeure actuelle épinglée par SHA de commit, workflow changelog sur Node 26, entrées Dependabot docker et github-actions
 
 ## Section 6 - Observabilité
 

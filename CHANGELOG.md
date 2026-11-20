@@ -279,6 +279,8 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Declare globals as a dev dependency (CHORE-003)
 
+- Move to php 8.5 (CHORE-004)
+
 
 ### Fixed
 

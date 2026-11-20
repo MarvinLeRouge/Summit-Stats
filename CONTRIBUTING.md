@@ -8,7 +8,7 @@ This is primarily a personal portfolio project. External contributions are welco
 
 ## Prerequisites
 
-- PHP 8.2+ with Composer
+- PHP 8.5+ with Composer
 - Node.js 26 LTS
 - Docker (runs PostgreSQL 16 for development)
 - PHP extensions `pdo_pgsql`, and `pdo_sqlite` for the in-memory test database

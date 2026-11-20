@@ -43,7 +43,7 @@ services:
       - internal
 
   vite:
-    image: node:20-alpine
+    image: node:26-alpine
     working_dir: /app
     # npm ci installs the lockfile as-is: npm install rewrote it from this container
     command: sh -c "npm ci --prefer-offline && npm run dev"

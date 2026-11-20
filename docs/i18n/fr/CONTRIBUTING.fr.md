@@ -9,7 +9,7 @@ Il s'agit avant tout d'un projet portfolio personnel. Les contributions externes
 ## Prérequis
 
 - PHP 8.2+ avec Composer
-- Node.js 20+
+- Node.js 26 LTS
 - Docker (fait tourner PostgreSQL 16 pour le développement)
 - Extensions PHP `pdo_pgsql`, et `pdo_sqlite` pour la base de test en mémoire
 

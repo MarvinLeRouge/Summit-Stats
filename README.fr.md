@@ -86,7 +86,7 @@ resources/js/
 ```bash
 php artisan test                        # lancer tous les tests
 php artisan test --coverage             # avec rapport de couverture (nécessite pcov)
-php artisan test --coverage --min=80    # avec seuil minimum
+php artisan test --coverage --min=85    # avec seuil minimum
 ```
 
 - **TDD strict** sur les 6 services GPX : tests écrits avant le code
@@ -135,7 +135,7 @@ Les problèmes de style sont corrigés avant l'enregistrement du commit, ils n'a
 2. Tests backend PHP avec couverture (Pest + pcov), rapport envoyé à Codecov (flag `backend`)
 3. Tests unitaires frontend (Vitest), rapport envoyé à Codecov (flag `frontend`)
 
-Seuils de couverture (`codecov.yml`, bloquants) : projet 80 % (±2 %), patch 90 % (±5 %).
+Seuils de couverture (`codecov.yml`, bloquants) : projet 85 % (±2 %), patch 90 % (±5 %).
 
 ### Workflow E2E
 

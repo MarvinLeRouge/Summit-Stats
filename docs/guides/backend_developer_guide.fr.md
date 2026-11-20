@@ -93,7 +93,7 @@ distance/cap ailleurs.
 ```bash
 php artisan test                            # Lance tous les tests Pest
 php artisan test --filter=GpxParserService  # Lance un seul fichier/classe de test
-php artisan test --coverage --min=80        # Avec couverture (nécessite pcov)
+php artisan test --coverage --min=85        # Avec couverture (nécessite pcov)
 ```
 
 - Les tests Feature dans `tests/Feature/Api/` couvrent tous les endpoints
@@ -106,7 +106,7 @@ php artisan test --coverage --min=80        # Avec couverture (nécessite pcov)
 - Les fichiers GPX de test vivent dans `tests/Fixtures/gpx/` ; y ajouter les
   nouvelles fixtures plutôt que d'insérer du XML GPX directement dans les
   fichiers de test.
-- La couverture est vérifiée en CI avec `--min=80`.
+- La couverture est vérifiée en CI avec `--min=85`.
 
 ## Conventions
 

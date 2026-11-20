@@ -32,7 +32,7 @@ Create `.env.testing` with `DB_DATABASE=:memory:` for isolated test runs.
 ## Running tests
 
 ```bash
-php artisan test --coverage --min=80   # tests + coverage
+php artisan test --coverage --min=85   # tests + coverage
 ```
 
 ## Workflow

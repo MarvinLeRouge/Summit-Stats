@@ -19,7 +19,7 @@
 - [ ] PHPDoc added on new/changed public PHP methods
 - [ ] JSDoc added on new/changed Vue components and exported JS functions
 - [ ] `vendor/bin/pint --test` and `npm run lint` pass
-- [ ] `php artisan test --coverage --min=80` passes
+- [ ] `php artisan test --coverage --min=85` passes
 
 ## Related issues
 

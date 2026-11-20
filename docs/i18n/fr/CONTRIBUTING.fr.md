@@ -32,7 +32,7 @@ Créer `.env.testing` avec `DB_DATABASE=:memory:` pour des tests isolés.
 ## Lancer les tests
 
 ```bash
-php artisan test --coverage --min=80   # tests + couverture
+php artisan test --coverage --min=85   # tests + couverture
 ```
 
 ## Workflow

@@ -77,6 +77,7 @@ Plan complet : `docs/work-in-progress/v4-action-plan.md` (fichier local, non ver
 - [x] CHORE-003 - Mettre à jour eslint et @eslint/js en 10
 - [x] CHORE-004 - Passer en PHP 8.5 (image Docker, CI, contrainte composer, docs)
 - [x] CHORE-005 - Passer à Laravel 13 avec Pest 4 et PHPUnit 12 (Symfony maintenu en 7.4)
+- [x] CI-004 - Relever le seuil de couverture de 80 % à 85 % (seuils et docs)
 
 ## Section 6 - Observabilité
 

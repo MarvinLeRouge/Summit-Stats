@@ -15,7 +15,8 @@ it('answers 200 when the database and Redis respond', function () {
 
 it('answers 500 without details when the database is down', function () {
     Redis::shouldReceive('ping')->andReturn(true);
-    DB::shouldReceive('select')->with('select 1')->andThrow(new RuntimeException('SQLSTATE secret-host'));
+    // partialMock keeps the real DatabaseManager: Laravel disconnects every connection after each test
+    DB::partialMock()->shouldReceive('select')->with('select 1')->andThrow(new RuntimeException('SQLSTATE secret-host'));
 
     $this->get('/health')->assertServerError()->assertDontSee('secret-host');
 });

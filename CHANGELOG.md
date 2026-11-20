@@ -320,6 +320,8 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Run npm ci in the vite dev container
 
+- Keep the health check test working with laravel 12.73 (FIX-005)
+
 ## [3.0.0] — 2026-04-02
 
 ### Added

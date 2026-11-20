@@ -13,10 +13,10 @@ L'application tourne sur un VPS derrière un reverse proxy Traefik partagé, ave
 | Service | Image | Rôle |
 |---|---|---|
 | `nginx` | custom (nginx:alpine) | Serveur web, assets statiques, cache proxy des tuiles OSM |
-| `app` | custom (PHP 8.4-FPM) | Application Laravel |
+| `app` | custom (PHP 8.5-FPM) | Application Laravel |
 | `postgres` | postgres:16-alpine | Base de données de production |
 | `redis` | redis:7-alpine | Cache, sessions, queue |
-| `queue` | custom (PHP 8.4-FPM) | Worker de queue Laravel |
+| `queue` | custom (PHP 8.5-FPM) | Worker de queue Laravel |
 
 Seul `nginx` est exposé à Traefik via le réseau partagé `traefik-public`. Tous les autres services tournent sur un réseau Docker privé (`docker-compose.prod.yml`).
 

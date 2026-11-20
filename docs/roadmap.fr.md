@@ -75,6 +75,7 @@ Plan complet : `docs/work-in-progress/v4-action-plan.md` (fichier local, non ver
 - [x] CI-002 - Passer chaque GitHub Action sur sa majeure actuelle épinglée par SHA de commit, workflow changelog sur Node 26, entrées Dependabot docker et github-actions
 - [x] CI-003 - Renommer le workflow de déploiement en build-push-deploy.yml, deux jobs explicites (Build & push, Deploy), sans changement fonctionnel
 - [x] CHORE-003 - Mettre à jour eslint et @eslint/js en 10
+- [x] CHORE-004 - Passer en PHP 8.5 (image Docker, CI, contrainte composer, docs)
 
 ## Section 6 - Observabilité
 

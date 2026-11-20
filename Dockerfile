@@ -58,7 +58,7 @@ RUN mkdir -p bootstrap/cache && composer dump-autoload --optimize --no-dev --ign
 # =============================================================================
 # Stage 3 — Base PHP image (shared between dev and production)
 # =============================================================================
-FROM php:8.4-fpm-alpine AS base
+FROM php:8.5-fpm-alpine AS base
 
 RUN apk add --no-cache \
         libpq-dev \
@@ -67,8 +67,9 @@ RUN apk add --no-cache \
         oniguruma-dev \
     && apk add --no-cache --virtual .build-deps \
         autoconf g++ make $PHPIZE_DEPS \
+    # OPcache is built into PHP since 8.5: nothing to install, the production stage only configures it
     && docker-php-ext-install \
-        pdo pdo_pgsql pgsql zip opcache pcntl intl \
+        pdo pdo_pgsql pgsql zip pcntl intl \
     && pecl install redis-6.3.0 \
     && docker-php-ext-enable redis \
     && apk del .build-deps

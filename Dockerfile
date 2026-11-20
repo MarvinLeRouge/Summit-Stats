@@ -21,7 +21,7 @@ RUN npm run build
 # =============================================================================
 # Stage 2a — PHP dependencies with dev (for development image)
 # =============================================================================
-FROM composer:2.8 AS composer-dev-builder
+FROM composer:2.10 AS composer-dev-builder
 
 WORKDIR /app
 
@@ -39,7 +39,7 @@ RUN mkdir -p bootstrap/cache && composer dump-autoload --optimize --ignore-platf
 # =============================================================================
 # Stage 2b — PHP dependencies without dev (for production image)
 # =============================================================================
-FROM composer:2.8 AS composer-builder
+FROM composer:2.10 AS composer-builder
 
 WORKDIR /app
 

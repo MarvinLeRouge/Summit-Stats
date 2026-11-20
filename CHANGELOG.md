@@ -269,6 +269,8 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Load prod config from shared/env (CHORE-002)
 
+- Move to node 26 lts (CHORE-001)
+
 
 ### Fixed
 

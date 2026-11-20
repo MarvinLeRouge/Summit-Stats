@@ -1,7 +1,7 @@
 # =============================================================================
 # Stage 1 — Build frontend assets (Vue.js / Vite)
 # =============================================================================
-FROM node:20-alpine AS node-builder
+FROM node:26-alpine AS node-builder
 
 WORKDIR /app
 

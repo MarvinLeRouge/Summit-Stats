@@ -68,7 +68,7 @@ Plan complet : `docs/work-in-progress/v4-action-plan.md` (fichier local, non ver
 - [x] FIX-002 - Épingler l'extension pecl redis et mettre en cache le build Docker de l'E2E (une panne passagère de pecl.php.net a cassé l'E2E du merge)
 - [x] FIX-003 - Mettre DB_PORT=5433 dans .env.example pour correspondre au port host du conteneur postgres de dev
 - [x] FIX-004 - Lancer npm ci dans le conteneur vite de dev pour qu'il ne réécrive plus package-lock.json
-- [ ] CHORE-001 - Passer à Node 24 : `node:20-alpine` dans le Dockerfile et le service vite de dev, et les GitHub Actions encore sur Node 20 (`checkout`, `setup-node`, `cache`, `upload-artifact` v4)
+- [x] CHORE-001 - Passer à Node 26 LTS : `node:20-alpine` dans le Dockerfile et le service vite de dev, CI en 22, ajout de `engines` (montées des actions traitées avec la tâche cross-project des actions)
 - [ ] DOCS-002 - Mettre à jour la section CI du README : elle décrit un enchaînement lint puis tests, alors que `ci.yml` lance des jobs parallèles filtrés par chemin derrière l'agrégateur `ci-status`
 - [x] CHORE-002 - Charger la config prod depuis shared/env (app.env + secrets.env) au lieu de compose/.env.prod, une seule copie du mot de passe de la base
 

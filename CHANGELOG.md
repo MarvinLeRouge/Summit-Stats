@@ -271,6 +271,8 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Move to node 26 lts (CHORE-001)
 
+- Move actions to current majors pinned by sha (CI-002)
+
 
 ### Fixed
 

@@ -22,3 +22,26 @@ updates:
     groups:
       composer-minor-patch:
         update-types: ["minor", "patch"]
+
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    ignore:
+      # Node majors follow package.json engines and CI node-version, changed together on purpose
+      - dependency-name: "node"
+        update-types: ["version-update:semver-major"]
+      # PHP versions follow composer.json and CI setup-php, moved by a dedicated task
+      - dependency-name: "php"
+        update-types: ["version-update:semver-major", "version-update:semver-minor"]
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    groups:
+      # One weekly PR for every action bump, majors included
+      actions:
+        patterns: ["*"]

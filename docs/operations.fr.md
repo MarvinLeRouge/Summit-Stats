@@ -26,7 +26,7 @@ Nginx fait proxy des requêtes de tuiles OpenStreetMap via `/tiles/{z}/{x}/{y}.p
 
 ## Déploiement continu
 
-`.github/workflows/build-deploy.yml` gère le pipeline complet de build et de déploiement.
+`.github/workflows/build-push-deploy.yml` gère le pipeline complet de build et de déploiement.
 
 **Déclenchement**
 - Automatiquement, quand le workflow `E2E` réussit sur `main`
@@ -130,7 +130,7 @@ Les événements du navigateur partent vers `POST /api/<hash du DSN>` sur l'orig
 | `SENTRY_FRONTEND_DSN` | backend, à l'exécution (liste autorisée du relais) | `.env` | `shared/env/secrets.env` |
 | `SENTRY_ENVIRONMENT` | backend, à l'exécution (vide : `APP_ENV`) | `.env` | `shared/env/app.env` (`production`) |
 | `VITE_SENTRY_DSN` | frontend, au build | `.env` | secret GitHub `VITE_SENTRY_DSN`, argument de build Docker |
-| `VITE_SENTRY_ENVIRONMENT` | frontend, au build (vide : `development`) | `.env` | `production`, défini dans `build-deploy.yml` |
+| `VITE_SENTRY_ENVIRONMENT` | frontend, au build (vide : `development`) | `.env` | `production`, défini dans `build-push-deploy.yml` |
 
 `SENTRY_FRONTEND_DSN` doit être identique, caractère pour caractère, à `VITE_SENTRY_DSN` : le navigateur calcule le chemin du relais à partir du DSN intégré au bundle, donc un écart fait finir chaque événement frontend en 404. Le backend logue alors `Sentry tunnel path matches no configured DSN`.
 
@@ -144,6 +144,6 @@ Vérification après un déploiement : `docker compose -f docker-compose.prod.ym
 
 ## Mise à jour
 
-Les déploiements sont automatiques : dès qu'un changement arrive sur `main` et que la suite E2E réussit, `build-deploy.yml` build de nouvelles images et redéploie la stack, migrations en attente incluses.
+Les déploiements sont automatiques : dès qu'un changement arrive sur `main` et que la suite E2E réussit, `build-push-deploy.yml` build de nouvelles images et redéploie la stack, migrations en attente incluses.
 
 Pour redéployer sans nouveau commit (par exemple un rollback vers un tag d'image précédent), déclencher le workflow manuellement via `workflow_dispatch`.

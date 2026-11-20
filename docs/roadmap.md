@@ -73,6 +73,7 @@ Full plan: `docs/work-in-progress/v4-action-plan.md` (local file, not tracked in
 - [ ] DOCS-002 - Update the README CI section: it describes sequential lint-then-tests, `ci.yml` now runs path-filtered parallel jobs behind the `ci-status` aggregator
 - [x] CHORE-002 - Load prod config from shared/env (app.env + secrets.env) instead of compose/.env.prod, single copy of the database password
 - [x] CI-002 - Move every GitHub Action to its current major pinned by commit SHA, changelog workflow on Node 26, Dependabot docker and github-actions entries
+- [x] CI-003 - Rename the deploy workflow to build-push-deploy.yml, two explicit jobs (Build & push, Deploy), no functional change
 
 ## Section 6 - Observability
 

@@ -76,6 +76,7 @@ Plan complet : `docs/work-in-progress/v4-action-plan.md` (fichier local, non ver
 - [x] CI-003 - Renommer le workflow de déploiement en build-push-deploy.yml, deux jobs explicites (Build & push, Deploy), sans changement fonctionnel
 - [x] CHORE-003 - Mettre à jour eslint et @eslint/js en 10
 - [x] CHORE-004 - Passer en PHP 8.5 (image Docker, CI, contrainte composer, docs)
+- [x] CHORE-005 - Passer à Laravel 13 avec Pest 4 et PHPUnit 12 (Symfony maintenu en 7.4)
 
 ## Section 6 - Observabilité
 

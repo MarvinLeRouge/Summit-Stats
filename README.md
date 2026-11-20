@@ -10,8 +10,8 @@
 [![CI](https://github.com/MarvinLeRouge/Summit-Stats/actions/workflows/ci.yml/badge.svg)](https://github.com/MarvinLeRouge/Summit-Stats/actions/workflows/ci.yml)
 [![E2E](https://github.com/MarvinLeRouge/Summit-Stats/actions/workflows/e2e.yml/badge.svg)](https://github.com/MarvinLeRouge/Summit-Stats/actions/workflows/e2e.yml)
 [![CD](https://github.com/MarvinLeRouge/Summit-Stats/actions/workflows/build-push-deploy.yml/badge.svg)](https://github.com/MarvinLeRouge/Summit-Stats/actions/workflows/build-push-deploy.yml)
-![PHP](https://img.shields.io/badge/PHP-8.4-777BB4?logo=php&logoColor=white)
-![Laravel](https://img.shields.io/badge/Laravel-12-FF2D20?logo=laravel&logoColor=white)
+![PHP](https://img.shields.io/badge/PHP-8.5-777BB4?logo=php&logoColor=white)
+![Laravel](https://img.shields.io/badge/Laravel-13-FF2D20?logo=laravel&logoColor=white)
 ![Vue.js](https://img.shields.io/badge/Vue.js-3-4FC08D?logo=vuedotjs&logoColor=white)
 
 [![codecov backend](https://img.shields.io/codecov/c/github/MarvinLeRouge/Summit-Stats?flag=backend&label=backend&logo=codecov)](https://codecov.io/gh/MarvinLeRouge/Summit-Stats)
@@ -237,7 +237,7 @@ The app is then available at `http://summit-stats.marvinlerouge.local`.
 
 Personal project with a dual purpose:
 
-- **Learning**: layered service architecture (TDD, single responsibility, dependency injection), geospatial algorithms (Haversine, sliding average smoothing, GPS trace segmentation), and modern tooling (Laravel 12, Vue.js 3 Composition API, Pinia, Chart.js, Pest, GitHub Actions)
+- **Learning**: layered service architecture (TDD, single responsibility, dependency injection), geospatial algorithms (Haversine, sliding average smoothing, GPS trace segmentation), and modern tooling (Laravel 13, Vue.js 3 Composition API, Pinia, Chart.js, Pest, GitHub Actions)
 - **Portfolio**: demonstrates a structured, tested and documented approach, from scoping to CI
 
 ---
@@ -258,7 +258,7 @@ Personal project with a dual purpose:
 
 | Layer | Technology |
 |---|---|
-| Backend | ![Laravel](https://img.shields.io/badge/Laravel_12-FF2D20?logo=laravel&logoColor=white&style=flat-square) ![PHP](https://img.shields.io/badge/PHP_8.4-777BB4?logo=php&logoColor=white&style=flat-square) |
+| Backend | ![Laravel](https://img.shields.io/badge/Laravel_13-FF2D20?logo=laravel&logoColor=white&style=flat-square) ![PHP](https://img.shields.io/badge/PHP_8.5-777BB4?logo=php&logoColor=white&style=flat-square) |
 | Database | ![PostgreSQL](https://img.shields.io/badge/PostgreSQL_16-336791?logo=postgresql&logoColor=white&style=flat-square) ![SQLite](https://img.shields.io/badge/SQLite_%3Amemory%3A_(tests)-003B57?logo=sqlite&logoColor=white&style=flat-square) |
 | Auth | Laravel Sanctum (password login, single-user) |
 | Frontend | ![Vue.js](https://img.shields.io/badge/Vue.js_3-4FC08D?logo=vuedotjs&logoColor=white&style=flat-square) ![Vite](https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=white&style=flat-square) |

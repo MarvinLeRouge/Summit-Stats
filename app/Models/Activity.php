@@ -75,7 +75,7 @@ class Activity extends Model
         $h = intdiv($this->duration_seconds, 3600);
         $m = intdiv($this->duration_seconds % 3600, 60);
 
-        return "{$h}h".str_pad($m, 2, '0', STR_PAD_LEFT);
+        return sprintf('%dh%02d', $h, $m);
     }
 
     /**

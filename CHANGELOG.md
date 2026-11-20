@@ -281,6 +281,8 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Move to php 8.5 (CHORE-004)
 
+- Upgrade to laravel 13 with pest 4 and phpunit 12 (CHORE-005)
+
 
 ### Fixed
 

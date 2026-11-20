@@ -31,12 +31,6 @@ parameters:
 			path: app/Models/Activity.php
 
 		-
-			message: '#^Parameter \#1 \$string of function str_pad expects string, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Models/Activity.php
-
-		-
 			message: '#^Method App\\Models\\Segment\:\:activity\(\) should return Illuminate\\Database\\Eloquent\\Relations\\BelongsTo\<App\\Models\\Activity, App\\Models\\Segment\> but returns Illuminate\\Database\\Eloquent\\Relations\\BelongsTo\<App\\Models\\Activity, \$this\(App\\Models\\Segment\)\>\.$#'
 			identifier: return.type
 			count: 1

@@ -87,7 +87,7 @@ elsewhere.
 ```bash
 php artisan test                            # Run all Pest tests
 php artisan test --filter=GpxParserService  # Run a single test file/class
-php artisan test --coverage --min=80        # With coverage (requires pcov)
+php artisan test --coverage --min=85        # With coverage (requires pcov)
 ```
 
 - Feature tests in `tests/Feature/Api/` cover all API endpoints end-to-end.
@@ -97,7 +97,7 @@ php artisan test --coverage --min=80        # With coverage (requires pcov)
   and `Sanctum::actingAs($user)` for authenticated requests.
 - GPX fixture files live in `tests/Fixtures/gpx/`; add new fixtures there
   rather than inlining GPX XML in test files.
-- Coverage is enforced in CI at `--min=80`.
+- Coverage is enforced in CI at `--min=85`.
 
 ## Conventions
 

@@ -283,6 +283,8 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Upgrade to laravel 13 with pest 4 and phpunit 12 (CHORE-005)
 
+- Raise the coverage floor to 85% (CI-004)
+
 
 ### Fixed
 

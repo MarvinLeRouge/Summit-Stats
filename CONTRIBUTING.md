@@ -12,6 +12,7 @@ This is primarily a personal portfolio project. External contributions are welco
 - Node.js 26 LTS
 - Docker (runs PostgreSQL 16 for development)
 - PHP extensions `pdo_pgsql`, and `pdo_sqlite` for the in-memory test database
+- [gitleaks](https://github.com/gitleaks/gitleaks): the pre-commit hook scans staged changes for secrets and refuses to commit without it
 
 ## Local setup
 

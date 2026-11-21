@@ -285,6 +285,8 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Raise the coverage floor to 85% (CI-004)
 
+- Scan staged changes for secrets with gitleaks (CI-005)
+
 
 ### Fixed
 

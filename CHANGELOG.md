@@ -299,6 +299,10 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Run one deploy at a time (CI-006)
 
+- Update CHANGELOG.md (#203)
+
+- Bump the npm-minor-patch group across 1 directory with 7 updates
+
 
 ### Fixed
 

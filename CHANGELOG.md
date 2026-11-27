@@ -295,6 +295,8 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Point the backup mail scp at a local folder (CHORE-006)
 
+- Run one deploy at a time (CI-006)
+
 
 ### Fixed
 

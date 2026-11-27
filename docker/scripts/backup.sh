@@ -32,8 +32,8 @@ if [ -f "$BACKUP_ENV_FILE" ]; then
     done < "$BACKUP_ENV_FILE"
 fi
 
-BACKUP_SMTP_HOST="${BACKUP_SMTP_HOST:-smtp-relay.brevo.com}"
-BACKUP_SMTP_PORT="${BACKUP_SMTP_PORT:-587}"
+SMTP_HOST="${SMTP_HOST:-smtp-relay.brevo.com}"
+SMTP_PORT="${SMTP_PORT:-587}"
 BACKUP_SSH_TARGET="${BACKUP_SSH_TARGET:-$(id -un)@$(hostname -f)}"
 
 mkdir -p "$BACKUP_DIR"
@@ -49,7 +49,7 @@ encode_header() { printf '=?UTF-8?B?%s?=' "$(printf '%s' "$1" | base64 | tr -d '
 
 send_mail() {
     local subject="$1" body="$2" message="$WORK_DIR/mail.txt"
-    for var in BACKUP_MAIL_FROM BACKUP_MAIL_TO BACKUP_SMTP_USER BACKUP_SMTP_PASSWORD; do
+    for var in BACKUP_MAIL_FROM BACKUP_MAIL_TO SMTP_USERNAME SMTP_PASSWORD; do
         if [ -z "${!var:-}" ]; then
             log "mail not sent: $var is not set in $BACKUP_ENV_FILE"
             return 1
@@ -63,11 +63,11 @@ send_mail() {
         printf 'MIME-Version: 1.0\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\n'
         printf '%s\n' "$body"
     } > "$message"
-    # --ssl-reqd: STARTTLS is mandatory, credentials never travel in clear (BACKUP_SMTP_SSL=0 only for a local test relay)
+    # --ssl-reqd: STARTTLS is mandatory, credentials never travel in clear (BACKUP_SMTP_INSECURE=1 only for a local test relay)
     curl --silent --show-error --fail \
-        $([ "${BACKUP_SMTP_SSL:-1}" = 0 ] || echo --ssl-reqd) \
-        --url "smtp://$BACKUP_SMTP_HOST:$BACKUP_SMTP_PORT" \
-        --user "$BACKUP_SMTP_USER:$BACKUP_SMTP_PASSWORD" \
+        $([ "${BACKUP_SMTP_INSECURE:-0}" = 1 ] || echo --ssl-reqd) \
+        --url "smtp://$SMTP_HOST:$SMTP_PORT" \
+        --user "$SMTP_USERNAME:$SMTP_PASSWORD" \
         --mail-from "$BACKUP_MAIL_FROM" --mail-rcpt "$BACKUP_MAIL_TO" \
         --upload-file "$message"
     touch "$MAIL_MARKER"

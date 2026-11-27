@@ -99,9 +99,9 @@ The fingerprint ignores the random `\restrict` key that `pg_dump` 16.10+ writes 
 |---|---|
 | `BACKUP_MAIL_FROM`, `BACKUP_MAIL_FROM_NAME` | Verified Brevo sender |
 | `BACKUP_MAIL_TO`, `BACKUP_MAIL_TO_NAME` | Recipient |
-| `BACKUP_SMTP_HOST`, `BACKUP_SMTP_PORT` | `smtp-relay.brevo.com`, `587` |
-| `BACKUP_SMTP_USER`, `BACKUP_SMTP_PASSWORD` | Brevo SMTP login and SMTP key |
-| `BACKUP_SSH_TARGET` | How your machine reaches the VPS in the `scp` command (default `<user>@<hostname -f>`) |
+| `SMTP_HOST`, `SMTP_PORT` | `smtp-relay.brevo.com`, `587` |
+| `SMTP_USERNAME`, `SMTP_PASSWORD` | Brevo SMTP login and SMTP key |
+| `BACKUP_SSH_TARGET` | Only for the ready-to-paste `scp` command in the mail: the VPS address as your machine reaches it (IP, `user@IP` or ssh alias; default `<user>@<hostname -f>`) |
 
 Optional overrides on the cron line: `BACKUP_KEEP` (8), `BACKUP_ALIVE_DAYS` (28), `BACKUP_DIR` (`../shared/backups`), `BACKUP_ENV_FILE` (`../shared/env/backup.env`).
 

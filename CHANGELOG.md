@@ -289,6 +289,8 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Weekly change-only backup with mail notice (CHORE-006)
 
+- Use the shared smtp variable names in the backup env (CHORE-006)
+
 
 ### Fixed
 

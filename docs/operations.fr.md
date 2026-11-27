@@ -99,9 +99,9 @@ L'empreinte ignore la clé `\restrict` aléatoire que `pg_dump` 16.10+ écrit da
 |---|---|
 | `BACKUP_MAIL_FROM`, `BACKUP_MAIL_FROM_NAME` | Expéditeur Brevo vérifié |
 | `BACKUP_MAIL_TO`, `BACKUP_MAIL_TO_NAME` | Destinataire |
-| `BACKUP_SMTP_HOST`, `BACKUP_SMTP_PORT` | `smtp-relay.brevo.com`, `587` |
-| `BACKUP_SMTP_USER`, `BACKUP_SMTP_PASSWORD` | Login SMTP et clé SMTP Brevo |
-| `BACKUP_SSH_TARGET` | Comment ta machine joint le VPS dans la commande `scp` (par défaut `<user>@<hostname -f>`) |
+| `SMTP_HOST`, `SMTP_PORT` | `smtp-relay.brevo.com`, `587` |
+| `SMTP_USERNAME`, `SMTP_PASSWORD` | Login SMTP et clé SMTP Brevo |
+| `BACKUP_SSH_TARGET` | Sert uniquement à la commande `scp` prête à coller du mail : l'adresse du VPS telle que ta machine la joint (IP, `user@IP` ou alias ssh ; par défaut `<user>@<hostname -f>`) |
 
 Surcharges possibles sur la ligne cron : `BACKUP_KEEP` (8), `BACKUP_ALIVE_DAYS` (28), `BACKUP_DIR` (`../shared/backups`), `BACKUP_ENV_FILE` (`../shared/env/backup.env`).
 

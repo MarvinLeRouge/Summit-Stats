@@ -87,28 +87,51 @@ Les identifiants de la base n'existent qu'une fois, sous les noms de l'image pos
 
 ## Sauvegardes automatisées
 
-`docker/scripts/backup-postgres.sh` sauvegarde la base de données et conserve les 14 derniers jours de sauvegardes. Il lit les identifiants dans le conteneur postgres, il n'a donc besoin d'aucun fichier d'environnement. Il doit être présent sur le serveur, à côté du fichier compose :
+`docker/scripts/backup.sh` tourne une fois par semaine via cron sur le VPS. Il fait un dump de la base et archive les fichiers GPX importés (`storage/app/private/gpx` dans le conteneur `app`), puis compare leur empreinte avec la dernière sauvegarde stockée :
+
+- **Changement :** stocke `shared/backups/summit-stats-<horodatage>/` (`db.sql.gz`, `gpx.tar.gz`, `fingerprint`), garde les 8 sauvegardes les plus récentes, et envoie par mail la commande `scp` pour la récupérer sur ta machine (la copie hors VPS).
+- **Pas de changement :** ne stocke rien. Quand aucun mail n'est parti depuis 28 jours, il envoie un mail « still alive », pour qu'un mois de silence ne cache jamais un job en panne.
+- **Échec :** envoie l'erreur par mail et sort en erreur.
+
+L'empreinte ignore la clé `\restrict` aléatoire que `pg_dump` 16.10+ écrit dans chaque dump : deux dumps d'une base inchangée sont donc identiques. Les identifiants sont lus dans les conteneurs ; le script n'a besoin que des réglages mail, dans `shared/env/backup.env` (modèle [`docker/env/backup.env.example`](../docker/env/backup.env.example)), lu par le script sur l'hôte et jamais par les conteneurs. Les mails passent par le relais SMTP de Brevo en STARTTLS, depuis un expéditeur vérifié dans Brevo.
+
+| Variable | Rôle |
+|---|---|
+| `BACKUP_MAIL_FROM`, `BACKUP_MAIL_FROM_NAME` | Expéditeur Brevo vérifié |
+| `BACKUP_MAIL_TO`, `BACKUP_MAIL_TO_NAME` | Destinataire |
+| `SMTP_HOST`, `SMTP_PORT` | `smtp-relay.brevo.com`, `587` |
+| `SMTP_USERNAME`, `SMTP_PASSWORD` | Login SMTP et clé SMTP Brevo |
+| `BACKUP_SSH_TARGET` | Sert uniquement à la commande `scp` prête à coller du mail : l'adresse du VPS telle que ta machine la joint (IP, `user@IP` ou alias ssh ; par défaut `<user>@<hostname -f>`) |
+
+Surcharges possibles sur la ligne cron : `BACKUP_KEEP` (8), `BACKUP_ALIVE_DAYS` (28), `BACKUP_DIR` (`../shared/backups`), `BACKUP_ENV_FILE` (`../shared/env/backup.env`).
+
+Mise en place sur le VPS (commandes à lancer toi-même en SSH, Claude ne les exécute jamais) :
 
 ```bash
-cd /home/mlr/marvinlerouge.dev/summit-stats/compose
-curl -fsSL https://raw.githubusercontent.com/MarvinLeRouge/Summit-Stats/main/docker/scripts/backup-postgres.sh -o backup-postgres.sh
-chmod +x backup-postgres.sh
-```
-
-L'installer en cron quotidien (commandes ci-dessous à exécuter vous-même en SSH, Claude ne les exécute jamais) :
-
-```bash
+cd /home/mlr/marvinlerouge.dev/summit-stats
+mkdir -p shared/backups
+curl -fsSL https://raw.githubusercontent.com/MarvinLeRouge/Summit-Stats/main/docker/env/backup.env.example -o shared/env/backup.env
+chmod 600 shared/env/backup.env   # puis le remplir
+curl -fsSL https://raw.githubusercontent.com/MarvinLeRouge/Summit-Stats/main/docker/scripts/backup.sh -o compose/backup.sh
+chmod +x compose/backup.sh
+cd compose
+./backup.sh --test-mail   # réglages mail seuls : envoie un mail de test, sans sauvegarde
+./backup.sh               # premier vrai passage : stocke une sauvegarde et l'envoie par mail
 crontab -e
-# Ajouter cette ligne :
-0 3 * * * cd /home/mlr/marvinlerouge.dev/summit-stats/compose && BACKUP_DIR=../shared/backups ./backup-postgres.sh >> ../shared/backups/backup.log 2>&1
+# Ajouter cette ligne (le lundi à 03:00) :
+0 3 * * 1 cd /home/mlr/marvinlerouge.dev/summit-stats/compose && ./backup.sh >> ../shared/backups/backup.log 2>&1
 ```
 
-Pour restaurer depuis une sauvegarde, depuis `compose/` :
+Pour restaurer, depuis `compose/` avec le dossier de sauvegarde dans `../shared/backups/` :
 
 ```bash
-gunzip -c ../shared/backups/summit-stats-<timestamp>.sql.gz | \
-  docker compose -f docker-compose.prod.yml exec -T postgres sh -c 'psql -U "$POSTGRES_USER" "$POSTGRES_DB"'
+B=../shared/backups/summit-stats-<horodatage>
+gunzip -c "$B/db.sql.gz" | \
+  docker compose -f docker-compose.prod.yml exec -T postgres sh -c 'psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" "$POSTGRES_DB"'
+docker compose -f docker-compose.prod.yml exec -T app tar -C /app/storage/app/private -xzf - < "$B/gpx.tar.gz"
 ```
+
+La restauration de la base suppose une base vide (volume postgres neuf) : le dump recrée les tables.
 
 ## Vérification de santé
 

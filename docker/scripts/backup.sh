@@ -36,6 +36,7 @@ fi
 SMTP_HOST="${SMTP_HOST:-smtp-relay.brevo.com}"
 SMTP_PORT="${SMTP_PORT:-587}"
 BACKUP_SSH_TARGET="${BACKUP_SSH_TARGET:-$(id -un)@$(hostname -f)}"
+BACKUP_LOCAL_DIR="${BACKUP_LOCAL_DIR:-./}"
 
 mkdir -p "$BACKUP_DIR"
 BACKUP_DIR="$(cd "$BACKUP_DIR" && pwd)"
@@ -132,7 +133,7 @@ send_mail "Summit Stats backup: new backup to fetch" "A new backup was stored on
 
 Fetch it to your machine:
 
-scp -r $BACKUP_SSH_TARGET:$TARGET ./
+scp -r $BACKUP_SSH_TARGET:$TARGET $BACKUP_LOCAL_DIR
 
 Contents: db.sql.gz (database), gpx.tar.gz (uploaded GPX files)."
 log "new-backup mail sent"

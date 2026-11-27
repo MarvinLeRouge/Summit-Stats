@@ -293,6 +293,8 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Add a mail-only check to the backup script (CHORE-006)
 
+- Point the backup mail scp at a local folder (CHORE-006)
+
 
 ### Fixed
 

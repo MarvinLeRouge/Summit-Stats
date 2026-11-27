@@ -102,6 +102,7 @@ L'empreinte ignore la clé `\restrict` aléatoire que `pg_dump` 16.10+ écrit da
 | `SMTP_HOST`, `SMTP_PORT` | `smtp-relay.brevo.com`, `587` |
 | `SMTP_USERNAME`, `SMTP_PASSWORD` | Login SMTP et clé SMTP Brevo |
 | `BACKUP_SSH_TARGET` | Sert uniquement à la commande `scp` prête à coller du mail : l'adresse du VPS telle que ta machine la joint (IP, `user@IP` ou alias ssh ; par défaut `<user>@<hostname -f>`) |
+| `BACKUP_LOCAL_DIR` | Destination de cette commande `scp` sur ta machine, par exemple `~/projets/Summit-Stats/backups/` (ignoré par git ; par défaut `./`) |
 
 Surcharges possibles sur la ligne cron : `BACKUP_KEEP` (8), `BACKUP_ALIVE_DAYS` (28), `BACKUP_DIR` (`../shared/backups`), `BACKUP_ENV_FILE` (`../shared/env/backup.env`).
 

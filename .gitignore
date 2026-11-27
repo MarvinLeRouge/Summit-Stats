@@ -6,6 +6,8 @@
 .env.testing
 .phpactor.json
 .phpunit.result.cache
+# local copies of the production backups (docker/scripts/backup.sh mail, scp)
+/backups/
 /.fleet
 /.idea
 /.nova

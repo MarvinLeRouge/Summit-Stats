@@ -79,6 +79,7 @@ Plan complet : `docs/work-in-progress/v4-action-plan.md` (fichier local, non ver
 - [x] CHORE-005 - Passer à Laravel 13 avec Pest 4 et PHPUnit 12 (Symfony maintenu en 7.4)
 - [x] CI-004 - Relever le seuil de couverture de 80 % à 85 % (seuils et docs)
 - [x] CI-005 - Analyser les modifications indexées avec gitleaks dans le hook pre-commit
+- [x] CI-006 - Un seul déploiement à la fois (groupe concurrency), pour que deux merges rapprochés ne suppriment plus les conteneurs l'un de l'autre
 
 ## Section 6 - Observabilité
 

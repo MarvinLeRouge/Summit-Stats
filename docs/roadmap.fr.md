@@ -40,7 +40,7 @@ Plan complet : `docs/work-in-progress/v4-action-plan.md` (fichier local, non ver
 - [x] Authentification par mot de passe - formulaire de login (Sanctum via identifiants)
 - [x] Limitation de débit sur le login, politique d'expiration des tokens Sanctum
 - [x] Configuration CORS explicite et security headers (CSP, HSTS, X-Frame-Options, ...)
-- [ ] Sauvegarde automatique de la base - `pg_dump` planifié sur le VPS, rotation, documentation du restore
+- [x] Sauvegarde automatique de la base - `pg_dump` et archive GPX hebdomadaires sur le VPS, stockés et signalés par mail seulement en cas de changement, rotation, documentation du restore (CHORE-006)
 - [x] Audit OWASP Top 10:2025 + ASVS
 - [x] Analyse statique (PHPStan/Larastan) dans le hook pre-commit et en CI
 - [x] Audit et optimisation du pipeline CI

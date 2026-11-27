@@ -287,6 +287,8 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Scan staged changes for secrets with gitleaks (CI-005)
 
+- Weekly change-only backup with mail notice (CHORE-006)
+
 
 ### Fixed
 

@@ -87,28 +87,49 @@ Steps:
 
 ## Automated backups
 
-`docker/scripts/backup-postgres.sh` dumps the database and keeps the last 14 days of backups. It reads the credentials inside the postgres container, so it needs no env file. It needs to live on the server alongside the compose file:
+`docker/scripts/backup.sh` runs once a week from cron on the VPS. It dumps the database and archives the uploaded GPX files (`storage/app/private/gpx` in the `app` container), then compares their fingerprint with the last stored backup:
+
+- **Changed:** stores `shared/backups/summit-stats-<timestamp>/` (`db.sql.gz`, `gpx.tar.gz`, `fingerprint`), keeps the 8 newest backups, and mails the `scp` command to fetch it to your machine (the off-VPS copy).
+- **Unchanged:** stores nothing. When no mail went out for 28 days, it sends a "still alive" mail, so a silent month never hides a broken job.
+- **Failure:** mails the error and exits non-zero.
+
+The fingerprint ignores the random `\restrict` key that `pg_dump` 16.10+ writes into every dump, so two dumps of an unchanged database match. Credentials are read inside the containers; the script itself only needs the mail settings, in `shared/env/backup.env` (template [`docker/env/backup.env.example`](../docker/env/backup.env.example)), read by the script on the host and never by the containers. Mails go through the Brevo SMTP relay with STARTTLS, from a sender verified in Brevo.
+
+| Variable | Purpose |
+|---|---|
+| `BACKUP_MAIL_FROM`, `BACKUP_MAIL_FROM_NAME` | Verified Brevo sender |
+| `BACKUP_MAIL_TO`, `BACKUP_MAIL_TO_NAME` | Recipient |
+| `BACKUP_SMTP_HOST`, `BACKUP_SMTP_PORT` | `smtp-relay.brevo.com`, `587` |
+| `BACKUP_SMTP_USER`, `BACKUP_SMTP_PASSWORD` | Brevo SMTP login and SMTP key |
+| `BACKUP_SSH_TARGET` | How your machine reaches the VPS in the `scp` command (default `<user>@<hostname -f>`) |
+
+Optional overrides on the cron line: `BACKUP_KEEP` (8), `BACKUP_ALIVE_DAYS` (28), `BACKUP_DIR` (`../shared/backups`), `BACKUP_ENV_FILE` (`../shared/env/backup.env`).
+
+Setup on the VPS (commands for you to run over SSH, Claude never executes these):
 
 ```bash
-cd /home/mlr/marvinlerouge.dev/summit-stats/compose
-curl -fsSL https://raw.githubusercontent.com/MarvinLeRouge/Summit-Stats/main/docker/scripts/backup-postgres.sh -o backup-postgres.sh
-chmod +x backup-postgres.sh
-```
-
-Install it as a daily cron job (commands below are for you to run over SSH, Claude never executes these):
-
-```bash
+cd /home/mlr/marvinlerouge.dev/summit-stats
+mkdir -p shared/backups
+curl -fsSL https://raw.githubusercontent.com/MarvinLeRouge/Summit-Stats/main/docker/env/backup.env.example -o shared/env/backup.env
+chmod 600 shared/env/backup.env   # then fill it in
+curl -fsSL https://raw.githubusercontent.com/MarvinLeRouge/Summit-Stats/main/docker/scripts/backup.sh -o compose/backup.sh
+chmod +x compose/backup.sh
+cd compose && ./backup.sh   # first run: stores a backup and mails it
 crontab -e
-# Add this line:
-0 3 * * * cd /home/mlr/marvinlerouge.dev/summit-stats/compose && BACKUP_DIR=../shared/backups ./backup-postgres.sh >> ../shared/backups/backup.log 2>&1
+# Add this line (Mondays at 03:00):
+0 3 * * 1 cd /home/mlr/marvinlerouge.dev/summit-stats/compose && ./backup.sh >> ../shared/backups/backup.log 2>&1
 ```
 
-To restore from a backup, from `compose/`:
+To restore, from `compose/` with the backup folder in `../shared/backups/`:
 
 ```bash
-gunzip -c ../shared/backups/summit-stats-<timestamp>.sql.gz | \
-  docker compose -f docker-compose.prod.yml exec -T postgres sh -c 'psql -U "$POSTGRES_USER" "$POSTGRES_DB"'
+B=../shared/backups/summit-stats-<timestamp>
+gunzip -c "$B/db.sql.gz" | \
+  docker compose -f docker-compose.prod.yml exec -T postgres sh -c 'psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" "$POSTGRES_DB"'
+docker compose -f docker-compose.prod.yml exec -T app tar -C /app/storage/app/private -xzf - < "$B/gpx.tar.gz"
 ```
+
+The database restore expects an empty database (fresh postgres volume): the dump recreates the tables.
 
 ## Health check
 

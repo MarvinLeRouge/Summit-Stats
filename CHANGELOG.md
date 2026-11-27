@@ -303,6 +303,10 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Bump the npm-minor-patch group across 1 directory with 7 updates
 
+- Update CHANGELOG.md (#204)
+
+- Bump composer from 2.8 to 2.10
+
 
 ### Fixed
 

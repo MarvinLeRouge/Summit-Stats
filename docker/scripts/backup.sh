@@ -7,6 +7,7 @@
 # - Unchanged: stores nothing; mails a "still alive" notice once no mail went out for
 #   BACKUP_ALIVE_DAYS days, so a silent week never hides a broken job.
 # - Any failure: mails the error and exits non-zero.
+# - --test-mail: sends a test mail with the current settings and exits, no backup.
 #
 # Run from the directory holding the compose file. Mail settings come from BACKUP_ENV_FILE
 # (host-side only, never read by the containers), see docker/env/backup.env.example.
@@ -83,6 +84,13 @@ Check $BACKUP_DIR/backup.log." || true
     exit 1
 }
 trap 'on_error $LINENO' ERR
+
+# --test-mail: checks the mail settings only (after a SMTP key change, for instance), no backup
+if [ "${1:-}" = --test-mail ]; then
+    send_mail "Summit Stats backup: test mail" "Mail settings work on $(hostname -f). No backup was made."
+    log "test mail sent to $BACKUP_MAIL_TO"
+    exit 0
+fi
 
 compose() { docker compose -f "$COMPOSE_FILE" "$@"; }
 

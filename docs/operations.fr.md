@@ -114,7 +114,9 @@ curl -fsSL https://raw.githubusercontent.com/MarvinLeRouge/Summit-Stats/main/doc
 chmod 600 shared/env/backup.env   # puis le remplir
 curl -fsSL https://raw.githubusercontent.com/MarvinLeRouge/Summit-Stats/main/docker/scripts/backup.sh -o compose/backup.sh
 chmod +x compose/backup.sh
-cd compose && ./backup.sh   # premier passage : stocke une sauvegarde et l'envoie par mail
+cd compose
+./backup.sh --test-mail   # réglages mail seuls : envoie un mail de test, sans sauvegarde
+./backup.sh               # premier vrai passage : stocke une sauvegarde et l'envoie par mail
 crontab -e
 # Ajouter cette ligne (le lundi à 03:00) :
 0 3 * * 1 cd /home/mlr/marvinlerouge.dev/summit-stats/compose && ./backup.sh >> ../shared/backups/backup.log 2>&1

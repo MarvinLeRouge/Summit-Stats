@@ -291,6 +291,8 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Use the shared smtp variable names in the backup env (CHORE-006)
 
+- Add a mail-only check to the backup script (CHORE-006)
+
 
 ### Fixed
 
